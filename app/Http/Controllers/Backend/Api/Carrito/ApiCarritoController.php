@@ -438,7 +438,7 @@ class ApiCarritoController extends Controller
                         'nota' => $request->nota,
                         'cambio' => $request->cambio,
                         'fecha_orden' => $fechahoy,
-                        'precio_consumido' => $resultado,
+                        'precio_consumido' => $total,
 
                         'estado_2' => 0, // el propietario inicia la orden
                         'fecha_2' => null,
