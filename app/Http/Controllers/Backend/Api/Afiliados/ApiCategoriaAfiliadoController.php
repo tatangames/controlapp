@@ -9,6 +9,7 @@ use App\Models\Afiliados;
 use App\Models\Categorias;
 use App\Models\Clientes;
 use App\Models\Motoristas;
+use App\Models\MotoristasExperiencia;
 use App\Models\MotoristasOrdenes;
 use App\Models\Ordenes;
 use App\Models\OrdenesDescripcion;
@@ -624,6 +625,17 @@ class ApiCategoriaAfiliadoController extends Controller
                 $o->telefono = $infoOrden->telefono;
 
                 $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
+
+                $calificada = "";
+                if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
+                    if($infoC->mensaje != null) {
+                        $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
+                    }else{
+                        $calificada = "#" . $infoC->experiencia;
+                    }
+                }
+
+                $o->calificada = $calificada;
             }
 
             return ['success' => 1, 'ordenes' => $orden];
