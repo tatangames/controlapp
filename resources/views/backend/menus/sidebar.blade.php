@@ -155,6 +155,13 @@
                                     <p>Servicios</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('index.sliders') }}" target="frameprincipal" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Slider</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

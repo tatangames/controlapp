@@ -55,7 +55,7 @@ class ZonaController extends Controller
         $zona->hora_cerrado_delivery = $request->horacerrado;
         $zona->activo = 1;
         $zona->mensaje_bloqueo = null;
-        $zona->precio_envio = $request->precio;
+        $zona->minimo_consumo = $request->precio;
 
         if($zona->save()){
             return ['success'=>1];
@@ -110,7 +110,7 @@ class ZonaController extends Controller
                 'latitud' => $request->latitud,
                 'longitud' => $request->longitud,
                 'mensaje_bloqueo' => $request->mensaje,
-                'precio_envio' => $request->precio]);
+                'minimo_consumo' => $request->precio]);
 
             return ['success' => 1];
         }else{

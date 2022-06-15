@@ -11,7 +11,6 @@
                                 <th>Orden</th>
                                 <th>Fecha</th>
                                 <th>Venta</th>
-                                <th>Envío</th>
                                 <th>Cliente</th>
                                 <th>Estado</th>
                                 <th>Calificación</th>
@@ -26,7 +25,6 @@
                                     <td>{{ $dato->id }}</td>
                                     <td>{{ $dato->fecha_orden }}</td>
                                     <td>{{ $dato->precio_consumido }}</td>
-                                    <td>{{ $dato->precio_envio }}</td>
                                     <td>{{ $dato->cliente }}</td>
                                     <td>{{ $dato->estado }}</td>
                                     <td>{{ $dato->calificacion }}</td>

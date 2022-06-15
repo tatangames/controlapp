@@ -41,10 +41,7 @@ class ApiOrdenesController extends Controller
                 $infoDireccion = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
 
                 $o->direccion = $infoDireccion->direccion;
-
-                $sumado = $o->precio_consumido + $o->precio_envio;
-                $sumado = number_format((float)$sumado, 2, '.', ',');
-                $o->total = $sumado;
+                $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
             }
 
             return ['success' => 1, 'ordenes' => $orden];
@@ -271,7 +268,7 @@ class ApiOrdenesController extends Controller
 
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
 
-                $estado = "";
+                $estado = "En proceso";
 
                 if($o->estado_5 == 1){
                     $estado = "Orden Entregada";
@@ -293,9 +290,7 @@ class ApiOrdenesController extends Controller
 
                 $o->estado = $estado;
 
-                $total = $o->precio_envio + $o->precio_consumido;
-                $o->precio_envio = number_format((float)$o->precio_envio, 2, '.', ',');
-                $o->total = number_format((float)$total, 2, '.', ',');
+                $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
 
                 $infoCliente = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
                 $o->direccion = $infoCliente->direccion;

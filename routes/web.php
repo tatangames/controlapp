@@ -104,6 +104,15 @@ Route::post('/admin/bloques/informacion', [CategoriasController::class,'informac
 Route::post('/admin/bloques/editar', [CategoriasController::class,'editarBloque']);
 Route::post('/admin/bloques/ordenar', [CategoriasController::class,'ordenarBloque']);
 
+// --- SLIDERS ---
+Route::get('/admin/sliders', [CategoriasController::class,'indexSliders'])->name('index.sliders');
+Route::get('/admin/sliders/tablas', [CategoriasController::class,'tablaSliders']);
+Route::post('/admin/sliders/nuevo', [CategoriasController::class,'nuevoSliders']);
+Route::post('/admin/sliders/ordenar', [CategoriasController::class,'ordenarSliders']);
+Route::post('/admin/sliders/borrar', [CategoriasController::class,'borrarSliders']);
+Route::post('/admin/sliders/informacion', [CategoriasController::class,'informacionSlider']);
+Route::post('/admin/sliders/editar', [CategoriasController::class,'editarSlider']);
+
 // --- CATEGORIAS ---
 Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
 Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);

@@ -128,7 +128,7 @@ class MotoristaController extends Controller
             $mm->fecha_orden = date("h:i A d-m-Y", strtotime($infoOrdenes->fecha_orden));
             $mm->orden = $infoOrdenes->id;
 
-            $estado = "";
+            $estado = "En proceso";
 
             if($infoOrdenes->estado_5 == 1){
                 $estado = "Orden Entregada";

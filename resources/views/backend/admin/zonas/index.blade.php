@@ -92,7 +92,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio Envío</label>
+                                    <label>Precio Mínimo de Consumo</label>
                                     <input type="number" class="form-control" id="precio-nuevo" value="0.00">
                                 </div>
 
@@ -150,7 +150,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio Envío</label>
+                                    <label>Precio Mínimo de Consumo</label>
                                     <input type="number" class="form-control" id="precio-editar">
                                 </div>
 
@@ -377,7 +377,7 @@
 
                         $('#latitud-editar').val(response.data.zona.latitud);
                         $('#longitud-editar').val(response.data.zona.longitud);
-                        $('#precio-editar').val(response.data.zona.precio_envio);
+                        $('#precio-editar').val(response.data.zona.minimo_consumo);
 
                         if(response.data.zona.saturacion === 0){
                             $("#toggle-problema").prop("checked", false);
@@ -480,20 +480,25 @@
                 return;
             }
 
+            if(precio === ''){
+                toastr.error('Mínimo consumo es requerido');
+                return;
+            }
+
             var reglaNumeroDecimal = /^[0-9]\d*(\.\d+)?$/;
 
             if(!precio.match(reglaNumeroDecimal)) {
-                toastr.error('Precio debe ser número decimal');
+                toastr.error('Mínimo consumo debe ser número decimal');
                 return;
             }
 
             if(precio < 0) {
-                toastr.error('Precio debe ser mayor a 0 o igual');
+                toastr.error('Mínimo consumo debe ser mayor a 0 o igual');
                 return;
             }
 
             if(precio.length > 6) {
-                toastr.error('Máximo 6 caracteres');
+                toastr.error('Mínimo consumo Máximo 6 caracteres');
                 return;
             }
 

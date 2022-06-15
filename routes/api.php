@@ -58,8 +58,6 @@ Route::post('cliente/listado/productos/ordenes-individual',  [ApiOrdenesControll
 Route::post('cliente/proceso/borrar/orden',  [ApiOrdenesController::class, 'borrarOrdenCliente']);
 
 
-
-
 // --- EVENTOS ----
 Route::get('cliente/eventos/listado', [ApiServiciosController::class, 'listadoEventos']);
 Route::post('cliente/eventos-imagen/listado', [ApiServiciosController::class, 'listadoEventosImagenes']);
@@ -94,9 +92,13 @@ Route::post('afiliado/informacion/estado/nueva-orden', [ApiCategoriaAfiliadoCont
 Route::post('afiliado/listado/producto/orden', [ApiCategoriaAfiliadoController::class, 'listadoProductosOrden']);
 Route::post('afiliado/listado/orden/producto/individual', [ApiCategoriaAfiliadoController::class, 'listaOrdenProductoIndividual']);
 
+// actualizar cantidad de producto por propietario
+Route::post('afiliado/producto/cambiar-cantidad', [ApiCategoriaAfiliadoController::class, 'actualizarCantidadProducto']);
+
 // orden cancelada por propietario
 Route::post('afiliado/cancelar/orden', [ApiCategoriaAfiliadoController::class, 'cancelarOrden']);
 Route::post('afiliado/borrar/orden', [ApiCategoriaAfiliadoController::class, 'borrarOrden']);
+
 
 // orden aceptada
 Route::post('afiliado/proceso/orden/estado-2', [ApiCategoriaAfiliadoController::class, 'procesarOrdenEstado2']);

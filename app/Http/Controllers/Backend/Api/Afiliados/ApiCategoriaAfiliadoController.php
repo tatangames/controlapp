@@ -660,7 +660,7 @@ class ApiCategoriaAfiliadoController extends Controller
 
                 $o->fecha_orden = date("d-m-Y h:i A", strtotime($o->fecha_orden));
 
-                $estado = "";
+                $estado = "En proceso";
 
                 if($o->estado_2 == 1){
                     $estado = "Orden Preparandose";
@@ -702,6 +702,44 @@ class ApiCategoriaAfiliadoController extends Controller
         }else{
             return ['success' => 2];
         }
+    }
+
+
+    public function actualizarCantidadProducto(Request $request){
+
+        $rules = array(
+            'id' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){return ['success' => 0]; }
+
+        if($info = OrdenesDescripcion::where('id', $request->id)->first()){
+
+            if($info->cantidad != $request->cantidad){
+                OrdenesDescripcion::where('id', $request->id)->update(['cantidad' => $request->cantidad]);
+
+
+                // obtener todos los productos de la orden
+                $todos = OrdenesDescripcion::where('ordenes_id', $info->ordenes_id)->get();
+                $sumado = 0;
+
+                // multiplicar precio x cantidad
+                foreach($todos as $p){
+                    $multi = $p->cantidad * $p->precio;
+                    $sumado = $sumado + $multi;
+                }
+
+                // setear consumo
+                Ordenes::where('id', $info->ordenes_id)->update(['precio_consumido' => $sumado]);
+            }
+
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+
     }
 
 }

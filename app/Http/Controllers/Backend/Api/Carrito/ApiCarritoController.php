@@ -262,7 +262,7 @@ class ApiCarritoController extends Controller
                     ->where('c.carrito_temporal_id', $cart->id)
                     ->get();
 
-                $pila = array();
+                $subtotal = 0;
 
                 // multiplicar precio x cantidad
                 foreach($producto as $p){
@@ -270,44 +270,28 @@ class ApiCarritoController extends Controller
                     $cantidad = $p->cantidad;
                     $precio = $p->precio;
                     $multi = $cantidad * $precio;
-                    array_push($pila, $multi);
+                    $subtotal = $subtotal + $multi;
                 }
 
-                // sumar listado de sub totales de cada producto multiplicado
-                foreach ($pila as $valor){
-                    $resultado = $resultado + $valor;
-                }
-
-                // precio de la zona servicio
+                // precio minimo para envio de zona
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
+                $minimo = 0; // si es 1: si supera el minimo de consumo
 
-                // obtiene precio envio de la zona servicio
-                // PRIORIDAD 1
-                $envioPrecio = $infoZona->precio_envio;
+                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
-                // PRIORIDAD 2
-                // esta zona servicio tiene un minimo de $$ para aplicar nuevo tipo de cargo
-                if($infoZona->min_envio == 1){
-
-                    // verificar resultado que es el sub total
-                    if($resultado >= $infoZona->precio_minimo){
-                        //aplicar nuevo tipo cargo
-                        $envioPrecio = 0;
-                    }
+                if($subtotal >= $infoZona->minimo_consumo){
+                    // si puede ordenar
+                    $minimo = 1;
                 }
 
-                // sumar a total
-                $total = $resultado + $envioPrecio;
-
-                $total = number_format((float)$total, 2, '.', '');
-                $envioPrecio = number_format((float)$envioPrecio, 2, '.', ',');
+                $total = number_format((float)$subtotal, 2, '.', '');
 
                 return [
                     'success' => 2,
                     'total' => $total,
-                    'subtotal' => number_format((float)$resultado, 2, '.', ','),
-                    'envio' => $envioPrecio,
                     'direccion' => $infoDireccion->direccion,
+                    'minimo' => $minimo,
+                    'mensaje' => $msjMinimoConsumo
                 ];
 
             }else{
@@ -427,7 +411,7 @@ class ApiCarritoController extends Controller
                     ->where('c.carrito_temporal_id', $cart->id)
                     ->get();
 
-                $pila = array();
+                $total = 0;
 
                 // multiplicar precio x cantidad
                 foreach($producto as $p){
@@ -435,30 +419,16 @@ class ApiCarritoController extends Controller
                     $cantidad = $p->cantidad;
                     $precio = $p->precio;
                     $multi = $cantidad * $precio;
-                    array_push($pila, $multi);
-                }
-
-                // sumar listado de sub totales de cada producto multiplicado
-                foreach ($pila as $valor){
-                    $resultado = $resultado + $valor;
+                    $total = $total + $multi;
                 }
 
                 // precio de la zona servicio
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
+                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
-                // obtiene precio envio de la zona servicio
-                // PRIORIDAD 1
-                $envioPrecio = $infoZona->precio_envio;
-
-                // PRIORIDAD 2
-                // esta zona servicio tiene un minimo de $$ para aplicar nuevo tipo de cargo
-                if($infoZona->min_envio == 1){
-
-                    // verificar resultado que es el sub total
-                    if($resultado >= $infoZona->precio_minimo){
-                        //aplicar nuevo tipo cargo
-                        $envioPrecio = 0;
-                    }
+                if($total < $infoZona->minimo_consumo){
+                    // si puede ordenar
+                    return ['success' => 6, 'msj1' => $msjMinimoConsumo];
                 }
 
                 $fechahoy = Carbon::now('America/El_Salvador');
@@ -469,7 +439,6 @@ class ApiCarritoController extends Controller
                         'cambio' => $request->cambio,
                         'fecha_orden' => $fechahoy,
                         'precio_consumido' => $resultado,
-                        'precio_envio' => $envioPrecio,
 
                         'estado_2' => 0, // el propietario inicia la orden
                         'fecha_2' => null,
@@ -549,10 +518,10 @@ class ApiCarritoController extends Controller
                 }
 
                 DB::commit();
-                return ['success' => 6];
+                return ['success' => 7];
             }else{
                 // no tiene carrito de compras
-                return ['success' => 7];
+                return ['success' => 8];
             }
 
         } catch(\Throwable $e){

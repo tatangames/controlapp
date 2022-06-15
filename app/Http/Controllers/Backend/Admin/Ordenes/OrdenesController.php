@@ -30,7 +30,6 @@ class OrdenesController extends Controller
 
             $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
             $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
-            $mm->precio_envio = number_format((float)$mm->precio_envio, 2, '.', ',');
 
             if($infoE = MotoristasExperiencia::where('ordenes_id', $mm->id)->first()){
                 $mm->calificacion = "Estrellas: " . $infoE->experiencia . " y Nota es: " . $infoE->mensaje;
@@ -136,7 +135,6 @@ class OrdenesController extends Controller
 
             $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
             $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
-            $mm->precio_envio = number_format((float)$mm->precio_envio, 2, '.', ',');
 
             if($infoE = MotoristasExperiencia::where('ordenes_id', $mm->id)->first()){
                 $mm->calificacion = "Estrellas: " . $infoE->experiencia . " y Nota es: " . $infoE->mensaje;
