@@ -90,6 +90,8 @@ class ApiMotoristasController extends Controller
                 $o->direccion = $infoDireccion->direccion;
                 $o->telefono = $infoDireccion->telefono;
 
+                $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
+
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
             }
 
