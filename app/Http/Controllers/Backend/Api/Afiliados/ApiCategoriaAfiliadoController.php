@@ -640,14 +640,6 @@ class ApiCategoriaAfiliadoController extends Controller
                 $calificada = "";
                 $motorista = "";
 
-                if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
-                    if($infoC->mensaje != null) {
-                        $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
-                    }else{
-                        $calificada = "#" . $infoC->experiencia;
-                    }
-                }
-
 
                 $o->calificada = $calificada;
                 $o->motorista = $motorista;
