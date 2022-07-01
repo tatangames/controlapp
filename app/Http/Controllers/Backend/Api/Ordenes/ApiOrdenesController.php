@@ -98,7 +98,9 @@ class ApiOrdenesController extends Controller
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
             }
 
-            return ['success' => 1, 'ordenes' => $orden];
+            $mensaje = "Orden Lista. Puede Pasar Al local";
+
+            return ['success' => 1, 'ordenes' => $orden, 'mensaje' => $mensaje];
         }else{
             return ['success' => 2];
         }
