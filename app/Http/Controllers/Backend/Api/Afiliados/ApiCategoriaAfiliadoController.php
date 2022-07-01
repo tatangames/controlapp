@@ -617,7 +617,7 @@ class ApiCategoriaAfiliadoController extends Controller
             $orden = Ordenes::where('estado_3', 1)
                 ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
                 ->get();
-
+            return ['success' => 1, 'ordenes' => $orden];
             foreach($orden as $o){
 
                 $infoOrden = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
@@ -639,7 +639,6 @@ class ApiCategoriaAfiliadoController extends Controller
 
                 $calificada = "";
                 $motorista = "";
-
 
                 $o->calificada = $calificada;
                 $o->motorista = $motorista;
