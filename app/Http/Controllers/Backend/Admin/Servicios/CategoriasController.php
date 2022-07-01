@@ -165,14 +165,14 @@ class CategoriasController extends Controller
 
     // *** CATEGORIAS *** //
 
-    public function indexCategorias($id){
+    public function indexCategorias(){
 
-        return view('backend.admin.categorias.vistacategorias', compact('id'));
+        return view('backend.admin.categorias.vistacategorias');
     }
 
     // tabla
-    public function tablaCategorias($id){
-        $categorias = Categorias::where('bloque_servicios_id', $id)->orderBy('posicion')->get();
+    public function tablaCategorias(){
+        $categorias = Categorias::orderBy('posicion')->get();
 
         return view('backend.admin.categorias.tablacategorias', compact('categorias'));
     }
