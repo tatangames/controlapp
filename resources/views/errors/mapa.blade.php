@@ -49,7 +49,7 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background-image: url({{ asset('/images/fondo.jpg') }});
+        background-image: url({{ asset('/images/fondo-login.jpg') }});
         background-size: cover;
     }
 
