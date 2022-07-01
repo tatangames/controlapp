@@ -626,6 +626,16 @@ class ApiCategoriaAfiliadoController extends Controller
 
             $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
 
+            $calificada = "";
+            $motorista = "";
+
+            if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
+                if($infoC->mensaje != null) {
+                    $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
+                }else{
+                    $calificada = "#" . $infoC->experiencia;
+                }
+            }
 
         }
 
