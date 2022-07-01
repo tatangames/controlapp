@@ -519,9 +519,22 @@ class ApiCategoriaAfiliadoController extends Controller
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
                 $o->fecha_2 = date("h:i A d-m-Y", strtotime($o->fecha_2));
                 $o->cliente = $infoCliente->nombre;
-                $o->direccion = $infoCliente->direccion;
                 $o->telefono = $infoCliente->telefono;
 
+                if($o->tipoentrega == 1){
+                    // domicilio
+                    $o->direccion = $infoCliente->direccion;
+                }else{
+                    $o->direccion = "";
+                }
+
+                if($o->tipoentrega == 1){
+                    $entrega = "A Domicilio";
+                }else{
+                    $entrega = "Pasar a Traer a Local";
+                }
+
+                $o->entrega = $entrega;
                 $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
             }
 
@@ -642,9 +655,15 @@ class ApiCategoriaAfiliadoController extends Controller
                     $motorista = $datos->nombre;
                 }
 
+                if($o->tipoentrega == 1){
+                    $o->entrega = "A Domicilio";
+                }else{
+                    $o->entrega = "Entrega en Local";
+                }
 
                 $o->calificada = $calificada;
                 $o->motorista = $motorista;
+
             }
 
             return ['success' => 1, 'ordenes' => $orden];
@@ -681,38 +700,23 @@ class ApiCategoriaAfiliadoController extends Controller
 
                 $o->fecha_orden = date("d-m-Y h:i A", strtotime($o->fecha_orden));
 
-                $estado = "En proceso";
-
-                if($o->estado_2 == 1){
-                    $estado = "Orden Preparandose";
-                }
-                if($o->estado_3 == 1){
-                    $estado = "Orden lista para Entrega";
-                }
-                if($o->estado_4 == 1){
-                    $estado = "Orden En Camino";
-                }
-                if($o->estado_4 == 1){
-                    $estado = "Orden Entregada";
-                }
-
-                if($o->estado_7 == 1){
-                    if($o->cancelado == 1){
-                        $estado = "Orden Cancelada Por: Cliente";
-                    }else{
-                        $estado = "Orden Cancelada Por: Propietario";
-                    }
-                }
-
-                $o->estado = $estado;
-
                 $vendido = $vendido + $o->precio_consumido;
                 $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
                 $infoCliente = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
                 $o->cliente = $infoCliente->nombre;
-                $o->direccion = $infoCliente->direccion;
-                $o->puntoref = $infoCliente->punto_referencia;
                 $o->telefono = $infoCliente->telefono;
+
+                if($o->tipoentrega == 1){
+                    $entrega = "A Domicilio";
+                    $o->direccion = $infoCliente->direccion;
+                    $o->puntoref = $infoCliente->punto_referencia;
+                }else{
+                    $entrega = "Pasar a Traer a Local";
+                    $o->direccion = "";
+                    $o->puntoref = "";
+                }
+
+                $o->entrega = $entrega;
             }
 
             $vendido = number_format((float)$vendido, 2, '.', ',');
@@ -724,7 +728,6 @@ class ApiCategoriaAfiliadoController extends Controller
             return ['success' => 2];
         }
     }
-
 
     public function actualizarCantidadProducto(Request $request){
 
@@ -760,7 +763,54 @@ class ApiCategoriaAfiliadoController extends Controller
         }else{
             return ['success' => 2];
         }
+    }
 
+    public function infoCategoriaHorario(Request $request){
+
+        $rules = array(
+            'id' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){return ['success' => 0]; }
+
+        if($info = Categorias::where('id', $request->id)->first()){
+
+            $categoria = Categorias::where('id', $request->id)->get();
+
+            $hora1 = date("h:i A", strtotime($info->hora1));
+            $hora2 = date("h:i A", strtotime($info->hora2));
+
+            return ['success' => 1, 'horario' => $categoria,
+                'hora1' => $hora1, 'hora2' => $hora2];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+
+    public function guardarCategoriaHorario(Request $request){
+
+        $rules = array(
+            'id' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){return ['success' => 0]; }
+
+        if(Categorias::where('id', $request->id)->first()){
+
+            Categorias::where('id', $request->id)
+                ->update(['usahorario' => $request->estado,
+                    'hora1' => $request->hora1,
+                    'hora2' => $request->hora2]);
+
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
     }
 
 }

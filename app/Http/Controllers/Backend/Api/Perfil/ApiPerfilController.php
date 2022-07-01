@@ -7,6 +7,7 @@ use App\Models\CarritoExtra;
 use App\Models\CarritoTemporal;
 use App\Models\Clientes;
 use App\Models\DireccionCliente;
+use App\Models\Horario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -310,6 +311,18 @@ class ApiPerfilController extends Controller
         }else{
             return ['success' => 2];
         }
+    }
+
+    public function listaHorarios(){
+
+        $horario = Horario::orderBy('id')->get();
+
+        foreach($horario as $s){
+            $s->hora1 = date("h:i A", strtotime($s->hora1));
+            $s->hora2 = date("h:i A", strtotime($s->hora2));
+        }
+
+        return ['success' => 1, 'horario' => $horario];
     }
 
 }

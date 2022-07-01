@@ -81,12 +81,12 @@
 
 
                                 <div class="form-group" style="margin-left:0px">
-                                    <label>Notificación cada minuto si una orden no ha sido respondida</label><br>
+                                    <label>Permitir Domicilio y Local Entrega</label><br>
                                     <label class="switch" style="margin-top:10px">
                                         <input type="checkbox" id="toggle-noti">
                                         <div class="slider round">
-                                            <span class="on">Activar</span>
-                                            <span class="off">Desactivar</span>
+                                            <span class="on">Domicilio y Local</span>
+                                            <span class="off">Domicilio</span>
                                         </div>
                                     </label>
                                 </div>
@@ -154,7 +154,7 @@
                             $("#toggle-cerrado").prop("checked", true);
                         }
 
-                        if(response.data.info.activo_noti === 0){
+                        if(response.data.info.domicilio === 0){
                             $("#toggle-noti").prop("checked", false);
                         }else{
                             $("#toggle-noti").prop("checked", true);

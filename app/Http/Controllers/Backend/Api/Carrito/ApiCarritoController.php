@@ -18,6 +18,7 @@ use App\Models\Zonas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApiCarritoController extends Controller
@@ -253,8 +254,6 @@ class ApiCarritoController extends Controller
                     ->where('seleccionado', 1)
                     ->first();
 
-                $resultado = 0; // sub total del carrito de compras
-
                 // listado de productos del carrito
                 $producto = DB::table('producto AS p')
                     ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
@@ -263,7 +262,6 @@ class ApiCarritoController extends Controller
                     ->get();
 
                 $subtotal = 0;
-
                 // multiplicar precio x cantidad
                 foreach($producto as $p){
 
@@ -277,11 +275,14 @@ class ApiCarritoController extends Controller
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
                 $minimo = 0; // si es 1: si supera el minimo de consumo
 
-                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
+                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_compra;
 
-                if($subtotal >= $infoZona->minimo_consumo){
-                    // si puede ordenar
-                    $minimo = 1;
+                // solo aplica si es adomicilio
+                if($request->metodo == 1){
+                    if($subtotal >= $infoZona->minimo_compra){
+                        // si puede ordenar
+                        $minimo = 1;
+                    }
                 }
 
                 $total = number_format((float)$subtotal, 2, '.', '');
@@ -395,14 +396,11 @@ class ApiCarritoController extends Controller
                 // abierto
             }else{
                 // cerrado horario de zona
-                return ['success' => 5, 'msj1' => "temporalmente cerrado para esta zona el envio"];
+                return ['success' => 5, 'msj1' => "temporalmente cerrado para esta zona el envío"];
             }
-
 
             // preguntar si usuario ya tiene un carrito de compras
             if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
-
-                $resultado = 0; // sub total del carrito de compras
 
                 // listado de productos del carrito
                 $producto = DB::table('producto AS p')
@@ -426,9 +424,13 @@ class ApiCarritoController extends Controller
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
                 $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
-                if($total < $infoZona->minimo_consumo){
-                    // si puede ordenar
-                    return ['success' => 6, 'msj1' => $msjMinimoConsumo];
+                // solo aplica es si adomicilio
+                if($request->metodo == 1) {
+
+                    if ($total < $infoZona->minimo_consumo) {
+                        // si puede ordenar
+                        return ['success' => 6, 'msj1' => $msjMinimoConsumo];
+                    }
                 }
 
                 $fechahoy = Carbon::now('America/El_Salvador');
@@ -436,9 +438,12 @@ class ApiCarritoController extends Controller
                 $idOrden = DB::table('ordenes')->insertGetId(
                     [ 'clientes_id' => $request->clienteid,
                         'nota' => $request->nota,
-                        'cambio' => $request->cambio,
-                        'fecha_orden' => $fechahoy,
+
                         'precio_consumido' => $total,
+                        'tipoentrega' => $request->metodo, // 1 domicilio, 2 local
+
+                        'fecha_orden' => $fechahoy,
+                        'cambio' => $request->cambio,
 
                         'estado_2' => 0, // el propietario inicia la orden
                         'fecha_2' => null,
@@ -514,7 +519,7 @@ class ApiCarritoController extends Controller
                 $mensaje = "Hay una Nueva Orden";
 
                 if($pilaPropietarios != null) {
-                    SendNotiPropietarioJobs::dispatch($titulo, $mensaje, $pilaPropietarios);
+                     SendNotiPropietarioJobs::dispatch($titulo, $mensaje, $pilaPropietarios);
                 }
 
                 DB::commit();
@@ -525,14 +530,12 @@ class ApiCarritoController extends Controller
             }
 
         } catch(\Throwable $e){
+
             DB::rollback();
             return [
                 'success' => 101,
             ];
         }
     }
-
-
-
 
 }

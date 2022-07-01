@@ -20,8 +20,10 @@ class CreateInformacionAdminTable extends Migration
             $table->boolean('cerrado');
             $table->string('mensaje_cerrado', 300);
 
-            // para el CRON que envia notificacion a cada propietario si hay ordenes sin contestar
-            $table->boolean('activo_noti');
+            // establecer opcion para recoger en local o no
+            // 0- solo habra domicilio
+            // 1- si habra local y domicilio
+            $table->boolean('domicilio');
         });
     }
 

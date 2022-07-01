@@ -17,49 +17,63 @@ class ApiServiciosController extends Controller
 {
     public function listadoMenuVertical(Request $request){
 
-        $reglaDatos = array(
-            'idbloque' => 'required',
-            'idcliente' => 'required'
-        );
+        $getValores = Carbon::now('America/El_Salvador');
+        $hora = $getValores->format('H:i:s');
 
-        $validarDatos = Validator::make($request->all(), $reglaDatos);
+        // se necesita verificar que categorias utilizan horarios para mostrarse y crear una lista de Id
+        // obtener lista de id que utilizan horarios
+        $listaIdHorario = Categorias::where('usahorario', 1)->get();
+        $pilaIdDisponible = array();
 
-        if($validarDatos->fails()){return ['success' => 0]; }
+        // verificar si esta categoria por horario estara disponible
+        foreach ($listaIdHorario as $ll){
+            $detalle = Categorias::where('id', $ll->id)
+                ->where('hora1', '<=', $hora)
+                ->where('hora2', '>=', $hora)
+                ->get();
 
+            if(count($detalle) >= 1){
+                // abierto
+                array_push($pilaIdDisponible, $ll->id);
+            }else{
+                // cerrado
+            }
+        }
 
-        // retornar listado de productos por su bloque id
+        // obtener todos los id categorias que no utilizan horario
+        $listaNoHorario = Categorias::where('usahorario', 0)->get();
 
-        if(BloqueServicios::where('id', $request->idbloque)->first()){
+        // meter estos id a la lista tambien
+        foreach ($listaNoHorario as $ln){
+            array_push($pilaIdDisponible, $ln->id);
+        }
 
-            $productos = Categorias::where('bloque_servicios_id', $request->idbloque)
-                ->where('activo', 1) // app cliente y afiliado
-                ->where('visible', 1) // app cliente
+        // unicamente las categorias disponibles
+        $productos = Categorias::whereIn('id', $pilaIdDisponible)
+            ->where('activo', 1) // app cliente y afiliado
+            ->where('visible', 1) // app cliente
+            ->orderBy('posicion', 'ASC')
+            ->get();
+
+        $resultsBloque = array();
+        $index = 0;
+
+        foreach($productos as $secciones){
+            array_push($resultsBloque,$secciones);
+
+            $subSecciones = Producto::where('categorias_id', $secciones->id)
+                ->where('activo', 1) // para inactivarlo solo para administrador
                 ->orderBy('posicion', 'ASC')
                 ->get();
 
-            $resultsBloque = array();
-            $index = 0;
-
-            foreach($productos as $secciones){
-                array_push($resultsBloque,$secciones);
-
-                $subSecciones = Producto::where('categorias_id', $secciones->id)
-                    ->where('activo', 1) // para inactivarlo solo para administrador
-                    ->orderBy('posicion', 'ASC')
-                    ->get();
-
-                $resultsBloque[$index]->productos = $subSecciones; //agregar los productos en la sub seccion
-                $index++;
-            }
-
-            return [
-                'success' => 1,
-                'productos' => $productos,
-            ];
+            $resultsBloque[$index]->productos = $subSecciones; //agregar los productos en la sub seccion
+            $index++;
         }
-        else{
-            return ['success' => 2];
-        }
+
+        return [
+            'success' => 1,
+            'productos' => $productos,
+        ];
     }
 
     public function listadoEventos(){

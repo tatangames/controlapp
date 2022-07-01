@@ -41,7 +41,16 @@ class ApiOrdenesController extends Controller
                 $infoDireccion = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
 
                 $o->direccion = $infoDireccion->direccion;
+
                 $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
+
+                if($o->tipoentrega == 1){
+                    $entrega = "A Domicilio";
+                }else{
+                    $entrega = "Pasar a Traer a Local";
+                }
+
+                $o->entrega = $entrega;
             }
 
             return ['success' => 1, 'ordenes' => $orden];
@@ -293,7 +302,14 @@ class ApiOrdenesController extends Controller
                 $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
 
                 $infoCliente = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
-                $o->direccion = $infoCliente->direccion;
+
+                if($o->tipoentrega == 1){
+                    $o->entrega = "A Domicilio";
+                    $o->direccion = $infoCliente->direccion;
+                }else{
+                    $o->direccion = "";
+                    $o->entrega = "Pasar a Traer a Local";
+                }
             }
 
             return ['success' => 1, 'historial' => $orden];
