@@ -11,6 +11,7 @@
                                 <th>Orden</th>
                                 <th>Fecha</th>
                                 <th>Venta</th>
+                                <th>Entrega</th>
                                 <th>Cliente</th>
                                 <th>Estado</th>
                                 <th>Calificación</th>
@@ -25,6 +26,11 @@
                                     <td>{{ $dato->id }}</td>
                                     <td>{{ $dato->fecha_orden }}</td>
                                     <td>{{ $dato->precio_consumido }}</td>
+                                    @if($dato->tipoentrega == 1)
+                                        <td>A Domicilio</td>
+                                    @else
+                                        <td>Entrega en Local</td>
+                                    @endif
                                     <td>{{ $dato->cliente }}</td>
                                     <td>{{ $dato->estado }}</td>
                                     <td>{{ $dato->calificacion }}</td>

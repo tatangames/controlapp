@@ -78,8 +78,9 @@ class ApiMotoristasController extends Controller
             }
 
             $orden = Ordenes::where('estado_5', 0)
-                ->where('estado_2', 1) // inicia la orden
+                ->where('estado_2', 1) // inicia la orden a prepararse
                 ->where('estado_7', 0) // orden no cancelada
+                ->where('tipoentrega', 1) // solo domicilio
                 ->whereNotIn('id', $pilaOrden)
                 ->get();
 
@@ -91,7 +92,6 @@ class ApiMotoristasController extends Controller
                 $o->telefono = $infoDireccion->telefono;
 
                 $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
-
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
             }
 
