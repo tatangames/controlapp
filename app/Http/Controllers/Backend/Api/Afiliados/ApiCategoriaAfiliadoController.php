@@ -642,11 +642,18 @@ class ApiCategoriaAfiliadoController extends Controller
                 $datos = Motoristas::where('id', $infoM->motoristas_id)->first();
                 $motorista = $datos->nombre;
             }
+            $o->motorista = $motorista;
 
-
+            if($o->tipoentrega == 1){
+                $o->entrega = "A Domicilio";
+                $o->direccion = $infoOrden->direccion;
+            }else{
+                $o->entrega = "Entrega en Local";
+                $o->direccion = "";
+            }
         }
 
-        return ['success' => 1, 'ordenes' => $orden];
+        return ['success' => 1];
     }
 
 
