@@ -318,8 +318,8 @@
                 });
         }
 
-        function verCategorias(id) {
-            window.location.href="{{ url('/admin/categorias/') }}/"+id;
+        function verCategorias() {
+            window.location.href="{{ url('/admin/categorias/') }}";
         }
 
         function verEventos() {

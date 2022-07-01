@@ -114,8 +114,8 @@ Route::post('/admin/sliders/informacion', [CategoriasController::class,'informac
 Route::post('/admin/sliders/editar', [CategoriasController::class,'editarSlider']);
 
 // --- CATEGORIAS ---
-Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
-Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);
+Route::get('/admin/categorias', [CategoriasController::class,'indexCategorias']);
+Route::get('/admin/categorias/tablas', [CategoriasController::class,'tablaCategorias']);
 Route::post('/admin/categorias/nuevo', [CategoriasController::class,'nuevaCategorias']);
 Route::post('/admin/categorias/informacion', [CategoriasController::class,'informacionCategorias']);
 Route::post('/admin/categorias/editar', [CategoriasController::class,'editarCategorias']);
