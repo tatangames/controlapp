@@ -115,7 +115,7 @@ class HorarioController extends Controller
             InformacionAdmin::where('id', $request->id)->update([
                 'mensaje_cerrado' => $request->mensaje,
                 'cerrado' => $request->cbcerrado,
-                'activo_noti' => $request->cbnoti
+                'domicilio' => $request->cbnoti
             ]);
 
             return ['success' => 1];
