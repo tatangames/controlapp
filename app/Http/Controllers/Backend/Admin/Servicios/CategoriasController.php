@@ -195,6 +195,9 @@ class CategoriasController extends Controller
         $ca->bloque_servicios_id = $request->id;
         $ca->nombre = $request->nombre;
         $ca->activo = 1;
+        $ca->usahorario = $request->toggle;
+        $ca->hora1 = $request->hora1;
+        $ca->hora2 = $request->hora2;
         $ca->visible = 1;
         $ca->posicion = $suma;
 
@@ -240,7 +243,10 @@ class CategoriasController extends Controller
             Categorias::where('id', $request->id)->update([
                 'nombre' => $request->nombre,
                 'activo' => $request->cbactivo,
-                'visible' => $request->cbvisible
+                'visible' => $request->cbvisible,
+                'usahorario' => $request->toggle,
+                'hora1' => $request->hora1,
+                'hora2' => $request->hora2,
             ]);
             return ['success' => 1];
         }else{
