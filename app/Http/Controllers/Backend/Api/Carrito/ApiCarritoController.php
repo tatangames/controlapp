@@ -275,7 +275,7 @@ class ApiCarritoController extends Controller
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
                 $minimo = 0; // si es 1: si supera el minimo de consumo
 
-                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_compra;
+                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
                 // solo aplica si es adomicilio
                 if($request->metodo == 1){
