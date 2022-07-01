@@ -640,12 +640,14 @@ class ApiCategoriaAfiliadoController extends Controller
                 $calificada = "";
                 $motorista = "";
 
-
-                if($o->tipoentrega == 1){
-                    $o->entrega = "A Domicilio";
-                }else{
-                    $o->entrega = "Entrega en Local";
+                if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
+                    if($infoC->mensaje != null) {
+                        $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
+                    }else{
+                        $calificada = "#" . $infoC->experiencia;
+                    }
                 }
+
 
                 $o->calificada = $calificada;
                 $o->motorista = $motorista;
