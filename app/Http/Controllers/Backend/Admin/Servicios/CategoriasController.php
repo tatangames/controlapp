@@ -167,13 +167,13 @@ class CategoriasController extends Controller
 
     public function indexCategorias(){
 
-        return view('backend.admin.categorias.vistacategorias');
+        return view('backend.admin.categorias.vistaCategorias');
     }
 
     // tabla
     public function tablaCategorias(){
         $categorias = Categorias::orderBy('posicion')->get();
-        return view('backend.admin.categorias.tablacategorias', compact('categorias'));
+        return view('backend.admin.categorias.tablaCategorias', compact('categorias'));
     }
 
     public function nuevaCategorias(Request $request){
