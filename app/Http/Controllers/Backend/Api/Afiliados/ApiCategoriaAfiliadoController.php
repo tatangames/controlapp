@@ -36,7 +36,6 @@ class ApiCategoriaAfiliadoController extends Controller
 
             $categorias = Categorias::orderBy('posicion', 'ASC')
                 ->where('activo', 1)
-                ->whereNotIn('bloque_servicios_id', [1])
                 ->get();
 
             return ['success'=> 1, 'categorias'=> $categorias];
@@ -174,7 +173,6 @@ class ApiCategoriaAfiliadoController extends Controller
         if(Afiliados::where('id', $request->id)->first()){
 
             $lista = Categorias::where('activo', 1)
-                ->whereNotIn('bloque_servicios_id', [1])
                 ->orderBy('posicion', 'ASC')
                 ->get();
 
