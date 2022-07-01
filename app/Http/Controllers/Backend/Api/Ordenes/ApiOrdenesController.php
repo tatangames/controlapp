@@ -367,22 +367,33 @@ class ApiOrdenesController extends Controller
         if($or = Ordenes::where('id', $request->ordenid)->first()){
 
             if(MotoristasExperiencia::where('ordenes_id', $or->id)->first()){
-               return ['success' => 1]; // ya hay una valoracion
+                return ['success' => 1]; // ya hay una valoracion
             }
 
-            // sacar id del motorista de la orden
-            $motoristaDato = MotoristasOrdenes::where('ordenes_id', $or->id)->first();
+            if($info = MotoristasOrdenes::where('ordenes_id', $or->id)->first()){
 
-            $idMotorista = $motoristaDato->motoristas_id;
-            $fecha = Carbon::now('America/El_Salvador');
+                $fecha = Carbon::now('America/El_Salvador');
+                $nueva = new MotoristasExperiencia();
+                $nueva->ordenes_id = $or->id;
+                $nueva->motoristas_id = $info->motoristas_id;
+                $nueva->experiencia = $request->valor;
+                $nueva->mensaje = $request->mensaje;;
+                $nueva->fecha = $fecha;
+                $nueva->save();
 
-            $nueva = new MotoristasExperiencia();
-            $nueva->ordenes_id = $or->id;
-            $nueva->motoristas_id = $idMotorista;
-            $nueva->experiencia = $request->valor;
-            $nueva->mensaje = $request->mensaje;;
-            $nueva->fecha = $fecha;
-            $nueva->save();
+            }else{
+
+                // la orden fue entregada localmente
+                $fecha = Carbon::now('America/El_Salvador');
+
+                $nueva = new MotoristasExperiencia();
+                $nueva->ordenes_id = $or->id;
+                $nueva->motoristas_id = null;
+                $nueva->experiencia = $request->valor;
+                $nueva->mensaje = $request->mensaje;;
+                $nueva->fecha = $fecha;
+                $nueva->save();
+            }
 
             // ocultar orden al usuario
             Ordenes::where('id', $or->id)->update(['visible' => 0]);
