@@ -173,7 +173,6 @@ class CategoriasController extends Controller
     // tabla
     public function tablaCategorias(){
         $categorias = Categorias::orderBy('posicion')->get();
-
         return view('backend.admin.categorias.tablacategorias', compact('categorias'));
     }
 
