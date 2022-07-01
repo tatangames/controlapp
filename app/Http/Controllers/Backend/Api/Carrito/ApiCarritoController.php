@@ -40,7 +40,6 @@ class ApiCarritoController extends Controller
 
                 $estadoProductoGlobal = 0; // saver si producto esta activo
 
-
                 // preguntar si usuario ya tiene un carrito de compras
                 if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
                     $producto = DB::table('producto AS p')
@@ -73,14 +72,15 @@ class ApiCarritoController extends Controller
                     // sub total de la orden
                     $subTotal = collect($producto)->sum('precio'); // sumar todos el precio
 
-                    //** validacion de horarios */
-
+                    // informacion sistema
+                    $infoSistema = InformacionAdmin::where('id', 1)->first();
 
                     return [
                         'success' => 1,
                         'subtotal' => number_format((float)$subTotal, 2, '.', ','), // subtotal
                         'estadoProductoGlobal' => $estadoProductoGlobal, // saver si producto esta activo
                         'producto' => $producto, //todos los productos
+                        'domicilio' => $infoSistema->domicilio
                     ];
 
                 }else{
