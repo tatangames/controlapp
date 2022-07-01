@@ -165,14 +165,14 @@ class CategoriasController extends Controller
 
     // *** CATEGORIAS *** //
 
-    public function indexCategorias(){
-        return view('backend.admin.categorias.vistacategorias');
+    public function indexCategorias($id){
+        return view('backend.admin.categorias.vistacategorias', compact('id'));
     }
 
     // tabla
-    public function tablaCategorias(){
-        $categorias = Categorias::orderBy('posicion')->get();
-        return view('backend.admin.categorias.tablacategorias', compact('categorias'));
+    public function tablaCategorias($id){
+        $categorias = Categorias::where('bloqueservicio_id', $id)->orderBy('posicion')->get();
+        return view('backend.admin.categorias.tablacategorias', compact('categorias', 'id'));
     }
 
     public function nuevaCategorias(Request $request){
@@ -185,7 +185,8 @@ class CategoriasController extends Controller
 
         if ($validar->fails()){return ['success' => 0]; }
 
-        if($info = Categorias::orderBy('posicion', 'DESC')->first()){
+        if($info = Categorias::where('bloqueservicio_id', $request->id)
+        ->orderBy('posicion', 'DESC')->first()){
             $suma = $info->posicion + 1;
         }else{
             $suma = 1;
@@ -199,6 +200,7 @@ class CategoriasController extends Controller
         $ca->hora2 = $request->hora2;
         $ca->visible = 1;
         $ca->posicion = $suma;
+        $ca->bloqueservicio_id = $request->id;
 
         if($ca->save()){
             return ['success' => 1];
@@ -246,6 +248,7 @@ class CategoriasController extends Controller
                 'usahorario' => $request->toggle,
                 'hora1' => $request->hora1,
                 'hora2' => $request->hora2,
+                'bloqueservicio_id' => $request->idc
             ]);
             return ['success' => 1];
         }else{
@@ -255,7 +258,7 @@ class CategoriasController extends Controller
 
     public function ordenarCategorias(Request $request){
 
-        $tasks = Categorias::all();
+        $tasks = Categorias::where('bloqueservicio_id', $request->idc)->get();
 
         foreach ($tasks as $task) {
             $id = $task->id;

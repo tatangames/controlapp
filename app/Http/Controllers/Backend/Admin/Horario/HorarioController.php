@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Horario;
 use App\Models\InformacionAdmin;
 use App\Models\IntentosCorreo;
+use App\Models\TipoServicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -139,6 +140,82 @@ class HorarioController extends Controller
         return view('backend.admin.intentos.tablaintentocorreo', compact('correos'));
     }
 
+
+
+    // ******** TIPO DE SERVICIO /****************
+
+    public function indexTipoServicio(){
+        return view('backend.admin.tipo.vistatipos');
+    }
+
+    public function tablaTipoServicio(){
+
+        $lista = TipoServicio::get();
+
+        return view('backend.admin.tipo.tablatipos', compact('lista'));
+
+    }
+
+    public function nuevoTipoServicio(Request $request){
+
+        $regla = array(
+            'nombre' => 'required'
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){return ['success' => 0]; }
+
+        $ca = new TipoServicio();
+        $ca->nombre = $request->nombre;
+        if($ca->save()){
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+    public function informacionTipoServicio(Request $request){
+
+
+        $regla = array(
+            'id' => 'required',
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){return ['success' => 0]; }
+
+        if($bloque = TipoServicio::where('id', $request->id)->first()){
+
+            return ['success' => 1, 'tipo' => $bloque];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+
+    public function editarTipoServicio(Request $request){
+
+        $rules = array(
+            'id' => 'required',
+            'nombre' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()){return ['success' => 0]; }
+
+        if(TipoServicio::where('id', $request->id)->first()){
+
+            TipoServicio::where('id', $request->id)->update([
+                'nombre' => $request->nombre,
+            ]);
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+    }
 
 
 

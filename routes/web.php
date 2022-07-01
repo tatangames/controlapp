@@ -114,8 +114,8 @@ Route::post('/admin/sliders/informacion', [CategoriasController::class,'informac
 Route::post('/admin/sliders/editar', [CategoriasController::class,'editarSlider']);
 
 // --- CATEGORIAS ---
-Route::get('/admin/categorias', [CategoriasController::class,'indexCategorias']);
-Route::get('/admin/categorias/tablas', [CategoriasController::class,'tablaCategorias']);
+Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
+Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);
 Route::post('/admin/categorias/nuevo', [CategoriasController::class,'nuevaCategorias']);
 Route::post('/admin/categorias/informacion', [CategoriasController::class,'informacionCategorias']);
 Route::post('/admin/categorias/editar', [CategoriasController::class,'editarCategorias']);
@@ -173,5 +173,11 @@ Route::post('/admin/configuracion/editar', [HorarioController::class,'editarConf
 Route::get('/admin/intentos-correo/lista', [HorarioController::class, 'indexIntentosCorreo'])->name('index.intentos.correo');
 Route::get('/admin/intentos-correo/tabla/lista', [HorarioController::class, 'tablaIntentosCorreo']);
 
+// --- TIPO DE SERVICIO ---
+Route::get('/admin/tiposervicio/index', [HorarioController::class, 'indexTipoServicio'])->name('index.tiposervicio');
+Route::get('/admin/tiposervicio/tabla', [HorarioController::class, 'tablaTipoServicio']);
+Route::post('/admin/tiposervicio/nuevo', [HorarioController::class, 'nuevoTipoServicio']);
+Route::post('/admin/tiposervicio/informacion', [HorarioController::class,'informacionTipoServicio']);
+Route::post('/admin/tiposervicio/editar', [HorarioController::class,'editarTipoServicio']);
 
 

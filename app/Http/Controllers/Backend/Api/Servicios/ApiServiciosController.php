@@ -22,7 +22,8 @@ class ApiServiciosController extends Controller
 
         // se necesita verificar que categorias utilizan horarios para mostrarse y crear una lista de Id
         // obtener lista de id que utilizan horarios
-        $listaIdHorario = Categorias::where('usahorario', 1)->get();
+        $listaIdHorario = Categorias::where('bloqueservicio_id', $request->categoria)
+        ->where('usahorario', 1)->get();
         $pilaIdDisponible = array();
 
         // verificar si esta categoria por horario estara disponible
@@ -41,7 +42,8 @@ class ApiServiciosController extends Controller
         }
 
         // obtener todos los id categorias que no utilizan horario
-        $listaNoHorario = Categorias::where('usahorario', 0)->get();
+        $listaNoHorario = Categorias::where('bloqueservicio_id', $request->categoria)
+        ->where('usahorario', 0)->get();
 
         // meter estos id a la lista tambien
         foreach ($listaNoHorario as $ln){
@@ -52,6 +54,7 @@ class ApiServiciosController extends Controller
         $productos = Categorias::whereIn('id', $pilaIdDisponible)
             ->where('activo', 1) // app cliente y afiliado
             ->where('visible', 1) // app cliente
+            ->where('bloqueservicio_id', $request->categoria)
             ->orderBy('posicion', 'ASC')
             ->get();
 

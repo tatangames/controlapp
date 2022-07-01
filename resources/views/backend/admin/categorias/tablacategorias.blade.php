@@ -81,10 +81,13 @@
                 });
             });
 
+            var idc = {{ $id }};
+
             openLoading();
 
             axios.post('/admin/categorias/ordenar',  {
-                'order': order
+                'order': order,
+                'idc' : idc
             })
                 .then((response) => {
                     closeLoading();

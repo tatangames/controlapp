@@ -34,7 +34,7 @@ Route::post('cliente/perfil/cambiar-password', [ApiPerfilController::class, 'cam
 // --- BLOQUE DE SERVICIOS ---
 Route::post('cliente/lista/servicios-bloque', [ApiZonasServiciosController::class, 'listadoBloque']);
 
-Route::get('cliente/servicios/listado/menu', [ApiServiciosController::class, 'listadoMenuVertical']);
+Route::post('cliente/servicios/listado/menu', [ApiServiciosController::class, 'listadoMenuVertical']);
 Route::post('cliente/informacion/producto', [ApiProductosController::class, 'infoProductoIndividual']);
 Route::post('cliente/carrito/producto/agregar', [ApiProductosController::class, 'agregarProductoCarritoTemporal']);
 

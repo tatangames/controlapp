@@ -196,7 +196,8 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var ruta = "{{ URL::to('/admin/categorias/tablas') }}";
+            var id = {{ $id }};
+            var ruta = "{{ URL::to('/admin/categorias/tablas') }}/" + id;
             $('#tablaDatatable').load(ruta);
         });
     </script>
@@ -204,7 +205,8 @@
     <script>
 
         function recargar(){
-            var ruta = "{{ URL::to('/admin/categorias/tablas') }}";
+            var id = {{ $id }};
+            var ruta = "{{ URL::to('/admin/categorias/tablas') }}/" + id;
             $('#tablaDatatable').load(ruta);
         }
 
@@ -246,11 +248,14 @@
 
             openLoading();
 
+            var id = {{ $id }};
+
             var formData = new FormData();
             formData.append('nombre', nombre);
             formData.append('toggle', toggleHorario);
             formData.append('hora1', hora1);
             formData.append('hora2', hora2);
+            formData.append('id', id);
 
             axios.post('/admin/categorias/nuevo', formData, {
             })
@@ -353,6 +358,8 @@
                 return;
             }
 
+            var id = {{ $id }};
+
             openLoading();
             var formData = new FormData();
             formData.append('id', id);
@@ -362,6 +369,7 @@
             formData.append('toggle', toggleHorario);
             formData.append('hora1', hora1);
             formData.append('hora2', hora2);
+            formData.append('idc', id);
 
             axios.post('/admin/categorias/editar', formData, {
             })
