@@ -653,7 +653,7 @@ class ApiCategoriaAfiliadoController extends Controller
             }
         }
 
-        return ['success' => 1];
+        return ['success' => 1, 'ordenes' => $orden];
     }
 
 
