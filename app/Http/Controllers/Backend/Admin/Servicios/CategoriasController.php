@@ -192,7 +192,6 @@ class CategoriasController extends Controller
         }
 
         $ca = new Categorias();
-        $ca->bloque_servicios_id = $request->id;
         $ca->nombre = $request->nombre;
         $ca->activo = 1;
         $ca->usahorario = $request->toggle;
