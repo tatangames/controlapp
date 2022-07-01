@@ -607,7 +607,7 @@ class ApiCategoriaAfiliadoController extends Controller
         $orden = Ordenes::where('estado_3', 1)
             ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
             ->get();
-        return ['success' => 1, 'ordenes' => $orden];
+
         foreach($orden as $o){
 
             $infoOrden = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
@@ -626,31 +626,7 @@ class ApiCategoriaAfiliadoController extends Controller
 
             $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
 
-            $calificada = "";
-            $motorista = "";
 
-            if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
-                if($infoC->mensaje != null) {
-                    $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
-                }else{
-                    $calificada = "#" . $infoC->experiencia;
-                }
-            }
-            $o->calificada = $calificada;
-
-            if($infoM = MotoristasOrdenes::where('ordenes_id', $o->id)->first()){
-                $datos = Motoristas::where('id', $infoM->motoristas_id)->first();
-                $motorista = $datos->nombre;
-            }
-            $o->motorista = $motorista;
-
-            if($o->tipoentrega == 1){
-                $o->entrega = "A Domicilio";
-                $o->direccion = $infoOrden->direccion;
-            }else{
-                $o->entrega = "Entrega en Local";
-                $o->direccion = "";
-            }
         }
 
         return ['success' => 1, 'ordenes' => $orden];
