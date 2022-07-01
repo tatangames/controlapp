@@ -612,8 +612,6 @@ class ApiCategoriaAfiliadoController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-        return ['success' => 1];
-
         if(Afiliados::where('id', $request->id)->first()){
 
             $orden = Ordenes::where('estado_3', 1)
