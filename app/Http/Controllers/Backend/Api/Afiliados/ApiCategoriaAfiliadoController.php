@@ -637,6 +637,30 @@ class ApiCategoriaAfiliadoController extends Controller
 
                 $o->precio_consumido = number_format((float)$o->precio_consumido, 2, '.', ',');
 
+                $calificada = "";
+                $motorista = "";
+
+                if($infoC = MotoristasExperiencia::where('ordenes_id', $o->id)->first()){
+                    if($infoC->mensaje != null) {
+                        $calificada = "#" . $infoC->experiencia . " | " . $infoC->mensaje;
+                    }else{
+                        $calificada = "#" . $infoC->experiencia;
+                    }
+                }
+
+                if($infoM = MotoristasOrdenes::where('ordenes_id', $o->id)->first()){
+                    $datos = Motoristas::where('id', $infoM->motoristas_id)->first();
+                    $motorista = $datos->nombre;
+                }
+
+                if($o->tipoentrega == 1){
+                    $o->entrega = "A Domicilio";
+                }else{
+                    $o->entrega = "Entrega en Local";
+                }
+
+                $o->calificada = $calificada;
+                $o->motorista = $motorista;
 
             }
 
