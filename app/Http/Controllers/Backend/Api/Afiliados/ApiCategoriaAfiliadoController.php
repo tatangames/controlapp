@@ -612,7 +612,9 @@ class ApiCategoriaAfiliadoController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-        if($p = Afiliados::where('id', $request->id)->first()){
+        return ['success' => 1];
+
+        if(Afiliados::where('id', $request->id)->first()){
 
             $orden = Ordenes::where('estado_3', 1)
                 ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
