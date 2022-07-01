@@ -279,7 +279,7 @@ class ApiCarritoController extends Controller
 
                 // solo aplica si es adomicilio
                 if($request->metodo == 1){
-                    if($subtotal >= $infoZona->minimo_compra){
+                    if($subtotal >= $infoZona->minimo_consumo){
                         // si puede ordenar
                         $minimo = 1;
                     }
