@@ -123,8 +123,6 @@ Route::post('afiliado/categoria/horario-guardar', [ApiCategoriaAfiliadoControlle
 
 
 
-
-
 // ****--------------  MOTORISTAS  ---------------- **** //
 Route::post('motorista/login', [ApiMotoristasController::class, 'loginMotorista']);
 Route::post('motorista/ver/nueva/ordenes', [ApiMotoristasController::class, 'verNuevasOrdenes']);
