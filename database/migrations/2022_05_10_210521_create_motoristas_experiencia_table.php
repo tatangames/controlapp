@@ -16,7 +16,7 @@ class CreateMotoristasExperienciaTable extends Migration
         Schema::create('motoristas_experiencia', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('ordenes_id')->unsigned();
-            $table->bigInteger('motoristas_id')->unsigned();
+            $table->bigInteger('motoristas_id')->unsigned()->nullable();
             $table->integer('experiencia');
             $table->string('mensaje', 500)->nullable();
             $table->dateTime('fecha');
