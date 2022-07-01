@@ -24,10 +24,11 @@
         <div class="row">
             <h1>Servicios</h1>
 
-            <button type="button" style="margin-left: 30px" onclick="modalNuevo()" class="btn btn-info btn-sm">
+          <!--  <button type="button" style="margin-left: 30px" onclick="modalNuevo()" class="btn btn-info btn-sm">
                 <i class="fas fa-pencil-alt"></i>
                 Nuevo Servicio
             </button>
+            -->
         </div>
 
     </div>
