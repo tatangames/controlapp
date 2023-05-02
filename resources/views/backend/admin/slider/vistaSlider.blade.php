@@ -69,6 +69,22 @@
                         <div class="row">
                             <div class="col-md-12">
 
+
+                                <div class="form-group" style="margin-left:0px">
+                                    <label>Redirecciona a Producto?</label><br>
+                                    <label class="switch" style="margin-top:10px">
+                                        <input type="checkbox" id="toggle-redireccion">
+                                        <div class="slider round">
+                                            <span class="on">Sí</span>
+                                            <span class="off">No</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>En caso que no redireccione a ningun Producto, puede seleccionar cualquier categoría</label>
+                                </div>
+
                                 <div class="form-group">
                                     <label>Producto:</label>
                                     <select class="form-control" id="select-producto-nuevo">
@@ -80,7 +96,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Descripción</label>
+                                    <label>Descripción (no visible en Aplicación)</label>
                                     <input type="text" maxlength="300" autocomplete="off" class="form-control" id="nombre-nuevo" placeholder="Descripción">
                                 </div>
 
@@ -124,6 +140,22 @@
                     <div class="card-body">
                         <div class="col-md-12">
 
+
+                            <div class="form-group" style="margin-left:0px">
+                                <label>Redirecciona a Producto?</label><br>
+                                <label class="switch" style="margin-top:10px">
+                                    <input type="checkbox" id="toggle-redire-editar">
+                                    <div class="slider round">
+                                        <span class="on">Sí</span>
+                                        <span class="off">No</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>En caso que no redireccione a ningun Producto, puede seleccionar cualquier categoría</label>
+                            </div>
+
                             <div class="form-group">
                                 <label>Producto:</label>
                                 <select class="form-control" id="select-producto-editar">
@@ -146,6 +178,7 @@
                                     <input type="file" style="color:#191818" id="imagen-editar" accept="image/jpeg, image/jpg, image/png"/>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>
@@ -221,6 +254,10 @@
             var nombre = document.getElementById('nombre-nuevo').value;
             var imagen = document.getElementById('imagen-nuevo');
             var producto = document.getElementById('select-producto-nuevo').value;
+            var cbcategoria = document.getElementById('toggle-redireccion').checked;
+
+            var check_redireccion = cbcategoria ? 1 : 0;
+
 
             if(nombre.length > 300){
                 toastr.error('Descripción máximo 300 caracteres');
@@ -243,6 +280,7 @@
             formData.append('nombre', nombre);
             formData.append('imagen', imagen.files[0]);
             formData.append('producto', producto);
+            formData.append('toredireccion', check_redireccion);
 
             axios.post('/admin/sliders/nuevo', formData, {
             })
@@ -294,6 +332,13 @@
                             }
                         });
 
+
+                        if(response.data.slider.redireccionamiento === 0){
+                            $("#toggle-redire-editar").prop("checked", false);
+                        }else{
+                            $("#toggle-redire-editar").prop("checked", true);
+                        }
+
                     }else{
                         toastr.error('Error al buscar');
                     }
@@ -310,6 +355,9 @@
             var nombre = document.getElementById('nombre-editar').value;
             var imagen = document.getElementById('imagen-editar');
             var producto = document.getElementById('select-producto-editar').value;
+            var cbredire = document.getElementById('toggle-redire-editar').checked;
+
+            var check_redire = cbredire ? 1 : 0;
 
             if(nombre.length > 300){
                 toastr.error('Descripción máximo 300 caracteres');
@@ -329,6 +377,8 @@
             formData.append('nombre', nombre);
             formData.append('imagen', imagen.files[0]);
             formData.append('producto', producto);
+            formData.append('checkredirec', check_redire);
+
 
             axios.post('/admin/sliders/editar', formData, {
             })

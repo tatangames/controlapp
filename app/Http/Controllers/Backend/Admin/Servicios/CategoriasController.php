@@ -8,6 +8,7 @@ use App\Models\BloqueSlider;
 use App\Models\Categorias;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -232,6 +233,7 @@ class CategoriasController extends Controller
 
         $rules = array(
             'id' => 'required',
+            'ide' => 'required',
             'nombre' => 'required'
         );
 
@@ -239,16 +241,16 @@ class CategoriasController extends Controller
 
         if ($validator->fails()){return ['success' => 0]; }
 
-        if(Categorias::where('id', $request->id)->first()){
+        if(Categorias::where('id', $request->ide)->first()){
 
-            Categorias::where('id', $request->id)->update([
+            Categorias::where('id', $request->ide)->update([
                 'nombre' => $request->nombre,
                 'activo' => $request->cbactivo,
                 'visible' => $request->cbvisible,
                 'usahorario' => $request->toggle,
                 'hora1' => $request->hora1,
                 'hora2' => $request->hora2,
-                'bloqueservicio_id' => $request->idc
+                'bloqueservicio_id' => $request->id
             ]);
             return ['success' => 1];
         }else{
@@ -538,6 +540,9 @@ class CategoriasController extends Controller
                 $ca->imagen = $nombreFoto;
                 $ca->posicion = $suma;
                 $ca->id_producto = $request->producto;
+                $ca->redireccionamiento = $request->toredireccion;
+
+
 
                 if($ca->save()){
                     return ['success' => 1];
@@ -613,6 +618,8 @@ class CategoriasController extends Controller
 
     public function editarSlider(Request $request){
 
+        Log::info($request->all());
+
         if($info = BloqueSlider::where('id', $request->id)->first()){
 
             if($request->hasFile('imagen')){
@@ -633,7 +640,8 @@ class CategoriasController extends Controller
                     BloqueSlider::where('id', $request->id)->update([
                         'descripcion' => $request->nombre,
                         'imagen' => $nombreFoto,
-                        'id_producto' => $request->producto
+                        'id_producto' => $request->producto,
+                        'redireccionamiento' => $request->checkredirec
                     ]);
 
                     if(Storage::disk('imagenes')->exists($imagenOld)){
@@ -649,7 +657,8 @@ class CategoriasController extends Controller
 
                 BloqueSlider::where('id', $request->id)->update([
                     'descripcion' => $request->nombre,
-                    'id_producto' => $request->producto
+                    'id_producto' => $request->producto,
+                    'redireccionamiento' => $request->checkredirec
                 ]);
             }
 

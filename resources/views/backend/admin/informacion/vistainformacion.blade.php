@@ -22,7 +22,7 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="row">
-            <h1>Horarios</h1>
+            <h1>Configuración</h1>
         </div>
 
     </div>
@@ -32,7 +32,7 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header" id="card-header-color">
-                <h3 class="card-title" style="color: white">Configuración</h3>
+                <h3 class="card-title" style="color: white">Información</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -90,6 +90,26 @@
                                         </div>
                                     </label>
                                 </div>
+
+
+                                <hr>
+
+                                <div class="form-group">
+                                    <label>Esto es el Carrusel de Imagenes que se muestra al Inicio</label>
+                                </div>
+
+                                <div class="form-group" style="margin-left:0px">
+                                    <label>Habilitar Slider</label><br>
+                                    <label class="switch" style="margin-top:10px">
+                                        <input type="checkbox" id="toggle-carrusel">
+                                        <div class="slider round">
+                                            <span class="on">Si</span>
+                                            <span class="off">No</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+
 
                             </div>
 
@@ -160,6 +180,12 @@
                             $("#toggle-noti").prop("checked", true);
                         }
 
+                        if(response.data.info.activo_slider === 0){
+                            $("#toggle-carrusel").prop("checked", false);
+                        }else{
+                            $("#toggle-carrusel").prop("checked", true);
+                        }
+
                     }else{
                         toastr.error('Error al Buscar');
                     }
@@ -175,9 +201,13 @@
             var mensaje = document.getElementById('mensaje').value;
             var tp = document.getElementById('toggle-cerrado').checked;
             var tn = document.getElementById('toggle-noti').checked;
+            var cbslider = document.getElementById('toggle-carrusel').checked;
+
 
             var toggleCerrado = tp ? 1 : 0;
             var toggleNoti = tn ? 1 : 0;
+            var toggleCarrusel = cbslider ? 1 : 0;
+
 
             if(mensaje === ''){
                 toastr.error('Mensaje de Cerrado es Requerido');
@@ -196,6 +226,7 @@
             formData.append('mensaje', mensaje);
             formData.append('cbcerrado', toggleCerrado);
             formData.append('cbnoti', toggleNoti);
+            formData.append('cbcarrusel', toggleCarrusel);
 
             axios.post('/admin/configuracion/editar', formData, {
             })

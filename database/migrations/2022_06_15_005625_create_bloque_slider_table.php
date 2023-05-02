@@ -21,6 +21,9 @@ class CreateBloqueSliderTable extends Migration
             $table->string('descripcion', 300)->nullable();
             $table->integer('posicion');
 
+            // redireccionamiento en app cliente al tocar slider
+            $table->boolean('redireccionamiento');
+
             $table->foreign('id_producto')->references('id')->on('producto');
         });
     }

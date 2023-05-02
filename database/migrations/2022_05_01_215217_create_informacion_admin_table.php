@@ -24,6 +24,11 @@ class CreateInformacionAdminTable extends Migration
             // 0- solo habra domicilio
             // 1- si habra local y domicilio
             $table->boolean('domicilio');
+
+            // ocultar slider
+            $table->boolean('activo_slider');
+
+
         });
     }
 

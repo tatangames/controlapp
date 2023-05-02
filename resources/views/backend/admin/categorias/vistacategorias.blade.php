@@ -325,7 +325,7 @@
 
         function editar(){
 
-            var id = document.getElementById('id-editar').value;
+            var ide = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
             var cbactivo = document.getElementById('toggle-activo').checked;
             var cbvisible = document.getElementById('toggle-visible').checked;
@@ -358,18 +358,19 @@
                 return;
             }
 
+            // bloque de servicios
             var id = {{ $id }};
 
             openLoading();
             var formData = new FormData();
             formData.append('id', id);
+            formData.append('ide', ide); // a modificar
             formData.append('nombre', nombre);
             formData.append('cbactivo', check_activo);
             formData.append('cbvisible', check_visible);
             formData.append('toggle', toggleHorario);
             formData.append('hora1', hora1);
             formData.append('hora2', hora2);
-            formData.append('idc', id);
 
             axios.post('/admin/categorias/editar', formData, {
             })

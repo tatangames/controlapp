@@ -7,6 +7,7 @@ use App\Models\BloqueServicios;
 use App\Models\BloqueSlider;
 use App\Models\Clientes;
 use App\Models\DireccionCliente;
+use App\Models\InformacionAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -40,17 +41,31 @@ class ApiZonasServiciosController extends Controller
             ->get();
 
         $slider = BloqueSlider::orderBy('posicion')->get();
-
+        $lleva = false;
         foreach ($slider as $ss){
+            $lleva = true;
+
+            if($ss->redireccionamiento == 0){
+                $ss->id_producto = 0;
+            }
+
             if($ss->id_producto == null){
                 $ss->id_producto = 0;
             }
         }
 
+        $infogeneral = InformacionAdmin::where('id', 1)->first();
+        $visibleSlider = $infogeneral->activo_slider;
+
+        if($lleva == false){
+           $visibleSlider = 0;
+        }
+
         return [
             'success' => 2,
             'servicios' => $servicios,
-            'slider' => $slider
+            'slider' => $slider,
+            'activo_slider' => $visibleSlider
         ];
     }
 
