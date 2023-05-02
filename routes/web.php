@@ -8,8 +8,6 @@ use App\Http\Controllers\Backend\Admin\Control\PermisosController;
 use App\Http\Controllers\Backend\Admin\Perfil\PerfilController;
 use App\Http\Controllers\Backend\Admin\Control\EstadisticasController;
 use App\Http\Controllers\Backend\Admin\Mapa\ZonaController;
-use App\Http\Controllers\Backend\Admin\Afiliado\AfiliadoController;
-use App\Http\Controllers\Backend\Admin\Motorista\MotoristaController;
 use App\Http\Controllers\Backend\Admin\Servicios\CategoriasController;
 use App\Http\Controllers\Backend\Admin\Clientes\ClientesController;
 use App\Http\Controllers\Backend\Admin\Eventos\EventosController;
@@ -65,25 +63,6 @@ Route::get('/admin/zona/poligono/{id}', [ZonaController::class,'indexPoligono'])
 Route::post('/zona/poligono/listado-nuevo', [ZonaController::class,'nuevoPoligono']);
 Route::post('/zona/poligono/borrar', [ZonaController::class,'borrarPoligonos']);
 
-// --- AFILIADOS ---
-Route::get('/admin/afiliados/lista', [AfiliadoController::class,'index'])->name('index.afiliados');
-Route::get('/admin/afiliados/tabla/lista', [AfiliadoController::class,'tablaAfiliados']);
-Route::post('/admin/afiliados/nuevo', [AfiliadoController::class,'nuevo']);
-Route::post('/admin/afiliados/informacion', [AfiliadoController::class,'informacion']);
-Route::post('/admin/afiliados/editar', [AfiliadoController::class,'editar']);
-
-// --- MOTORISTAS ---
-Route::get('/admin/motoristas/lista', [MotoristaController::class,'index'])->name('index.motoristas');
-Route::get('/admin/motoristas/tabla/lista', [MotoristaController::class,'tablaMotoristas']);
-Route::post('/admin/motoristas/nuevo', [MotoristaController::class,'nuevo']);
-Route::post('/admin/motoristas/informacion', [MotoristaController::class,'informacion']);
-Route::post('/admin/motoristas/editar', [MotoristaController::class,'editar']);
-
-// --- MOTORISTAS ORDENES ---
-Route::get('/admin/motoristas-ordenes/lista', [MotoristaController::class,'indexMotoristaOrdenes'])->name('index.motoristas.ordenes');
-Route::get('/admin/motoristas-ordenes/tabla/lista', [MotoristaController::class,'tablaMotoristasOrdenes']);
-Route::post('/admin/motoristas-ordenes/informacion', [MotoristaController::class,'informacionMotoristaOrden']);
-Route::post('/admin/motoristas-ordenes/editar', [MotoristaController::class,'editarMotoristaOrden']);
 
 // --- ORDENES ---
 Route::get('/admin/ordenes/lista', [OrdenesController::class,'index'])->name('index.ordenes');
@@ -92,6 +71,23 @@ Route::post('/admin/ordenes/informacion', [OrdenesController::class,'informacion
 
 Route::get('/admin/productos/ordenes/{id}', [OrdenesController::class,'indexProductosOrdenes']);
 Route::get('/admin/productos/ordenes/tabla/{id}', [OrdenesController::class,'tablaOrdenesProducto']);
+
+
+
+// ordenes pendientes
+
+Route::get('/admin/ordenes-pendientes/lista', [OrdenesController::class,'indexOrdenesPendientes'])->name('index.ordenes.pendientes');
+Route::get('/admin/ordenes-pendientes/tabla/lista', [OrdenesController::class,'tablaOrdenesPendientes']);
+
+// iniciar la orden y se envia notificacion al cliente
+Route::post('/admin/ordenes/iniciar', [OrdenesController::class,'iniciarOrden']);
+Route::get('/admin/ordenes/mapa/cliente/{id}', [OrdenesController::class,'verMapaCliente']);
+
+
+
+
+
+
 
 Route::get('/admin/ordenes-hoy/lista', [OrdenesController::class,'indexOrdenHoy'])->name('index.ordenes.hoy');
 Route::get('/admin/ordenes-hoy/tabla/lista', [OrdenesController::class,'tablaOrdenesHoy']);

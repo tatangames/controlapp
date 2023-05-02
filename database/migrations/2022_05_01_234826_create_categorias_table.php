@@ -21,7 +21,6 @@ class CreateCategoriasTable extends Migration
             $table->string('nombre', 200);
             $table->integer('posicion');
             $table->boolean('activo');
-            $table->boolean('visible');
 
             $table->time('hora1');
             $table->time('hora2');

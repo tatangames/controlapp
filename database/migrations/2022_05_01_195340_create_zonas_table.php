@@ -27,10 +27,6 @@ class CreateZonasTable extends Migration
             $table->boolean('saturacion');
             $table->string('mensaje_bloqueo',200)->nullable();
 
-            // horario domicilio a esta zona
-            $table->time('hora_abierto_delivery');
-            $table->time('hora_cerrado_delivery');
-
             // visibilidad de la zona en el mapa
             $table->boolean('activo');
 

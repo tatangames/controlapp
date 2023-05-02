@@ -22,13 +22,6 @@ class ClienteSeeder extends Seeder
             'activo' => '1'
         ])->assignRole('Super-Admin');
 
-        Usuarios::create([
-            'nombre' => 'Revisador',
-            'usuario' => 'revisador',
-            'password' => bcrypt('1234'),
-            'activo' => '1'
-        ])->assignRole('Revisador');
-
 
     }
 }

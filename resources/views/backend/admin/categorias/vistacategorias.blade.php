@@ -140,17 +140,6 @@
                             </div>
 
                             <div class="form-group" style="margin-left:0px">
-                                <label>Visible</label><br>
-                                <label class="switch" style="margin-top:10px">
-                                    <input type="checkbox" id="toggle-visible">
-                                    <div class="slider round">
-                                        <span class="on">Activo</span>
-                                        <span class="off">Inactivo</span>
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="form-group" style="margin-left:0px">
                                 <label>Utiliza Horario?</label><br>
                                 <label class="switch" style="margin-top:10px">
                                     <input type="checkbox" id="toggle-horario-editar">
@@ -298,12 +287,6 @@
                             $("#toggle-activo").prop("checked", true);
                         }
 
-                        if(response.data.categoria.visible === 0){
-                            $("#toggle-visible").prop("checked", false);
-                        }else{
-                            $("#toggle-visible").prop("checked", true);
-                        }
-
                         $('#hora1-editar').val(response.data.categoria.hora1);
                         $('#hora2-editar').val(response.data.categoria.hora2);
 
@@ -328,7 +311,6 @@
             var ide = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
             var cbactivo = document.getElementById('toggle-activo').checked;
-            var cbvisible = document.getElementById('toggle-visible').checked;
             var tp = document.getElementById('toggle-horario-editar').checked;
             var hora1 = document.getElementById('hora1-editar').value;
             var hora2 = document.getElementById('hora2-editar').value;
@@ -346,7 +328,6 @@
             }
 
             var check_activo = cbactivo ? 1 : 0;
-            var check_visible = cbvisible ? 1 : 0;
 
             if(nombre === '') {
                 toastr.error('Nombre es requerido');
@@ -367,7 +348,6 @@
             formData.append('ide', ide); // a modificar
             formData.append('nombre', nombre);
             formData.append('cbactivo', check_activo);
-            formData.append('cbvisible', check_visible);
             formData.append('toggle', toggleHorario);
             formData.append('hora1', hora1);
             formData.append('hora2', hora2);

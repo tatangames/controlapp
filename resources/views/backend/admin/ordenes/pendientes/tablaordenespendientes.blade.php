@@ -9,27 +9,43 @@
                             <thead>
                             <tr>
                                 <th># Orden</th>
-                                <th>Fecha Orden</th>
-                                <th>Motorista</th>
-                                <th>Usuario</th>
-                                <th>Estado (Entregada / Cancelada)</th>
+                                <th>Fecha</th>
+                                <th>Venta</th>
+                                <th>Cliente</th>
+                                <th>Dirección</th>
+                                <th>Referencia</th>
+                                <th>Teléfono</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
                             <tbody>
 
-                            @foreach($motoristas as $dato)
+                            @foreach($ordenes as $dato)
                                 <tr>
-                                    <td>{{ $dato->orden }}</td>
+
+                                    <td>{{ $dato->id }}</td>
                                     <td>{{ $dato->fecha_orden }}</td>
-                                    <td>{{ $dato->nombre }}</td>
-                                    <td>{{ $dato->usuario }}</td>
-                                    <td>{{ $dato->estado }}</td>
+                                    <td>{{ $dato->precio_consumido }}</td>
+
+                                    <td>{{ $dato->cliente }}</td>
+                                    <td>{{ $dato->direccion }}</td>
+                                    <td>{{ $dato->referencia }}</td>
+                                    <td>{{ $dato->telefono }}</td>
 
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="verMapa({{ $dato->id }})">
+                                            <i class="fas fa-eye" title="Mapa"></i>&nbsp; Mapa
                                         </button>
+
+                                        <button type="button" class="btn btn-success btn-xs" onclick="informacionProducto({{ $dato->id }})">
+                                            <i class="fas fa-shopping-cart" title="Productos"></i>&nbsp; Productos
+                                        </button>
+
+                                        <br> <br>
+                                        <button type="button" class="btn btn-warning btn-xs" onclick="informacionIniciar({{ $dato->id }})">
+                                            <i class="fas fa-cookie" title="Iniciar"></i>&nbsp; Iniciar
+                                        </button>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -85,6 +101,7 @@
             "responsive": true, "lengthChange": true, "autoWidth": false,
         });
     });
+
 
 
 </script>

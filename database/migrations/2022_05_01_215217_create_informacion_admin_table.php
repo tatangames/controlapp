@@ -16,9 +16,17 @@ class CreateInformacionAdminTable extends Migration
         Schema::create('informacion_admin', function (Blueprint $table) {
             $table->id();
 
-            // cerrado por evento
+            // cerrar aplicacion y establecer mensaje
             $table->boolean('cerrado');
             $table->string('mensaje_cerrado', 300);
+
+            // mensaje de cerrado por horario normal de cierre
+            $table->string('cerrado_horario', 300);
+
+            // mensaje de cerrado este dia
+            $table->string('cerrado_estedia', 300);
+
+
 
             // establecer opcion para recoger en local o no
             // 0- solo habra domicilio

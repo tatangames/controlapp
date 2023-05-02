@@ -10,7 +10,6 @@
                                 <th>Nombre</th>
                                 <th>Rol</th>
                                 <th>Usuario</th>
-                                <th>Activo</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -22,11 +21,7 @@
                                     <td>{{ $dato->roles->implode('name', ', ') }}</td>
                                     <td>{{ $dato->usuario }}</td>
 
-                                    @if($dato->activo == 0)
-                                        <td> <span class="badge bg-danger">Inactivo</span></td>
-                                    @else
-                                        <td> <span class="badge bg-success">Activo</span></td>
-                                    @endif
+
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion({{ $dato->id }})">
                                             <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar

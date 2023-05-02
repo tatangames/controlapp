@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Backend\Api\Carrito;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendNotiPropietarioJobs;
-use App\Models\Afiliados;
 use App\Models\CarritoExtra;
 use App\Models\CarritoTemporal;
 use App\Models\Clientes;
@@ -13,7 +11,6 @@ use App\Models\Horario;
 use App\Models\InformacionAdmin;
 use App\Models\OrdenesDescripcion;
 use App\Models\OrdenesDirecciones;
-use App\Models\Producto;
 use App\Models\Zonas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -317,7 +314,6 @@ class ApiCarritoController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-
         // verificar que cliente tenga direccion
         if(!DireccionCliente::where('clientes_id', $request->clienteid)->first()){
             // sin direccion
@@ -346,6 +342,8 @@ class ApiCarritoController extends Controller
                 6 => 7, // sabado
             ];
 
+            $infoGeneral = InformacionAdmin::where('id', 1)->first();
+
             // hora y fecha
             $getValores = Carbon::now('America/El_Salvador');
             $getDiaHora = $getValores->dayOfWeek;
@@ -358,11 +356,13 @@ class ApiCarritoController extends Controller
                 ->where('hora2', '>=', $hora)
                 ->get();
 
+            // Mensaje cerrado por horario
+
             if(count($horario) >= 1){
                 // abierto
             }else{
                 // cerrado horario normal del servicio (2 horarios)
-                return ['success' => 2, 'msj1' => "El negocio esta cerrado por el momento"];
+                return ['success' => 2, 'msj1' => $infoGeneral->cerrado_horario];
             }
 
             // preguntar si este dia esta cerrado
@@ -370,8 +370,10 @@ class ApiCarritoController extends Controller
 
             if($cerradoHoy->cerrado == 1){
                 // cerrado este dia el negocio
-                return ['success' => 3, 'msj1' => "este dia tenemos cerrado"];
+                return ['success' => 3, 'msj1' => $infoGeneral->cerrado_estedia];
             }
+
+            // CERRADO POR BLOQUEO DE ZONA
 
             $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
 
@@ -386,18 +388,6 @@ class ApiCarritoController extends Controller
                 return ['success' => 4, 'msj1' => $infoApp->mensaje_cerrado];
             }
 
-            // horario delivery para esa zona
-            $horarioDeliveryZona = Zonas::where('id', $infoDireccion->zonas_id)
-                ->where('hora_abierto_delivery', '<=', $hora)
-                ->where('hora_cerrado_delivery', '>=', $hora)
-                ->get();
-
-            if(count($horarioDeliveryZona) >= 1){
-                // abierto
-            }else{
-                // cerrado horario de zona
-                return ['success' => 5, 'msj1' => "temporalmente cerrado para esta zona el envío"];
-            }
 
             // preguntar si usuario ya tiene un carrito de compras
             if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
@@ -425,12 +415,9 @@ class ApiCarritoController extends Controller
                 $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
                 // solo aplica es si adomicilio
-                if($request->metodo == 1) {
-
-                    if ($total < $infoZona->minimo_consumo) {
-                        // si puede ordenar
-                        return ['success' => 6, 'msj1' => $msjMinimoConsumo];
-                    }
+                if ($total < $infoZona->minimo_consumo) {
+                    // no puede ordenar
+                    return ['success' => 6, 'msj1' => $msjMinimoConsumo];
                 }
 
                 $fechahoy = Carbon::now('America/El_Salvador');
@@ -440,37 +427,18 @@ class ApiCarritoController extends Controller
                         'nota' => $request->nota,
 
                         'precio_consumido' => $total,
-                        'tipoentrega' => $request->metodo, // 1 domicilio, 2 local
-
                         'fecha_orden' => $fechahoy,
-                        'cambio' => $request->cambio,
 
-                        'estado_2' => 0, // el propietario inicia la orden
-                        'fecha_2' => null,
+                        'estado_iniciada' => 0, // el propietario inicia la orden
+                        'fecha_iniciada' => null,
 
-                        'estado_3' => 0, // el propietario finaliza la orden
-                        'fecha_3' => null,
+                        'estado_finalizada' => 0, // el propietario finaliza la orden
+                        'fecha_finalizada' => null,
 
-                        'estado_4' => 0, // el motorista inicia el envio
-                        'fecha_4' => null,
+                        'estado_cancelada' => 0, // el motorista inicia el envio
+                        'fecha_cancelada' => null,
 
-                        'estado_5' => 0, // motorista finaliza el envio
-                        'fecha_5' => null,
-
-                        'estado_6' => 0, // cliente califica la entrega
-                        'fecha_6' => null,
-
-                        'estado_7' => 0, // orden cancelamiento
-                        'fecha_7' => null,
-
-                        'mensaje_7' => null,
-
-                        'visible' => 1,
-                        'visible_p' => 1,
-                        'visible_p2' => 0,
-                        'visible_p3' => 0,
-                        'visible_m' => 0,
-                        'cancelado' => 0, // 0: nadie, 1: cliente, 2 propietarios
+                        'mensaje_cancelada' => null,
                     ]
                 );
 
@@ -484,6 +452,8 @@ class ApiCarritoController extends Controller
                         'nota' => $p->nota_producto);
                     OrdenesDescripcion::insert($data);
                 }
+
+                $infoCliente = Clientes::where('id', $request->clienteid)->first();
 
                 $nuevaDir = new OrdenesDirecciones();
                 $nuevaDir->clientes_id = $request->clienteid;
@@ -501,25 +471,9 @@ class ApiCarritoController extends Controller
                 $nuevaDir->save();
 
                 // BORRAR CARRITO TEMPORAL DEL USUARIO
-                //CarritoExtra::where('carrito_temporal_id', $cart->id)->delete();
-                //CarritoTemporal::where('clientes_id', $request->clienteid)->delete();
-
-                // obtener id one signal de todos los propietarios que reciban notificaciones
-                $listaPropietarios = Afiliados::where('activo', 1)
-                    ->where('disponible', 1)->get();
-
-                $pilaPropietarios = array();
-                foreach($listaPropietarios as $p){
-                    if($p->token_fcm != null){
-                        array_push($pilaPropietarios, $p->token_fcm);
-                    }
-                }
-
-                $titulo = "Nueva Orden #" . $nuevaDir->id;
-                $mensaje = "Hay una Nueva Orden";
-
-                if($pilaPropietarios != null) {
-                     SendNotiPropietarioJobs::dispatch($titulo, $mensaje, $pilaPropietarios);
+                if($infoCliente->borrar_carrito == 1){
+                    CarritoExtra::where('carrito_temporal_id', $cart->id)->delete();
+                    CarritoTemporal::where('clientes_id', $request->clienteid)->delete();
                 }
 
                 DB::commit();

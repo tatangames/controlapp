@@ -9,33 +9,18 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <!--
-                <li class="nav-item">
 
-                    <a href="#" class="nav-link">
-                        <i class="far fa-edit"></i>
-                        <p>
-                            Roles y Permisos
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                <li class="nav-item">
+                    <a href="{{ route('index.ordenes.pendientes') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ordenes Pendientes</p>
                     </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Roles</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-                -->
-
 
                 <li class="nav-item">
-                    <a href="{{ route('index.estadisticas') }}" target="frameprincipal" class="nav-link">
-                        <i class="fas fa-edit nav-icon"></i>
-                        <p>Estadísticas</p>
+                    <a href="{{ route('index.ordenes.hoy') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ordenes Completadas Hoy</p>
                     </a>
                 </li>
 
@@ -49,12 +34,6 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        <li class="nav-item">
-                            <a href="{{ route('index.ordenes.hoy') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ordenes Hoy</p>
-                            </a>
-                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('index.ordenes') }}" target="frameprincipal" class="nav-link">
@@ -63,17 +42,17 @@
                             </a>
                         </li>
 
-
                         <li class="nav-item">
-                            <a href="{{ route('index.motoristas.ordenes') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Motoristas Ordenes</p>
+                            <a href="{{ route('index.estadisticas') }}" target="frameprincipal" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <p>Estadísticas</p>
                             </a>
                         </li>
+
                     </ul>
                 </li>
 
-                @can('seccion.servicios')
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -98,36 +77,6 @@
                             </li>
                         </ul>
                     </li>
-                @endcan
-
-                @can('seccion.personal')
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-edit"></i>
-                            <p>
-                                Personal
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('index.afiliados') }}" target="frameprincipal" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Lista de Propietarios</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('index.motoristas') }}" target="frameprincipal" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Lista de Motoristas</p>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </li>
-                @endcan
-
 
 
                 <li class="nav-item">
@@ -162,7 +111,7 @@
                     </ul>
                 </li>
 
-                @can('seccion.configuracion')
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -171,6 +120,12 @@
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
+
+
+
+
+
+
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('index.zonas') }}" target="frameprincipal" class="nav-link">
@@ -206,17 +161,20 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                @endcan
 
-                @can('seccion.administradores')
+
+
+                    </li>
+
+
+
                     <li class="nav-item">
                         <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
                             <i class="far fa-user nav-icon"></i>
                             <p>Administradores</p>
                         </a>
                     </li>
-                @endcan
+
 
             <!-- fin del acordeon -->
             </ul>

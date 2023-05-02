@@ -77,12 +77,12 @@ class ApiMotoristasController extends Controller
                 array_push($pilaOrden, $p->ordenes_id);
             }
 
-            $orden = Ordenes::where('estado_5', 0)
+            /*$orden = Ordenes::where('estado_5', 0)
                 ->where('estado_2', 1) // inicia la orden a prepararse
                 ->where('estado_7', 0) // orden no cancelada
                 ->where('tipoentrega', 1) // solo domicilio
                 ->whereNotIn('id', $pilaOrden)
-                ->get();
+                ->get();*/
 
             foreach($orden as $o){
 

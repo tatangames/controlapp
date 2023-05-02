@@ -22,6 +22,10 @@ class CreateClientesTable extends Migration
             $table->dateTime('fecha');
             $table->boolean('activo');
             $table->string('token_fcm', 100)->nullable();
+
+            // el cliente decide si borra carrito de compras al realizar una orden
+            $table->boolean('borrar_carrito');
+
         });
     }
 

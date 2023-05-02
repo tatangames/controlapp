@@ -273,9 +273,9 @@ class ApiCategoriaAfiliadoController extends Controller
 
             foreach($orden as $o){
 
-                if($o->estado_7 == 1){
+               /* if($o->estado_7 == 1){
                     $o->fecha_7 = date("d-m-Y h:i A", strtotime($o->fecha_7));
-                }
+                }*/
 
                 $o->fecha_orden = date("d-m-Y h:i A", strtotime($o->fecha_orden));
             }
@@ -367,7 +367,7 @@ class ApiCategoriaAfiliadoController extends Controller
             try {
 
                 // el negocio puede cancelar la orden cuando quiera
-                if($o->estado_7 == 0){
+                /*if($o->estado_7 == 0){
 
                     $fecha = Carbon::now('America/El_Salvador');
 
@@ -391,7 +391,7 @@ class ApiCategoriaAfiliadoController extends Controller
 
                 }else{
                     return ['success' => 2]; // ya cancelada
-                }
+                }*/
             } catch(\Throwable $e){
                 DB::rollback();
                 return ['success' => 3];
@@ -436,9 +436,9 @@ class ApiCategoriaAfiliadoController extends Controller
         if($or = Ordenes::where('id', $request->ordenid)->first()){
 
             // orden fue cancelada
-            if($or->estado_7 == 1){
+            /*if($or->estado_7 == 1){
                 return ['success' => 1];
-            }
+            }*/
 
             if($or->estado_2 == 0){
 
@@ -504,11 +504,11 @@ class ApiCategoriaAfiliadoController extends Controller
 
             // obtener comision
 
-            $orden = Ordenes::where('estado_7', 0) // ordenes no canceladas
+            /*$orden = Ordenes::where('estado_7', 0) // ordenes no canceladas
                 ->where('visible_p2', 1) // estan en preparacion
                 ->where('visible_p3', 1) // aun sin terminar de preparar
                 ->where('estado_2', 1) // orden estado 4 preparacion
-                ->get();
+                ->get();*/
 
             foreach($orden as $o) {
 

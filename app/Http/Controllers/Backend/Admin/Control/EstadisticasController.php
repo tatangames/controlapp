@@ -27,7 +27,8 @@ class EstadisticasController extends Controller
         $tordenes = Ordenes::count();
 
         // venta total de ordenes no canceladas
-        $vtotal = Ordenes::where('estado_7', 0)->sum('precio_consumido');
+       // $vtotal = Ordenes::where('estado_7', 0)->sum('precio_consumido');
+        $vtotal = 10;
         $vtotal = number_format((float)$vtotal, 2, '.', ',');
 
         return view('backend.admin.estadisticas.vistaestadisticas', compact('clientehoy', 'clientetotal',

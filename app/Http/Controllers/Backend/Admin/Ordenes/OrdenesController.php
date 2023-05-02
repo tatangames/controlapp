@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend\Admin\Ordenes;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendNotiClienteJobs;
+use App\Models\Clientes;
 use App\Models\MotoristasExperiencia;
 use App\Models\Ordenes;
 use App\Models\OrdenesDescripcion;
@@ -37,7 +39,7 @@ class OrdenesController extends Controller
 
             $estado = "Orden Nueva";
 
-            if($mm->estado_2 == 1){
+           /* if($mm->estado_2 == 1){
                 $estado = "Orden Iniciada";
             }
 
@@ -64,7 +66,7 @@ class OrdenesController extends Controller
                 }else{
                     $estado = "Orden Cancelada por: Propietario";
                 }
-            }
+            }*/
 
             $mm->estado = $estado;
         }
@@ -116,6 +118,106 @@ class OrdenesController extends Controller
 
     }
 
+
+    //**** ORDENES PENDIENTES *******
+
+    public function indexOrdenesPendientes(){
+
+        //$dataFecha = Carbon::now('America/El_Salvador');
+        //$fecha = date("d-m-Y", strtotime($dataFecha));
+
+        return view('backend.admin.ordenes.pendientes.vistaordenespendientes');
+    }
+
+    public function tablaOrdenesPendientes(){
+        //$fecha = Carbon::now('America/El_Salvador');
+
+        $ordenes = Ordenes::where('estado_iniciada', 0)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        foreach ($ordenes as $mm){
+
+            $clienteDireccion = OrdenesDirecciones::where('id', $mm->id)->first();
+            $mm->cliente = $clienteDireccion->nombre;
+            $mm->telefono = $clienteDireccion->telefono;
+            $mm->direccion = $clienteDireccion->direccion;
+            $mm->referencia = $clienteDireccion->punto_referencia;
+
+            $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
+            $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
+        }
+
+        return view('backend.admin.ordenes.pendientes.tablaordenespendientes', compact('ordenes'));
+    }
+
+
+    public function iniciarOrden(Request $request){
+
+        $rules = array(
+            'id' => 'required', // id de la orden
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()){return ['success' => 0]; }
+
+        $fecha = Carbon::now('America/El_Salvador');
+
+        Ordenes::where('id', $request->id)->update([
+            'estado_iniciada' => 1,
+            'fecha_iniciada' => $fecha,
+        ]);
+
+        $infoOrdenes = Ordenes::where('id', $request->id)->first();
+        $infoCliente = Clientes::where('id', $infoOrdenes->clientes_id)->first();
+
+        /*$titulo = "Orden #" . $request->ordenid;
+        $mensaje = "Orden Iniciada";
+
+        if($infoCliente->token_fcm != null) {
+            SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
+        }*/
+
+        return ['success' => 1];
+    }
+
+
+
+    public function verMapaCliente($id){
+
+        $googleapi = config('googleapi.Google_API');
+
+        $infoOrdenes = OrdenesDirecciones::where('ordenes_id', $id)->first();
+        $latitud = $infoOrdenes->latitud;
+        $longitud = $infoOrdenes->longitud;
+
+        return view('backend.admin.ordenes.mapa.mapaentrega', compact('latitud', 'longitud', 'googleapi'));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //*****************
     public function indexOrdenHoy(){
 
         $dataFecha = Carbon::now('America/El_Salvador');
@@ -162,14 +264,14 @@ class OrdenesController extends Controller
                 $estado = "Orden Calificada";
             }
 
-            if($mm->estado_7 == 1){
+            /*if($mm->estado_7 == 1){
 
                 if($mm->cancelado == 1){
                     $estado = "Orden Cancelada por: Cliente";
                 }else{
                     $estado = "Orden Cancelada por: Propietario";
                 }
-            }
+            }*/
 
             $mm->estado = $estado;
         }

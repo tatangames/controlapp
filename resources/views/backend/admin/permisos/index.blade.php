@@ -27,10 +27,7 @@
             <h1>Permisos Usuarios</h1>
         </div>
         <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-info btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nuevo Usuario
-        </button>
+
     </div>
     </section>
 
@@ -147,16 +144,6 @@
                                         <input type="text" maxlength="16" class="form-control" id="password-editar" placeholder="Contraseña">
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Disponibilidad</label><br>
-                                        <label class="switch" style="margin-top:10px">
-                                            <input type="checkbox" id="toggle-editar">
-                                            <div class="slider round">
-                                                <span class="on">Activo</span>
-                                                <span class="off">Inactivo</span>
-                                            </div>
-                                        </label>
-                                    </div>
 
 
                                 </div>
@@ -311,11 +298,7 @@
                             }
                         });
 
-                        if(response.data.info.activo === 0){
-                            $("#toggle-editar").prop("checked", false);
-                        }else{
-                            $("#toggle-editar").prop("checked", true);
-                        }
+
 
                     }else{
                         toastr.error('Información no encontrado');
@@ -335,8 +318,7 @@
             var password = document.getElementById('password-editar').value;
             var idrol = document.getElementById('rol-editar').value;
 
-            var t = document.getElementById('toggle-editar').checked;
-            var toggle = t ? 1 : 0;
+
 
             if(nombre === ''){
                 toastr.error('Nombre es requerido');
@@ -376,7 +358,7 @@
             formData.append('nombre', nombre);
             formData.append('usuario', usuario);
             formData.append('password', password);
-            formData.append('toggle', toggle);
+
             formData.append('rol', idrol);
 
             axios.post('/admin/permisos/editar-usuario', formData, {

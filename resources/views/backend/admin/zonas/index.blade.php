@@ -73,15 +73,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Hora abierto</label>
-                                    <input type="time" class="form-control" id="horaabierto-nuevo">
-                                </div>
-                                <div class="form-group">
-                                    <label>Hora cerrado</label>
-                                    <input type="time" class="form-control" id="horacerrado-nuevo">
-                                </div>
-
-                                <div class="form-group">
                                     <label>Latitud</label>
                                     <input type="text" maxlength="50" class="form-control" id="latitud-nuevo" placeholder="Latitud">
                                 </div>
@@ -128,15 +119,6 @@
                                     <label>Nombre</label>
                                     <input type="hidden" id="id-editar">
                                     <input type="text" maxlength="100" class="form-control" id="nombre-editar" placeholder="Nombre zona">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Hora abierto</label>
-                                    <input type="time" class="form-control" id="horaabierto-editar">
-                                </div>
-                                <div class="form-group">
-                                    <label>Hora cerrado</label>
-                                    <input type="time" class="form-control" id="horacerrado-editar">
                                 </div>
 
                                 <div class="form-group">
@@ -252,8 +234,7 @@
 
         function nuevo() {
             var nombre = document.getElementById('nombre-nuevo').value;
-            var horaabierto = document.getElementById('horaabierto-nuevo').value;
-            var horacerrado = document.getElementById('horacerrado-nuevo').value;
+
             var latitud = document.getElementById("latitud-nuevo").value;
             var longitud = document.getElementById("longitud-nuevo").value;
             var precio = document.getElementById("precio-nuevo").value;
@@ -268,16 +249,6 @@
                 return;
             }
 
-
-            if(horaabierto === ''){
-                toastr.error('Hora Abierto es Requerido');
-                return;
-            }
-
-            if(horacerrado === ''){
-                toastr.error('Hora Cerrador es Requerido');
-                return;
-            }
 
             if(latitud === '') {
                 toastr.error('Latitud es Requerido');
@@ -320,8 +291,6 @@
 
             let formData = new FormData();
             formData.append('nombre', nombre);
-            formData.append('horaabierto', horaabierto);
-            formData.append('horacerrado', horacerrado);
             formData.append('latitud', latitud);
             formData.append('longitud', longitud);
             formData.append('precio', precio);
@@ -371,8 +340,6 @@
                         $('#modalEditar').modal('show');
                         $('#id-editar').val(response.data.zona.id);
                         $('#nombre-editar').val(response.data.zona.nombre);
-                        $('#horaabierto-editar').val(response.data.zona.hora_abierto_delivery);
-                        $('#horacerrado-editar').val(response.data.zona.hora_cerrado_delivery);
                         $('#mensaje-editar').val(response.data.zona.mensaje_bloqueo)
 
                         $('#latitud-editar').val(response.data.zona.latitud);
@@ -422,8 +389,6 @@
         function editar() {
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
-            var horaabierto = document.getElementById('horaabierto-editar').value;
-            var horacerrado = document.getElementById('horacerrado-editar').value;
 
             // toggle problema
             var tp = document.getElementById('toggle-problema').checked;
@@ -446,16 +411,6 @@
 
             if(nombre > 100){
                 toastr.error('Nombre máximo 100 caracteres');
-                return;
-            }
-
-            if(horaabierto === ''){
-                toastr.error('Hora Abierto es Requerido');
-                return;
-            }
-
-            if(horacerrado === ''){
-                toastr.error('Hora Cerrador es Requerido');
                 return;
             }
 
@@ -519,8 +474,6 @@
             let formData = new FormData();
             formData.append('id', id);
             formData.append('nombre', nombre);
-            formData.append('horaabierto', horaabierto);
-            formData.append('horacerrado', horacerrado);
             formData.append('togglep', toggleProblema);
             formData.append('togglea', toggleActivo);
             formData.append('latitud', latitud);

@@ -73,16 +73,16 @@ class PermisosController extends Controller
             }
 
             // usuario 1 no puede ser desactivado
-            if($request->id == 1){
+            /*if($request->id == 1){
                 if($request->toggle == 0){
                     return ['success' => 2];
-                }
-            }
+
+            }*/
 
             $usuario = Usuarios::find($request->id);
             $usuario->nombre = $request->nombre;
             $usuario->usuario = $request->usuario;
-            $usuario->activo = $request->toggle;
+            //$usuario->activo = $request->toggle;
 
             if($request->password != null){
                 $usuario->password =  bcrypt($request->password);

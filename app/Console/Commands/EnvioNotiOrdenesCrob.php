@@ -46,10 +46,10 @@ class EnvioNotiOrdenesCrob extends Command
     public function handle()
     {
 
-        $ordenhoy = Ordenes::where('estado_2', 0) // aun no han contestado
+        /*$ordenhoy = Ordenes::where('estado_2', 0) // aun no han contestado
         ->where('estado_7', 0) // no ha sido cancelada
         ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
-            ->count();
+            ->count();*/
 
         if($ordenhoy > 0){
 
@@ -74,7 +74,7 @@ class EnvioNotiOrdenesCrob extends Command
 
         // notificacion a motoristas que hay ordenes nuevas para que las agarren
         $ordenMotorista = Ordenes::where('estado_2', 1) // inicio preparacion
-        ->where('estado_7', 0) // no ha sido cancelada
+        //->where('estado_7', 0) // no ha sido cancelada
         ->where('tipoentrega', 1) // domicilio
         ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
             ->count();
@@ -84,7 +84,7 @@ class EnvioNotiOrdenesCrob extends Command
         if($ordenMotorista > 0){
 
             $ordenFore = Ordenes::where('estado_2', 1) // inicio preparacion
-            ->where('estado_7', 0) // no ha sido cancelada
+           // ->where('estado_7', 0) // no ha sido cancelada
             ->where('tipoentrega', 1) // domicilio
             ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
                 ->get();

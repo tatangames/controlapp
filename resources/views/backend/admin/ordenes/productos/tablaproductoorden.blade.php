@@ -23,8 +23,8 @@
                                     <td>{{ $dato->nombre }}</td>
                                     <td>{{ $dato->nota }}</td>
                                     <td>{{ $dato->cantidad }}</td>
-                                    <td>{{ $dato->precio }}</td>
-                                    <td>{{ $dato->total }}</td>
+                                    <td>${{ $dato->precio }}</td>
+                                    <td>${{ $dato->total }}</td>
 
                                 </tr>
                             @endforeach

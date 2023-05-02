@@ -36,8 +36,6 @@ class ZonaController extends Controller
 
         $rules = array(
             'nombre' => 'required',
-            'horaabierto' => 'required',
-            'horacerrado' => 'required',
             'latitud' => 'required',
             'longitud' => 'required'
         );
@@ -51,8 +49,6 @@ class ZonaController extends Controller
         $zona->latitud = $request->latitud;
         $zona->longitud = $request->longitud;
         $zona->saturacion = 0;
-        $zona->hora_abierto_delivery = $request->horaabierto;
-        $zona->hora_cerrado_delivery = $request->horacerrado;
         $zona->activo = 1;
         $zona->mensaje_bloqueo = null;
         $zona->minimo_consumo = $request->precio;
@@ -87,8 +83,6 @@ class ZonaController extends Controller
         $rules = array(
             'id' => 'required',
             'nombre' => 'required',
-            'horaabierto' => 'required',
-            'horacerrado' => 'required',
             'togglep' => 'required',
             'togglea' => 'required',
             'latitud' => 'required',
@@ -103,8 +97,6 @@ class ZonaController extends Controller
 
             Zonas::where('id', $request->id)->update([
                 'nombre' => $request->nombre,
-                'hora_abierto_delivery' => $request->horaabierto,
-                'hora_cerrado_delivery' => $request->horacerrado,
                 'saturacion' => $request->togglep,
                 'activo' => $request->togglea,
                 'latitud' => $request->latitud,
@@ -116,7 +108,6 @@ class ZonaController extends Controller
         }else{
             return ['success' => 2];
         }
-
     }
 
     public function indexPoligono($id){
