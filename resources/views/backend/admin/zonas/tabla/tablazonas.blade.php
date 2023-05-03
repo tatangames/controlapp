@@ -12,8 +12,6 @@
                                 <th>Bloqueo</th>
                                 <th>Mensaje</th>
                                 <th>Estado</th>
-                                <th>Hora Abierto</th>
-                                <th>Hora Cerrado</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -37,8 +35,6 @@
                                             <span class="badge bg-success">Activo</span>
                                         @endif
                                     </td>
-                                    <td>{{ $dato->hora_abierto_delivery }}</td>
-                                    <td>{{ $dato->hora_cerrado_delivery }}</td>
 
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion({{ $dato->id }})">

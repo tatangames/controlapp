@@ -186,16 +186,6 @@
                                 </label>
                             </div>
 
-                            <div class="form-group" style="margin-left:0px">
-                                <label>Disponibilidad</label><br>
-                                <label class="switch" style="margin-top:10px">
-                                    <input type="checkbox" id="toggle-disponible">
-                                    <div class="slider round">
-                                        <span class="on">Sí</span>
-                                        <span class="off">No</span>
-                                    </div>
-                                </label>
-                            </div>
 
                             <div class="form-group" style="margin-left:0px">
                                 <label>Utiliza Imagen</label><br>
@@ -402,12 +392,6 @@
                             $("#toggle-activo").prop("checked", true);
                         }
 
-                        if(response.data.producto.disponibilidad === 0){
-                            $("#toggle-disponible").prop("checked", false);
-                        }else{
-                            $("#toggle-disponible").prop("checked", true);
-                        }
-
                         if(response.data.producto.utiliza_nota === 0){
                             $("#toggle-nota-editar").prop("checked", false);
                         }else{
@@ -440,13 +424,11 @@
             var cbimagen = document.getElementById('toggle-imagen-editar').checked;
             var cbnota = document.getElementById('toggle-nota-editar').checked;
             var cbactivo = document.getElementById('toggle-activo').checked;
-            var cbdisponible = document.getElementById('toggle-disponible').checked;
             var nota = document.getElementById('nota-editar').value;
 
             var check_imagen = cbimagen ? 1 : 0;
             var check_nota = cbnota ? 1 : 0;
             var check_activo = cbactivo ? 1 : 0;
-            var check_disponible = cbdisponible ? 1 : 0;
 
             if(nombre === '') {
                 toastr.error('Nombre es requerido');
@@ -515,7 +497,6 @@
             formData.append('cbnota', check_nota);
             formData.append('cbimagen', check_imagen);
             formData.append('cbactivo', check_activo);
-            formData.append('cbdisponibilidad', check_disponible);
             formData.append('nota', nota);
 
             axios.post('/admin/productos/editar', formData, {

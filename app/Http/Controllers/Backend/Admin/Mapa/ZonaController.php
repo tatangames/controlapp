@@ -23,11 +23,6 @@ class ZonaController extends Controller
     public function tablaZonas(){
         $zonas = Zonas::orderBy('id', 'ASC')->get();
 
-        foreach($zonas as $z){
-            $z->hora_abierto_delivery = date("h:i A", strtotime($z->hora_abierto_delivery));
-            $z->hora_cerrado_delivery = date("h:i A", strtotime($z->hora_cerrado_delivery));
-        }
-
         return view('backend.admin.zonas.tabla.tablazonas', compact('zonas'));
     }
 

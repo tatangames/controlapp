@@ -34,6 +34,20 @@ class CreateOrdenesTable extends Migration
 
             $table->string('mensaje_cancelada', 600)->nullable(); // porque fue cancelada
 
+            // orden cancelada por
+            // 0 nada
+            // 1 -> cliente
+            // 2 -> propietario
+
+            $table->integer('cancelada_por');
+
+
+            $table->boolean('visible');
+
+
+            $table->integer('estrellas');
+            $table->string('mensaje_estrellas', 600)->nullable();
+
 
             $table->foreign('clientes_id')->references('id')->on('clientes');
         });

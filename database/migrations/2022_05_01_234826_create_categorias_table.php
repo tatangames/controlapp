@@ -16,17 +16,7 @@ class CreateCategoriasTable extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
 
-            $table->bigInteger('bloqueservicio_id')->unsigned();
-
             $table->string('nombre', 200);
-            $table->integer('posicion');
-            $table->boolean('activo');
-
-            $table->time('hora1');
-            $table->time('hora2');
-            $table->boolean('usahorario');
-
-            $table->foreign('bloqueservicio_id')->references('id')->on('bloque_servicios');
         });
     }
 

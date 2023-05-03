@@ -64,11 +64,6 @@ class ApiProductosController extends Controller
 
         try {
 
-            // informacion de la direccion del cliente
-            $infoDireccion = DireccionCliente::where('clientes_id', $request->clienteid)
-                ->where('seleccionado', 1)
-                ->first();
-
             //**** VALIDACIONES
 
             // validacion de horarios para este servicio
@@ -81,6 +76,8 @@ class ApiProductosController extends Controller
                 5 => 6, // viernes
                 6 => 7, // sabado
             ];
+
+            $infoApp = InformacionAdmin::where('id', 1)->first();
 
             // hora y fecha
             $getValores = Carbon::now('America/El_Salvador');
@@ -98,7 +95,7 @@ class ApiProductosController extends Controller
                 // abierto
             }else{
                 // cerrado horario normal del servicio (2 horarios)
-                return ['success' => 2, 'msj1' => "El negocio esta cerrado por el momento"];
+                return ['success' => 2, 'msj1' => $infoApp->cerrado_horario];
             }
 
             // preguntar si este dia esta cerrado
@@ -106,32 +103,12 @@ class ApiProductosController extends Controller
 
             if($cerradoHoy->cerrado == 1){
                 // cerrado este dia el negocio
-                return ['success' => 3, 'msj1' => "este dia tenemos cerrado"];
+                return ['success' => 3, 'msj1' => $infoApp->cerrado_estedia];
             }
 
-            $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
 
-            if($infoZona->saturacion == 1){
-                // zona bloqueada por algun problema
-                return ['success' => 4, 'msj1' => $infoZona->mensaje_bloqueo];
-            }
-
-            $infoApp = InformacionAdmin::where('id', 1)->first();
             if($infoApp->cerrado == 1){
                 return ['success' => 4, 'msj1' => $infoApp->mensaje_cerrado];
-            }
-
-            // horario delivery para esa zona
-            $horarioDeliveryZona = Zonas::where('id', $infoDireccion->zonas_id)
-                ->where('hora_abierto_delivery', '<=', $hora)
-                ->where('hora_cerrado_delivery', '>=', $hora)
-                ->get();
-
-            if(count($horarioDeliveryZona) >= 1){
-                // abierto
-            }else{
-                // cerrado horario de zona
-                return ['success' => 5, 'msj1' => "temporalmente cerrado para esta zona el envio"];
             }
 
             // verificar si cliente tiene carrito de compras sino solo agregar

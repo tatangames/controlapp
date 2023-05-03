@@ -116,7 +116,6 @@ class HorarioController extends Controller
             InformacionAdmin::where('id', $request->id)->update([
                 'mensaje_cerrado' => $request->mensaje,
                 'cerrado' => $request->cbcerrado,
-                'domicilio' => $request->cbnoti,
                 'activo_slider' => $request->cbcarrusel
             ]);
 

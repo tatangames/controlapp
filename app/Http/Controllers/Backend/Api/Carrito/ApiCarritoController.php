@@ -42,7 +42,7 @@ class ApiCarritoController extends Controller
                     $producto = DB::table('producto AS p')
                         ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
                         ->select('p.id AS productoID', 'p.nombre', 'c.cantidad',
-                            'p.imagen', 'p.precio', 'p.activo', 'p.disponibilidad',
+                            'p.imagen', 'p.precio', 'p.activo',
                             'c.id AS carritoid', 'p.utiliza_imagen')
                         ->where('c.carrito_temporal_id', $cart->id)
                         ->get();
@@ -53,7 +53,7 @@ class ApiCarritoController extends Controller
                         // verificar si un producto no esta disponible o activo
 
                         // saver si al menos un producto no esta activo o disponible
-                        if($pro->activo == 0 || $pro->disponibilidad == 0){
+                        if($pro->activo == 0){
                             $estadoProductoGlobal = 1; // producto no disponible global
                         }
 
@@ -270,16 +270,14 @@ class ApiCarritoController extends Controller
 
                 // precio minimo para envio de zona
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
-                $minimo = 0; // si es 1: si supera el minimo de consumo
+                $minimo = 0; // aqui no puede ordenar
 
                 $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
-                // solo aplica si es adomicilio
-                if($request->metodo == 1){
-                    if($subtotal >= $infoZona->minimo_consumo){
-                        // si puede ordenar
-                        $minimo = 1;
-                    }
+
+                if($subtotal >= $infoZona->minimo_consumo){
+                    // si puede ordenar
+                    $minimo = 1;
                 }
 
                 $total = number_format((float)$subtotal, 2, '.', '');
@@ -414,10 +412,10 @@ class ApiCarritoController extends Controller
                 $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
                 $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
 
-                // solo aplica es si adomicilio
+
                 if ($total < $infoZona->minimo_consumo) {
                     // no puede ordenar
-                    return ['success' => 6, 'msj1' => $msjMinimoConsumo];
+                    return ['success' => 5, 'msj1' => $msjMinimoConsumo];
                 }
 
                 $fechahoy = Carbon::now('America/El_Salvador');
@@ -439,6 +437,13 @@ class ApiCarritoController extends Controller
                         'fecha_cancelada' => null,
 
                         'mensaje_cancelada' => null,
+
+                        'cancelada_por' => 0,
+
+                        'visible' => 1,
+
+                        'estrellas' => 0,
+                        'mensaje_estrellas' => null
                     ]
                 );
 
@@ -477,10 +482,10 @@ class ApiCarritoController extends Controller
                 }
 
                 DB::commit();
-                return ['success' => 7];
+                return ['success' => 6];
             }else{
                 // no tiene carrito de compras
-                return ['success' => 8];
+                return ['success' => 7];
             }
 
         } catch(\Throwable $e){

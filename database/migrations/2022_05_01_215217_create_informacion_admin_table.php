@@ -27,12 +27,6 @@ class CreateInformacionAdminTable extends Migration
             $table->string('cerrado_estedia', 300);
 
 
-
-            // establecer opcion para recoger en local o no
-            // 0- solo habra domicilio
-            // 1- si habra local y domicilio
-            $table->boolean('domicilio');
-
             // ocultar slider
             $table->boolean('activo_slider');
 

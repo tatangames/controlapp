@@ -55,7 +55,7 @@ Route::post('cliente/ver/estado-orden',  [ApiOrdenesController::class, 'estadoOr
 Route::post('cliente/proceso/orden/cancelar',  [ApiOrdenesController::class, 'cancelarOrdenCliente']);
 Route::post('cliente/listado/productos/ordenes',  [ApiOrdenesController::class, 'listadoProductosOrdenes']);
 Route::post('cliente/listado/productos/ordenes-individual',  [ApiOrdenesController::class, 'listadoProductosOrdenesIndividual']);
-Route::post('cliente/proceso/borrar/orden',  [ApiOrdenesController::class, 'borrarOrdenCliente']);
+
 
 Route::post('cliente/ver/historial', [ApiOrdenesController::class, 'verHistorial']);
 Route::post('cliente/ver/productos/historial',  [ApiOrdenesController::class, 'verProductosOrdenHistorial']);
@@ -68,6 +68,12 @@ Route::post('cliente/proceso/calificar/entrega',  [ApiOrdenesController::class, 
 
 // horarios
 Route::get('cliente/horarios', [ApiPerfilController::class, 'listaHorarios']);
+
+
+// ver opcion elegida carrito de compras
+Route::post('cliente/opcion/carrito/compras', [ApiPerfilController::class, 'opcionCarritoCompras']);
+// guardar opcion elegida carrito de compras
+Route::post('cliente/opcion/carrito/guardar', [ApiPerfilController::class, 'guardarOpcionCarritoCompras']);
 
 
 

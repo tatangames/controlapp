@@ -79,19 +79,6 @@
                                     <input type="hidden" id="id-editar">
                                 </div>
 
-
-                                <div class="form-group" style="margin-left:0px">
-                                    <label>Permitir Domicilio y Local Entrega</label><br>
-                                    <label class="switch" style="margin-top:10px">
-                                        <input type="checkbox" id="toggle-noti">
-                                        <div class="slider round">
-                                            <span class="on">Domicilio y Local</span>
-                                            <span class="off">Domicilio</span>
-                                        </div>
-                                    </label>
-                                </div>
-
-
                                 <hr>
 
                                 <div class="form-group">
@@ -174,12 +161,6 @@
                             $("#toggle-cerrado").prop("checked", true);
                         }
 
-                        if(response.data.info.domicilio === 0){
-                            $("#toggle-noti").prop("checked", false);
-                        }else{
-                            $("#toggle-noti").prop("checked", true);
-                        }
-
                         if(response.data.info.activo_slider === 0){
                             $("#toggle-carrusel").prop("checked", false);
                         }else{
@@ -200,12 +181,10 @@
             var id = document.getElementById('id-editar').value;
             var mensaje = document.getElementById('mensaje').value;
             var tp = document.getElementById('toggle-cerrado').checked;
-            var tn = document.getElementById('toggle-noti').checked;
             var cbslider = document.getElementById('toggle-carrusel').checked;
 
 
             var toggleCerrado = tp ? 1 : 0;
-            var toggleNoti = tn ? 1 : 0;
             var toggleCarrusel = cbslider ? 1 : 0;
 
 
@@ -225,7 +204,6 @@
             formData.append('id', id);
             formData.append('mensaje', mensaje);
             formData.append('cbcerrado', toggleCerrado);
-            formData.append('cbnoti', toggleNoti);
             formData.append('cbcarrusel', toggleCarrusel);
 
             axios.post('/admin/configuracion/editar', formData, {

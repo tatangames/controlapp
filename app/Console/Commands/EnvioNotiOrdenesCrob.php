@@ -75,7 +75,7 @@ class EnvioNotiOrdenesCrob extends Command
         // notificacion a motoristas que hay ordenes nuevas para que las agarren
         $ordenMotorista = Ordenes::where('estado_2', 1) // inicio preparacion
         //->where('estado_7', 0) // no ha sido cancelada
-        ->where('tipoentrega', 1) // domicilio
+        //->where('tipoentrega', 1) // domicilio
         ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
             ->count();
 
@@ -85,7 +85,7 @@ class EnvioNotiOrdenesCrob extends Command
 
             $ordenFore = Ordenes::where('estado_2', 1) // inicio preparacion
            // ->where('estado_7', 0) // no ha sido cancelada
-            ->where('tipoentrega', 1) // domicilio
+            //->where('tipoentrega', 1) // domicilio
             ->whereDate('fecha_orden', '=', Carbon::today('America/El_Salvador')->toDateString())
                 ->get();
 

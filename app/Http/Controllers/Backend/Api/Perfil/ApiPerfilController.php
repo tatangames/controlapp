@@ -264,14 +264,6 @@ class ApiPerfilController extends Controller
                             ->where('id', '!=', $di->id)
                             ->update(['seleccionado' => 0]);
 
-                        // BORRAR CARRITO DE COMPRAS, SI CAMBIO DE DIRECCION
-                        // ya no porque todos apunta a un solo servicio
-
-                        /*if($tabla1 = CarritoTemporal::where('clientes_id', $request->id)->first()){
-                            CarritoExtra::where('carrito_temporal_id', $tabla1->id)->delete();
-                            CarritoTemporal::where('clientes_id', $request->id)->delete();
-                        }*/
-
                         DB::commit();
 
                         return ['success' => 1];
@@ -324,5 +316,51 @@ class ApiPerfilController extends Controller
 
         return ['success' => 1, 'horario' => $horario];
     }
+
+
+    // opcion elegida si borrar o no carrito de compras
+    public function opcionCarritoCompras(Request $request){
+
+        $rules = array(
+            'id' => 'required', // id cliente
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ( $validator->fails()){return ['success' => 0]; }
+
+        if($info = Clientes::where('id', $request->id)->first()){
+
+            return ['success' => 1, 'opcion' => $info->borrar_carrito];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+    public function guardarOpcionCarritoCompras(Request $request){
+
+        $rules = array(
+            'id' => 'required', // id cliente
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ( $validator->fails()){return ['success' => 0]; }
+
+        if(Clientes::where('id', $request->id)->first()){
+
+
+            Clientes::where('id', $request->id)->update([
+                'borrar_carrito' => $request->disponible]);
+
+
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+
+
 
 }

@@ -15,19 +15,20 @@ class CreateProductoTable extends Migration
     {
         Schema::create('producto', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('bloque_servicios_id')->unsigned();
             $table->bigInteger('categorias_id')->unsigned();
 
             $table->string('nombre', 150);
             $table->string('imagen', 100)->nullable();
             $table->string('descripcion', 2000)->nullable();
             $table->decimal('precio', 10,2);
-            $table->boolean('disponibilidad');
             $table->boolean('activo');
             $table->integer('posicion');
             $table->boolean('utiliza_nota');
             $table->string('nota', 500)->nullable();
             $table->boolean('utiliza_imagen');
 
+            $table->foreign('bloque_servicios_id')->references('id')->on('bloque_servicios');
             $table->foreign('categorias_id')->references('id')->on('categorias');
         });
     }

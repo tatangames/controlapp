@@ -258,6 +258,12 @@
 
             var check_redireccion = cbcategoria ? 1 : 0;
 
+            if(check_redireccion === 1){
+                if(producto === '' || producto == null){
+                    toastr.error('Seleccionar Producto');
+                    return;
+                }
+            }
 
             if(nombre.length > 300){
                 toastr.error('Descripción máximo 300 caracteres');
@@ -358,6 +364,13 @@
             var cbredire = document.getElementById('toggle-redire-editar').checked;
 
             var check_redire = cbredire ? 1 : 0;
+
+            if(check_redire === 1){
+                if(producto === '' || producto == null){
+                    toastr.error('Seleccionar Producto');
+                    return;
+                }
+            }
 
             if(nombre.length > 300){
                 toastr.error('Descripción máximo 300 caracteres');
