@@ -58,23 +58,31 @@ Route::post('/zona/informacion-zona', [ZonaController::class,'informacionZona'])
 Route::post('/zona/editar-zona', [ZonaController::class,'editarZona']);
 Route::get('admin/zona/ver-mapa/{id}', [ZonaController::class,'verMapa']);
 
+
 // --- POLIGONO ---
 Route::get('/admin/zona/poligono/{id}', [ZonaController::class,'indexPoligono']);
 Route::post('/zona/poligono/listado-nuevo', [ZonaController::class,'nuevoPoligono']);
 Route::post('/zona/poligono/borrar', [ZonaController::class,'borrarPoligonos']);
 
 
-// --- ORDENES ---
-Route::get('/admin/ordenes/lista', [OrdenesController::class,'index'])->name('index.ordenes');
-Route::get('/admin/ordenes/tabla/lista', [OrdenesController::class,'tablaOrdenes']);
-Route::post('/admin/ordenes/informacion', [OrdenesController::class,'informacionOrden']);
+// --- ORDENES TODAS---
+Route::get('/admin/ordenes/todas', [OrdenesController::class,'index'])->name('index.ordenes.todas');
+Route::get('/admin/ordenes/todas/tablas', [OrdenesController::class,'tablaOrdenesTodas']);
 
+
+// --- ORDENES CANCELADAS---
+Route::get('/admin/ordenes-canceladas/todas', [OrdenesController::class,'indexOrdenesCanceladas'])->name('index.ordenes.canceladas');
+Route::get('/admin/ordenes-canceladas/todas/tablas', [OrdenesController::class,'tablaOrdenesTodasCanceladas']);
+
+
+
+// PRODUCTOS DE LA ORDEN
 Route::get('/admin/productos/ordenes/{id}', [OrdenesController::class,'indexProductosOrdenes']);
 Route::get('/admin/productos/ordenes/tabla/{id}', [OrdenesController::class,'tablaOrdenesProducto']);
 
 
 
-// ordenes pendientes
+// ORDENES PENDIENTES
 
 Route::get('/admin/ordenes-pendientes/lista', [OrdenesController::class,'indexOrdenesPendientes'])->name('index.ordenes.pendientes');
 Route::get('/admin/ordenes-pendientes/tabla/lista', [OrdenesController::class,'tablaOrdenesPendientes']);
@@ -84,13 +92,17 @@ Route::post('/admin/ordenes/iniciar', [OrdenesController::class,'iniciarOrden'])
 Route::get('/admin/ordenes/mapa/cliente/{id}', [OrdenesController::class,'verMapaCliente']);
 
 
+// Notificacion al cliente
+// cancelar la orden
+Route::post('/admin/ordenes/cancelar', [OrdenesController::class,'cancelarOrden']);
 
 
-
-
-
+// ORDENES INICIADAS HOY
 Route::get('/admin/ordenes-hoy/lista', [OrdenesController::class,'indexOrdenHoy'])->name('index.ordenes.hoy');
 Route::get('/admin/ordenes-hoy/tabla/lista', [OrdenesController::class,'tablaOrdenesHoy']);
+
+
+
 
 // --- BLOQUES ---
 Route::get('/admin/bloques', [CategoriasController::class,'indexBloque'])->name('index.bloques');
@@ -109,9 +121,19 @@ Route::post('/admin/sliders/borrar', [CategoriasController::class,'borrarSliders
 Route::post('/admin/sliders/informacion', [CategoriasController::class,'informacionSlider']);
 Route::post('/admin/sliders/editar', [CategoriasController::class,'editarSlider']);
 
+// --- PRODUCTOS ---
+Route::get('/admin/productos/{id}', [CategoriasController::class,'indexProductos']);
+Route::get('/admin/productos/tablas/{id}', [CategoriasController::class,'tablaProductos']);
+Route::post('/admin/productos/nuevo', [CategoriasController::class,'nuevoProducto']);
+Route::post('/admin/productos/informacion', [CategoriasController::class,'informacionProductos']);
+Route::post('/admin/productos/editar', [CategoriasController::class,'editarProductos']);
+Route::post('/admin/productos/ordenar', [CategoriasController::class,'ordenarProductos']);
+
+
+
 // --- CATEGORIAS ---
-Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
-Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);
+Route::get('/admin/categorias', [CategoriasController::class,'indexCategorias'])->name('index.categorias');
+Route::get('/admin/categorias/tablas', [CategoriasController::class,'tablaCategorias']);
 Route::post('/admin/categorias/nuevo', [CategoriasController::class,'nuevaCategorias']);
 Route::post('/admin/categorias/informacion', [CategoriasController::class,'informacionCategorias']);
 Route::post('/admin/categorias/editar', [CategoriasController::class,'editarCategorias']);
@@ -139,13 +161,7 @@ Route::get('/admin/horario/tablas', [HorarioController::class,'tablaHorario']);
 Route::post('/admin/horario/informacion', [HorarioController::class,'informacionHorario']);
 Route::post('/admin/horario/editar', [HorarioController::class,'editarHorario']);
 
-// --- PRODUCTOS ---
-Route::get('/admin/productos/{id}', [CategoriasController::class,'indexProductos']);
-Route::get('/admin/productos/tablas/{id}', [CategoriasController::class,'tablaProductos']);
-Route::post('/admin/productos/nuevo', [CategoriasController::class,'nuevoProducto']);
-Route::post('/admin/productos/informacion', [CategoriasController::class,'informacionProductos']);
-Route::post('/admin/productos/editar', [CategoriasController::class,'editarProductos']);
-Route::post('/admin/productos/ordenar', [CategoriasController::class,'ordenarProductos']);
+
 
 // --- CLIENTES ---
 Route::get('/admin/cliente/lista-clientes-hoy', [ClientesController::class, 'indexRegistradosHoy'])->name('index.clientes.registrados.hoy');

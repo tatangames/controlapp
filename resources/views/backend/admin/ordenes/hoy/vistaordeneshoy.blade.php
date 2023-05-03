@@ -49,45 +49,25 @@
 
 
 
-<div class="modal fade" id="modalCliente" style="z-index:1000000000">
+<div class="modal fade" id="modalCancelar" style="z-index:1000000000">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cliente</h4>
+                <h4 class="modal-title">Cancelar Orden</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formulario-cliente">
+                <form id="formulario-cancelar">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
 
                                 <div class="form-group">
-                                    <label>Zona</label>
-                                    <input type="text" readonly class="form-control" id="zona">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Nombre</label>
-                                    <input type="text" readonly class="form-control" id="nombre">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Dirección</label>
-                                    <input type="text" readonly class="form-control" id="direccion">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Punto de Referencia</label>
-                                    <input type="text" readonly class="form-control" id="puntoref">
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label>Teléfono</label>
-                                    <input type="text" readonly class="form-control" id="telefono">
+                                    <label>Explicación al Cliente</label>
+                                    <input type="hidden" id="id-cancelar">
+                                    <input type="text" maxlength="600" class="form-control" id="nombre-cancelar">
                                 </div>
 
                             </div>
@@ -97,6 +77,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" onclick="cancelarOrden()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -162,6 +143,62 @@
         function informacionProducto(id){
             window.location.href="{{ url('/admin/productos/ordenes') }}/"+id;
         }
+
+
+        function informacionCancelar(id){
+
+            document.getElementById("formulario-cancelar").reset();
+            $('#id-cancelar').val(id);
+            $('#modalCancelar').modal('show');
+        }
+
+
+        function cancelarOrden(){
+
+            var nombre = document.getElementById('nombre-cancelar').value;
+            var id = document.getElementById('id-cancelar').value;
+
+            if(nombre === '') {
+                toastr.error('Nota es requerido');
+                return;
+            }
+
+            if(nombre.length > 600){
+                toastr.error('Nota máximo 600 caracteres');
+                return;
+            }
+
+            openLoading();
+
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('nombre', nombre);
+
+            axios.post('/admin/ordenes/cancelar', formData, {
+            })
+                .then((response) => {
+                    closeLoading();
+                    if (response.data.success === 1) {
+                        $('#modalCancelar').modal('hide');
+                        toastr.success('Cancelada correctamente');
+                        recargar();
+                    }
+                    else {
+                        toastr.error('Error al cancelar');
+                    }
+                })
+                .catch((error) => {
+                    closeLoading();
+                    toastr.error('Error al cancelar');
+                });
+        }
+
+
+        // id de la orden
+        function verMapa(id){
+            window.location.href="{{ url('/admin/ordenes/mapa/cliente') }}/"+id;
+        }
+
 
 
     </script>

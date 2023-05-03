@@ -72,27 +72,6 @@
                                     <input type="text" maxlength="100" class="form-control" autocomplete="off" id="nombre-nuevo" placeholder="Nombre">
                                 </div>
 
-                                <div class="form-group" style="margin-left:0px">
-                                    <label>Utiliza Horario?</label><br>
-                                    <label class="switch" style="margin-top:10px">
-                                        <input type="checkbox" id="toggle-horario">
-                                        <div class="slider round">
-                                            <span class="on">Si</span>
-                                            <span class="off">No</span>
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Horario Mostrar</label>
-                                    <input type="time" class="form-control" value="00:00:00" id="hora1">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Horario Ocultar</label>
-                                    <input type="time" class="form-control" value="00:00:00" id="hora2">
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -128,38 +107,6 @@
                                 <input type="text" maxlength="100" class="form-control" id="nombre-editar" placeholder="Nombre">
                             </div>
 
-                            <div class="form-group" style="margin-left:0px">
-                                <label>Activo</label><br>
-                                <label class="switch" style="margin-top:10px">
-                                    <input type="checkbox" id="toggle-activo">
-                                    <div class="slider round">
-                                        <span class="on">Activo</span>
-                                        <span class="off">Inactivo</span>
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="form-group" style="margin-left:0px">
-                                <label>Utiliza Horario?</label><br>
-                                <label class="switch" style="margin-top:10px">
-                                    <input type="checkbox" id="toggle-horario-editar">
-                                    <div class="slider round">
-                                        <span class="on">Si</span>
-                                        <span class="off">No</span>
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Horario Mostrar</label>
-                                <input type="time" class="form-control" value="00:00:00" id="hora1-editar">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Horario Ocultar</label>
-                                <input type="time" class="form-control" value="00:00:00" id="hora2-editar">
-                            </div>
-
                         </div>
                     </div>
                 </form>
@@ -175,8 +122,8 @@
 @extends('backend.menus.footerjs')
 @section('archivos-js')
 
-    <script src="{{ asset('js/jquery-ui-drag.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/datatables-drag.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/jquery.dataTables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.js') }}" type="text/javascript"></script>
 
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
@@ -185,8 +132,8 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var id = {{ $id }};
-            var ruta = "{{ URL::to('/admin/categorias/tablas') }}/" + id;
+
+            var ruta = "{{ URL::to('/admin/categorias/tablas') }}";
             $('#tablaDatatable').load(ruta);
         });
     </script>
@@ -194,8 +141,8 @@
     <script>
 
         function recargar(){
-            var id = {{ $id }};
-            var ruta = "{{ URL::to('/admin/categorias/tablas') }}/" + id;
+
+            var ruta = "{{ URL::to('/admin/categorias/tablas') }}";
             $('#tablaDatatable').load(ruta);
         }
 
@@ -209,21 +156,6 @@
         function nuevo(){
 
             var nombre = document.getElementById('nombre-nuevo').value;
-            var hora1 = document.getElementById('hora1').value;
-            var hora2 = document.getElementById('hora2').value;
-            var tp = document.getElementById('toggle-horario').checked;
-
-            var toggleHorario = tp ? 1 : 0;
-
-            if(hora1 === ''){
-                toastr.error('Horario Mostrar es Requerido');
-                return;
-            }
-
-            if(hora2 === ''){
-                toastr.error('Horario Ocultar es Requerido');
-                return;
-            }
 
             if(nombre === '') {
                 toastr.error('Nombre es requerido');
@@ -237,14 +169,8 @@
 
             openLoading();
 
-            var id = {{ $id }};
-
             var formData = new FormData();
             formData.append('nombre', nombre);
-            formData.append('toggle', toggleHorario);
-            formData.append('hora1', hora1);
-            formData.append('hora2', hora2);
-            formData.append('id', id);
 
             axios.post('/admin/categorias/nuevo', formData, {
             })
@@ -281,20 +207,6 @@
                         $('#id-editar').val(id);
                         $('#nombre-editar').val(response.data.categoria.nombre);
 
-                        if(response.data.categoria.activo === 0){
-                            $("#toggle-activo").prop("checked", false);
-                        }else{
-                            $("#toggle-activo").prop("checked", true);
-                        }
-
-                        $('#hora1-editar').val(response.data.categoria.hora1);
-                        $('#hora2-editar').val(response.data.categoria.hora2);
-
-                        if(response.data.categoria.usahorario === 0){
-                            $("#toggle-horario-editar").prop("checked", false);
-                        }else{
-                            $("#toggle-horario-editar").prop("checked", true);
-                        }
 
                     }else{
                         toastr.error('Error al buscar');
@@ -308,26 +220,8 @@
 
         function editar(){
 
-            var ide = document.getElementById('id-editar').value;
+            var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
-            var cbactivo = document.getElementById('toggle-activo').checked;
-            var tp = document.getElementById('toggle-horario-editar').checked;
-            var hora1 = document.getElementById('hora1-editar').value;
-            var hora2 = document.getElementById('hora2-editar').value;
-
-            var toggleHorario = tp ? 1 : 0;
-
-            if(hora1 === ''){
-                toastr.error('Horario Mostrar es Requerido');
-                return;
-            }
-
-            if(hora2 === ''){
-                toastr.error('Horario Ocultar es Requerido');
-                return;
-            }
-
-            var check_activo = cbactivo ? 1 : 0;
 
             if(nombre === '') {
                 toastr.error('Nombre es requerido');
@@ -339,18 +233,10 @@
                 return;
             }
 
-            // bloque de servicios
-            var id = {{ $id }};
-
             openLoading();
             var formData = new FormData();
-            formData.append('id', id);
-            formData.append('ide', ide); // a modificar
+            formData.append('id', id); // a modificar
             formData.append('nombre', nombre);
-            formData.append('cbactivo', check_activo);
-            formData.append('toggle', toggleHorario);
-            formData.append('hora1', hora1);
-            formData.append('hora2', hora2);
 
             axios.post('/admin/categorias/editar', formData, {
             })

@@ -8,13 +8,13 @@
                         <table id="tabla" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Orden</th>
+                                <th># Orden</th>
                                 <th>Fecha</th>
                                 <th>Venta</th>
-                                <th>Entrega</th>
                                 <th>Cliente</th>
-                                <th>Estado</th>
-                                <th>Calificación</th>
+                                <th>Dirección</th>
+                                <th>Referencia</th>
+                                <th>Teléfono</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -26,22 +26,26 @@
                                     <td>{{ $dato->id }}</td>
                                     <td>{{ $dato->fecha_orden }}</td>
                                     <td>{{ $dato->precio_consumido }}</td>
-                                    @if($dato->tipoentrega == 1)
-                                        <td>A Domicilio</td>
-                                    @else
-                                        <td>Entrega en Local</td>
-                                    @endif
+
                                     <td>{{ $dato->cliente }}</td>
-                                    <td>{{ $dato->estado }}</td>
-                                    <td>{{ $dato->calificacion }}</td>
+                                    <td>{{ $dato->direccion }}</td>
+                                    <td>{{ $dato->referencia }}</td>
+                                    <td>{{ $dato->telefono }}</td>
+
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Cliente"></i>&nbsp; Cliente
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="verMapa({{ $dato->id }})">
+                                            <i class="fas fa-eye" title="Mapa"></i>&nbsp; Mapa
                                         </button>
 
                                         <button type="button" class="btn btn-success btn-xs" onclick="informacionProducto({{ $dato->id }})">
                                             <i class="fas fa-shopping-cart" title="Productos"></i>&nbsp; Productos
                                         </button>
+
+                                        <br> <br>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="informacionCancelar({{ $dato->id }})">
+                                            <i class="fas fa-info" title="Cancelar"></i>&nbsp; Cancelar
+                                        </button>
+
                                     </td>
                                 </tr>
                             @endforeach

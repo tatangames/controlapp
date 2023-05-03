@@ -20,36 +20,22 @@
                 <li class="nav-item">
                     <a href="{{ route('index.ordenes.hoy') }}" target="frameprincipal" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Ordenes Completadas Hoy</p>
+                        <p>Ordenes Iniciadas Hoy</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="far fa-list-alt"></i>
-                        <p>
-                            Ordenes
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                    <a href="{{ route('index.ordenes.todas') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Todas las Ordenes</p>
                     </a>
-                    <ul class="nav nav-treeview">
+                </li>
 
-
-                        <li class="nav-item">
-                            <a href="{{ route('index.ordenes') }}" target="frameprincipal" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Listado de Ordenes</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('index.estadisticas') }}" target="frameprincipal" class="nav-link">
-                                <i class="fas fa-edit nav-icon"></i>
-                                <p>Estadísticas</p>
-                            </a>
-                        </li>
-
-                    </ul>
+                <li class="nav-item">
+                    <a href="{{ route('index.ordenes.canceladas') }}" target="frameprincipal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ordenes Canceladas</p>
+                    </a>
                 </li>
 
 
@@ -75,6 +61,14 @@
                                     <p>Slider</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('index.categorias') }}" target="frameprincipal" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Categorías</p>
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
 
@@ -122,10 +116,6 @@
                         </a>
 
 
-
-
-
-
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('index.zonas') }}" target="frameprincipal" class="nav-link">
@@ -162,16 +152,13 @@
                             </li>
                         </ul>
 
-
-
                     </li>
 
 
-
                     <li class="nav-item">
-                        <a href="{{ route('admin.permisos.index') }}" target="frameprincipal" class="nav-link">
-                            <i class="far fa-user nav-icon"></i>
-                            <p>Administradores</p>
+                        <a href="{{ route('index.estadisticas') }}" target="frameprincipal" class="nav-link">
+                            <i class="fas fa-edit nav-icon"></i>
+                            <p>Estadísticas</p>
                         </a>
                     </li>
 

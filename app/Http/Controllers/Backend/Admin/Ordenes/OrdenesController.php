@@ -21,80 +21,59 @@ class OrdenesController extends Controller
         return view('backend.admin.ordenes.todas.vistaordenes');
     }
 
-    public function tablaOrdenes(){
+    // no canceladas
+    public function tablaOrdenesTodas(){
 
-        $ordenes = Ordenes::orderBy('id', 'DESC')->get();
+        $ordenes = Ordenes::where('estado_iniciada', 1)
+            ->where('estado_cancelada', 0)
+            ->orderBy('id', 'DESC')
+            ->get();
 
         foreach ($ordenes as $mm){
 
-            $infocliente = OrdenesDirecciones::where('id', $mm->id)->first();
-            $mm->cliente = $infocliente->nombre;
+            $clienteDireccion = OrdenesDirecciones::where('id', $mm->id)->first();
+            $mm->cliente = $clienteDireccion->nombre;
+            $mm->telefono = $clienteDireccion->telefono;
+            $mm->direccion = $clienteDireccion->direccion;
+            $mm->referencia = $clienteDireccion->punto_referencia;
 
             $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
             $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
-
-            if($infoE = MotoristasExperiencia::where('ordenes_id', $mm->id)->first()){
-                $mm->calificacion = "Estrellas: " . $infoE->experiencia . " y Nota es: " . $infoE->mensaje;
-            }
-
-            $estado = "Orden Nueva";
-
-           /* if($mm->estado_2 == 1){
-                $estado = "Orden Iniciada";
-            }
-
-            if($mm->estado_3 == 2){
-                $estado = "Orden Terminada";
-            }
-
-            if($mm->estado_4 == 1){
-                $estado = "Motorista en Camino";
-            }
-
-            if($mm->estado_5 == 1){
-                $estado = "Orden Entregada";
-            }
-
-            if($mm->estado_6 == 1){
-                $estado = "Orden Calificada";
-            }
-
-            if($mm->estado_7 == 1){
-
-                if($mm->cancelado == 1){
-                    $estado = "Orden Cancelada por: Cliente";
-                }else{
-                    $estado = "Orden Cancelada por: Propietario";
-                }
-            }*/
-
-            $mm->estado = $estado;
         }
 
         return view('backend.admin.ordenes.todas.tablaordenes', compact('ordenes'));
     }
 
-    public function informacionOrden(Request $request){
 
-        $regla = array(
-            'id' => 'required',
-        );
+    public function indexOrdenesCanceladas(){
 
-        $validar = Validator::make($request->all(), $regla);
-
-        if ($validar->fails()){ return ['success' => 0];}
-
-        if(Ordenes::where('id', $request->id)->first()){
-
-            $cliente = OrdenesDirecciones::where('ordenes_id', $request->id)->get();
-            $info = OrdenesDirecciones::where('ordenes_id', $request->id)->first();
-            $infoZona = Zonas::where('id', $info->zonas_id)->first();
-
-            return ['success' => 1, 'cliente' => $cliente, 'zona' => $infoZona->nombre];
-        }else{
-            return ['success' => 2];
-        }
+        return view('backend.admin.ordenes.canceladas.vistaordenescanceladas');
     }
+
+
+    public function tablaOrdenesTodasCanceladas(){
+        $ordenes = Ordenes::where('estado_iniciada', 1)
+            ->where('estado_cancelada', 1)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        foreach ($ordenes as $mm){
+
+            $clienteDireccion = OrdenesDirecciones::where('id', $mm->id)->first();
+            $mm->cliente = $clienteDireccion->nombre;
+            $mm->telefono = $clienteDireccion->telefono;
+            $mm->direccion = $clienteDireccion->direccion;
+            $mm->referencia = $clienteDireccion->punto_referencia;
+
+            $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
+            $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
+        }
+
+        return view('backend.admin.ordenes.canceladas.tablaordenescanceladas', compact('ordenes'));
+    }
+
+
+
 
     public function indexProductosOrdenes($id){
         return view('backend.admin.ordenes.productos.vistaproductoorden', compact('id'));
@@ -133,6 +112,7 @@ class OrdenesController extends Controller
         //$fecha = Carbon::now('America/El_Salvador');
 
         $ordenes = Ordenes::where('estado_iniciada', 0)
+            ->where('estado_cancelada', 0)
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -183,6 +163,41 @@ class OrdenesController extends Controller
     }
 
 
+    function cancelarOrden(Request $request){
+
+        $rules = array(
+            'id' => 'required', // id de la orden
+            'nombre' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()){return ['success' => 0]; }
+
+        $fecha = Carbon::now('America/El_Salvador');
+
+        Ordenes::where('id', $request->id)->update([
+            'estado_cancelada' => 1,
+            'fecha_cancelada' => $fecha,
+            'mensaje_cancelada' => $request->nombre,
+            'cancelada_por' => 2 // por propietario
+        ]);
+
+        $infoOrden = Ordenes::where('id', $request->id)->first();
+        $infoCliente = Clientes::where('id', $infoOrden->clientes_id)->first();
+
+        /*$titulo = "Orden #" . $request->ordenid;
+        $mensaje = "Lo sentimos, su orden fue cancelada";
+
+        if($infoCliente->token_fcm != null) {
+            SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
+        }*/
+
+        return ['success' => 1];
+
+    }
+
+
 
     public function verMapaCliente($id){
 
@@ -200,24 +215,7 @@ class OrdenesController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //*****************
+    //******* ORDENES INICIADAS HOY ***************
     public function indexOrdenHoy(){
 
         $dataFecha = Carbon::now('America/El_Salvador');
@@ -228,52 +226,22 @@ class OrdenesController extends Controller
 
     public function tablaOrdenesHoy(){
         $fecha = Carbon::now('America/El_Salvador');
-        $ordenes = Ordenes::whereDate('fecha_orden', $fecha)->orderBy('id', 'DESC')->get();
+        $ordenes = Ordenes::whereDate('fecha_orden', $fecha)
+            ->where('estado_iniciada', 1)
+            ->where('estado_cancelada', 0)
+            ->orderBy('id', 'DESC')
+            ->get();
 
         foreach ($ordenes as $mm){
 
-            $infocliente = OrdenesDirecciones::where('id', $mm->id)->first();
-            $mm->cliente = $infocliente->nombre;
+            $clienteDireccion = OrdenesDirecciones::where('id', $mm->id)->first();
+            $mm->cliente = $clienteDireccion->nombre;
+            $mm->telefono = $clienteDireccion->telefono;
+            $mm->direccion = $clienteDireccion->direccion;
+            $mm->referencia = $clienteDireccion->punto_referencia;
 
             $mm->fecha_orden = date("h:i A d-m-Y", strtotime($mm->fecha_orden));
             $mm->precio_consumido = number_format((float)$mm->precio_consumido, 2, '.', ',');
-
-            if($infoE = MotoristasExperiencia::where('ordenes_id', $mm->id)->first()){
-                $mm->calificacion = "Estrellas: " . $infoE->experiencia . " y Nota es: " . $infoE->mensaje;
-            }
-
-            $estado = "Orden Nueva";
-
-            if($mm->estado_2 == 1){
-                $estado = "Orden Iniciada";
-            }
-
-            if($mm->estado_3 == 1){
-                $estado = "Orden Terminada";
-            }
-
-            if($mm->estado_4 == 1){
-                $estado = "Motorista en Camino";
-            }
-
-            if($mm->estado_5 == 1){
-                $estado = "Orden Entregada";
-            }
-
-            if($mm->estado_6 == 1){
-                $estado = "Orden Calificada";
-            }
-
-            /*if($mm->estado_7 == 1){
-
-                if($mm->cancelado == 1){
-                    $estado = "Orden Cancelada por: Cliente";
-                }else{
-                    $estado = "Orden Cancelada por: Propietario";
-                }
-            }*/
-
-            $mm->estado = $estado;
         }
 
         return view('backend.admin.ordenes.hoy.tablaordeneshoy', compact('ordenes'));

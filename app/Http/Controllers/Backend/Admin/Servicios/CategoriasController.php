@@ -166,14 +166,15 @@ class CategoriasController extends Controller
 
     // *** CATEGORIAS *** //
 
-    public function indexCategorias($id){
-        return view('backend.admin.categorias.vistacategorias', compact('id'));
+    public function indexCategorias(){
+        return view('backend.admin.categorias.vistacategorias');
     }
 
     // tabla
-    public function tablaCategorias($id){
-        $categorias = Categorias::where('bloqueservicio_id', $id)->orderBy('posicion')->get();
-        return view('backend.admin.categorias.tablacategorias', compact('categorias', 'id'));
+    public function tablaCategorias(){
+        $categorias = Categorias::orderBy('nombre')->get();
+
+        return view('backend.admin.categorias.tablacategorias', compact('categorias'));
     }
 
     public function nuevaCategorias(Request $request){
@@ -186,21 +187,8 @@ class CategoriasController extends Controller
 
         if ($validar->fails()){return ['success' => 0]; }
 
-        if($info = Categorias::where('bloqueservicio_id', $request->id)
-        ->orderBy('posicion', 'DESC')->first()){
-            $suma = $info->posicion + 1;
-        }else{
-            $suma = 1;
-        }
-
         $ca = new Categorias();
         $ca->nombre = $request->nombre;
-        $ca->activo = 1;
-        $ca->usahorario = $request->toggle;
-        $ca->hora1 = $request->hora1;
-        $ca->hora2 = $request->hora2;
-        $ca->posicion = $suma;
-        $ca->bloqueservicio_id = $request->id;
 
         if($ca->save()){
             return ['success' => 1];
@@ -232,7 +220,6 @@ class CategoriasController extends Controller
 
         $rules = array(
             'id' => 'required',
-            'ide' => 'required',
             'nombre' => 'required'
         );
 
@@ -240,15 +227,10 @@ class CategoriasController extends Controller
 
         if ($validator->fails()){return ['success' => 0]; }
 
-        if(Categorias::where('id', $request->ide)->first()){
+        if(Categorias::where('id', $request->id)->first()){
 
-            Categorias::where('id', $request->ide)->update([
+            Categorias::where('id', $request->id)->update([
                 'nombre' => $request->nombre,
-                'activo' => $request->cbactivo,
-                'usahorario' => $request->toggle,
-                'hora1' => $request->hora1,
-                'hora2' => $request->hora2,
-                'bloqueservicio_id' => $request->id
             ]);
             return ['success' => 1];
         }else{
@@ -256,37 +238,30 @@ class CategoriasController extends Controller
         }
     }
 
-    public function ordenarCategorias(Request $request){
-
-        $tasks = Categorias::where('bloqueservicio_id', $request->idc)->get();
-
-        foreach ($tasks as $task) {
-            $id = $task->id;
-
-            foreach ($request->order as $order) {
-                if ($order['id'] == $id) {
-                    $task->update(['posicion' => $order['posicion']]);
-                }
-            }
-        }
-        return ['success' => 1];
-    }
-
 
     // *** PRODUCTOS *** //
 
     public function indexProductos($id){
 
-        $categoria = Categorias::where('id', $id)->pluck('nombre')->first();
+        $nomBloque = BloqueServicios::where('id', $id)->first();
 
-        return view('backend.admin.productos.vistaproductos', compact('id', 'categoria'));
+        $categorias = Categorias::orderBy('nombre')->get();
+
+        return view('backend.admin.productos.vistaproductos', compact('id', 'nomBloque', 'categorias'));
     }
 
     // tabla
     public function tablaProductos($id){
-        $productos = Producto::where('categorias_id', $id)->orderBy('posicion')->get();
+
+        $productos = Producto::where('bloque_servicios_id', $id)
+            ->orderBy('posicion')
+            ->get();
 
         foreach ($productos as $pp){
+
+            $infoCategoria = Categorias::where('id', $pp->categorias_id)->first();
+            $pp->nomcategoria = $infoCategoria->nombre;
+
            $pp->precio = number_format((float)$pp->precio, 2, '.', ',');
         }
 
@@ -297,7 +272,8 @@ class CategoriasController extends Controller
     public function nuevoProducto(Request $request){
 
         $regla = array(
-            'nombre' => 'required'
+            'nombre' => 'required',
+            'categoria' => 'required'
         );
 
         $validar = Validator::make($request->all(), $regla);
@@ -325,12 +301,12 @@ class CategoriasController extends Controller
                 }
 
                 $ca = new Producto();
-                $ca->categorias_id = $request->id;
+                $ca->bloque_servicios_id = $request->idservicio;
+                $ca->categorias_id = $request->categoria;
                 $ca->nombre = $request->nombre;
                 $ca->imagen = $nombreFoto;
                 $ca->descripcion = $request->descripcion;
                 $ca->precio = $request->precio;
-                $ca->disponibilidad = 1;
                 $ca->activo = 1;
                 $ca->posicion = $suma;
                 $ca->utiliza_nota = $request->cbnota;
@@ -356,11 +332,11 @@ class CategoriasController extends Controller
             }
 
             $ca = new Producto();
-            $ca->categorias_id = $request->id;
+            $ca->bloque_servicios_id  = $request->idservicio;
+            $ca->categorias_id = $request->categoria;
             $ca->nombre = $request->nombre;
             $ca->descripcion = $request->descripcion;
             $ca->precio = $request->precio;
-            $ca->disponibilidad = 1;
             $ca->activo = 1;
             $ca->posicion = $suma;
             $ca->utiliza_nota = $request->cbnota;
@@ -388,7 +364,9 @@ class CategoriasController extends Controller
 
         if($info = Producto::where('id', $request->id)->first()){
 
-            return ['success' => 1, 'producto' => $info];
+            $cate = Categorias::orderBy('nombre')->get();
+
+            return ['success' => 1, 'producto' => $info, 'cate' => $cate];
         }else{
             return ['success' => 2];
         }
@@ -423,6 +401,7 @@ class CategoriasController extends Controller
                     $imagenOld = $info->imagen;
 
                     Producto::where('id', $request->id)->update([
+                        'categorias_id' => $request->catego,
                         'nombre' => $request->nombre,
                         'descripcion' => $request->descripcion,
                         'precio' => $request->precio,
@@ -453,6 +432,7 @@ class CategoriasController extends Controller
                 }
 
                 Producto::where('id', $request->id)->update([
+                    'categorias_id' => $request->catego,
                     'nombre' => $request->nombre,
                     'descripcion' => $request->descripcion,
                     'precio' => $request->precio,

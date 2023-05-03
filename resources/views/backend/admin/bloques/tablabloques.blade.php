@@ -43,8 +43,8 @@
                                             <i class="fas fa-eye" title="Eventos"></i>&nbsp; Eventos
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-success btn-xs" onclick="verCategorias({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Categorías"></i>&nbsp; Categorías
+                                        <button type="button" class="btn btn-success btn-xs" onclick="verProductos({{ $dato->id }})">
+                                            <i class="fas fa-eye" title="Productos"></i>&nbsp; Productos
                                         </button>
                                     @endif
 

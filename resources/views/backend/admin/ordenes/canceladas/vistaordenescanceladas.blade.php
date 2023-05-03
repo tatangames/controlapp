@@ -15,14 +15,14 @@
     }
 
     #card-header-color {
-        background-color: #673AB7 !important;
+        background-color: #e50808 !important;
     }
 </style>
 
 <section class="content-header">
     <div class="container-fluid">
         <div class="row">
-            <h1>Todas las Ordenes</h1>
+            <h1>Todas las Ordenes Canceladas</h1>
         </div>
 
     </div>
@@ -60,7 +60,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var ruta = "{{ URL::to('/admin/ordenes/todas/tablas') }}";
+            var ruta = "{{ URL::to('/admin/ordenes-canceladas/todas/tablas') }}";
             $('#tablaDatatable').load(ruta);
         });
     </script>
@@ -68,14 +68,13 @@
     <script>
 
         function recargar(){
-            var ruta = "{{ url('/admin/ordenes/todas/tablas') }}";
+            var ruta = "{{ url('/admin/ordenes-canceladas/todas/tablas') }}";
             $('#tablaDatatable').load(ruta);
         }
 
         function informacionProducto(id){
             window.location.href="{{ url('/admin/productos/ordenes') }}/"+id;
         }
-
 
         // id de la orden
         function verMapa(id){

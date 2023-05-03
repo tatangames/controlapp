@@ -194,6 +194,8 @@
 
                     if(response.data.success === 1){
 
+                        recargar();
+
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
