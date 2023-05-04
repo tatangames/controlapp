@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header" id="card-header-color">
-                <h3 class="card-title" style="color: white">Tipo Servicio: {{ $nomBloque->nombre }}</h3>
+                <h3 class="card-title" style="color: white">Categoría: {{ $categoria }}</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -69,16 +69,6 @@
                                 <div class="form-group">
                                     <label>Nombre</label>
                                     <input type="text" maxlength="150" autocomplete="off" class="form-control" id="nombre-nuevo" placeholder="Nombre">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Categoría:</label>
-                                    <select class="form-control" id="select-categorias">
-                                        <option value=""> Seleccionar opción</option>
-                                        @foreach($categorias as $item)
-                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -162,13 +152,6 @@
                                 <label>Nombre</label>
                                 <input type="hidden" id="id-editar">
                                 <input type="text" maxlength="150" autocomplete="off" class="form-control" id="nombre-editar" placeholder="Nombre">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Categoría:</label>
-                                <select class="form-control" id="select-categorias-editar">
-
-                                </select>
                             </div>
 
 
@@ -288,8 +271,6 @@
             var cbnota = document.getElementById('toggle-nota').checked;
             var nota = document.getElementById('nota-nuevo').value;
 
-            var categoria = document.getElementById('select-categorias').value;
-
             var check_imagen = cbimagen ? 1 : 0;
             var check_nota = cbnota ? 1 : 0;
 
@@ -300,11 +281,6 @@
 
             if(nombre.length > 150){
                 toastr.error('Nombre máximo 150 caracteres');
-                return;
-            }
-
-            if(categoria === ''){
-                toastr.error('Categoría es requerida');
                 return;
             }
 
@@ -361,10 +337,10 @@
 
             openLoading();
 
-            var idservicio = {{ $id }};
+            var idcategoria = {{ $id }};
 
             var formData = new FormData();
-            formData.append('idservicio', idservicio);
+            formData.append('idcategoria', idcategoria);
             formData.append('nombre', nombre);
             formData.append('imagen', imagen.files[0]);
             formData.append('descripcion', descripcion);
@@ -372,7 +348,6 @@
             formData.append('cbnota', check_nota);
             formData.append('cbimagen', check_imagen);
             formData.append('nota', nota);
-            formData.append('categoria', categoria);
 
             axios.post('/admin/productos/nuevo', formData, {
             })
@@ -430,17 +405,6 @@
                             $("#toggle-imagen-editar").prop("checked", true);
                         }
 
-                        document.getElementById("select-categorias-editar").options.length = 0;
-
-                        $.each(response.data.cate, function( key, val ){
-                            if(response.data.producto.categorias_id == val.id){
-                                $('#select-categorias-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
-                            }else{
-                                $('#select-categorias-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
-                            }
-                        });
-
-
                     }else{
                         toastr.error('Error al buscar');
                     }
@@ -463,7 +427,6 @@
             var cbactivo = document.getElementById('toggle-activo').checked;
             var nota = document.getElementById('nota-editar').value;
 
-            var catego = document.getElementById('select-categorias-editar').value;
 
             var check_imagen = cbimagen ? 1 : 0;
             var check_nota = cbnota ? 1 : 0;
@@ -479,10 +442,6 @@
                 return;
             }
 
-            if(catego === '') {
-                toastr.error('Categoría es requerido');
-                return;
-            }
 
 
             if(nota.length > 500){
@@ -543,7 +502,6 @@
             formData.append('cbimagen', check_imagen);
             formData.append('cbactivo', check_activo);
             formData.append('nota', nota);
-            formData.append('catego', catego);
 
             axios.post('/admin/productos/editar', formData, {
             })

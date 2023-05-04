@@ -318,8 +318,8 @@
                 });
         }
 
-        function verProductos(id) {
-            window.location.href="{{ url('/admin/productos') }}/" + id;
+        function verCategorias(id) {
+            window.location.href="{{ url('/admin/categorias') }}/" + id;
         }
 
         function verEventos() {

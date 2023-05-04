@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Api\Servicios;
 
 use App\Http\Controllers\Controller;
+use App\Models\BloqueServicios;
 use App\Models\BloquesEventos;
 use App\Models\Categorias;
 use App\Models\EventoImagenes;
@@ -16,38 +17,48 @@ class ApiServiciosController extends Controller
 {
     public function listadoMenuVertical(Request $request){
 
-        // obtener listado de productos, solo sus id de categorias
-        $listadoPro = Producto::where('bloque_servicios_id', $request->categoria)->get();
-        $pilaIdNombre = array();
+        $reglaDatos = array(
+            'idbloque' => 'required',
+            'idcliente' => 'required'
+        );
 
-        // verificar si esta categoria por horario estara disponible
-        foreach ($listadoPro as $ll) {
+        $validarDatos = Validator::make($request->all(), $reglaDatos);
 
-            array_push($pilaIdNombre, $ll->categorias_id);
-        }
+        if($validarDatos->fails()){return ['success' => 0]; }
 
-        // unicamente las categorias disponibles
-        $productos = Categorias::whereIn('id', $pilaIdNombre)->get();
 
-        $resultsBloque = array();
-        $index = 0;
+        // retornar listado de productos por su bloque id
 
-        foreach($productos as $secciones){
-            array_push($resultsBloque,$secciones);
+        if(BloqueServicios::where('id', $request->idbloque)->first()){
 
-            $subSecciones = Producto::where('categorias_id', $secciones->id)
-                ->where('activo', 1) // para inactivarlo solo para administrador
+            $productos = Categorias::where('bloque_servicios_id', $request->idbloque)
+                ->where('activo', 1)
                 ->orderBy('posicion', 'ASC')
                 ->get();
 
-            $resultsBloque[$index]->productos = $subSecciones; //agregar los productos en la sub seccion
-            $index++;
-        }
+            $resultsBloque = array();
+            $index = 0;
 
-        return [
-            'success' => 1,
-            'productos' => $productos,
-        ];
+            foreach($productos as $secciones){
+                array_push($resultsBloque,$secciones);
+
+                $subSecciones = Producto::where('categorias_id', $secciones->id)
+                    ->where('activo', 1) // para inactivarlo solo para administrador
+                    ->orderBy('posicion', 'ASC')
+                    ->get();
+
+                $resultsBloque[$index]->productos = $subSecciones; //agregar los productos en la sub seccion
+                $index++;
+            }
+
+            return [
+                'success' => 1,
+                'productos' => $productos,
+            ];
+        }
+        else{
+            return ['success' => 2];
+        }
     }
 
     public function listadoEventos(){

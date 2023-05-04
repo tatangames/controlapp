@@ -35,7 +35,7 @@
 
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{ $dato->id }})">
-                                        <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
+                                        <i class="fas fa-edit" title="Editar"></i>&nbsp; Editar
                                     </button>
 
                                     @if($dato->tiposervicio_id == 1)
@@ -43,8 +43,8 @@
                                             <i class="fas fa-eye" title="Eventos"></i>&nbsp; Eventos
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-success btn-xs" onclick="verProductos({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Productos"></i>&nbsp; Productos
+                                        <button type="button" class="btn btn-success btn-xs" onclick="verCategorias({{ $dato->id }})">
+                                            <i class="fas fa-shopping-cart" title="Categorias"></i>&nbsp; Categorias
                                         </button>
                                     @endif
 
