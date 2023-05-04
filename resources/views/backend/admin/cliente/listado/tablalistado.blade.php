@@ -10,7 +10,6 @@
                                 <th>Fecha de Registro</th>
                                 <th>Usuario</th>
                                 <th>Activo</th>
-                                <th>Correo</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -27,8 +26,6 @@
                                             <span class="badge bg-success">Activo</span>
                                         @endif
                                     </td>
-
-                                    <td>{{ $dato->correo }}</td>
 
                                     <td>
                                         <button type="button" class="btn btn-info btn-xs" onclick="informacion({{ $dato->id }})">

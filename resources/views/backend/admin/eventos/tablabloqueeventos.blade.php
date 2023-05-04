@@ -43,6 +43,8 @@
                                         <i class="fas fa-list" title="Imagenes"></i>&nbsp; Imagenes
                                     </button>
 
+                                    <br><br>
+
                                     <button type="button" class="btn btn-danger btn-xs" onclick="modalBorrar({{ $dato->id }})">
                                         <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                     </button>
