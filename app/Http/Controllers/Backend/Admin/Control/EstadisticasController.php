@@ -18,17 +18,22 @@ class EstadisticasController extends Controller
 
         // clientes registrados hoy
         $fecha = Carbon::now('America/El_Salvador');
+
         $clientehoy = Clientes::whereDate('fecha', $fecha)->count();
 
         // total de clientes
         $clientetotal = Clientes::count();
 
-        // total de ordenes
-        $tordenes = Ordenes::count();
+        // total de ordenes aprobadas
+        $tordenes = Ordenes::where('estado_iniciada', 1)
+            ->where('estado_cancelada', 0)
+            ->count();
 
         // venta total de ordenes no canceladas
-       // $vtotal = Ordenes::where('estado_7', 0)->sum('precio_consumido');
-        $vtotal = 10;
+        $vtotal = Ordenes::where('estado_iniciada', 1)
+            ->where('estado_cancelada', 0)
+            ->sum('precio_consumido');
+
         $vtotal = number_format((float)$vtotal, 2, '.', ',');
 
         return view('backend.admin.estadisticas.vistaestadisticas', compact('clientehoy', 'clientetotal',
