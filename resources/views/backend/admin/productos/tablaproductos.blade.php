@@ -9,7 +9,6 @@
                         <tr>
                             <th>Posición</th>
                             <th>Nombre</th>
-                            <th>Categoría</th>
                             <th>Activo</th>
                             <th>Precio</th>
                             <th>Imagen</th>
@@ -22,7 +21,6 @@
 
                                 <td>{{ $dato->posicion }}</td>
                                 <td>{{ $dato->nombre }}</td>
-                                <td>{{ $dato->nomcategoria }}</td>
                                 <td>
                                     @if($dato->activo == 0)
                                         <span class="badge bg-danger">Desactivado</span>
