@@ -18,8 +18,7 @@ class ApiServiciosController extends Controller
     public function listadoMenuVertical(Request $request){
 
         $reglaDatos = array(
-            'idbloque' => 'required',
-            'idcliente' => 'required'
+            'categoria' => 'required',
         );
 
         $validarDatos = Validator::make($request->all(), $reglaDatos);
@@ -29,9 +28,9 @@ class ApiServiciosController extends Controller
 
         // retornar listado de productos por su bloque id
 
-        if(BloqueServicios::where('id', $request->idbloque)->first()){
+        if(BloqueServicios::where('id', $request->categoria)->first()){
 
-            $productos = Categorias::where('bloque_servicios_id', $request->idbloque)
+            $productos = Categorias::where('bloque_servicios_id', $request->categoria)
                 ->where('activo', 1)
                 ->orderBy('posicion', 'ASC')
                 ->get();
