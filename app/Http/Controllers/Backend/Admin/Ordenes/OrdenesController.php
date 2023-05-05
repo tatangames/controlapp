@@ -11,7 +11,9 @@ use App\Models\OrdenesDirecciones;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Ladumor\OneSignal\OneSignal;
 
 class OrdenesController extends Controller
 {
@@ -150,7 +152,7 @@ class OrdenesController extends Controller
         }
 
         Ordenes::where('id', $request->id)->update([
-            'estado_iniciada' => 1,
+            //'estado_iniciada' => 1,
             'fecha_iniciada' => $fecha,
         ]);
 
@@ -160,7 +162,9 @@ class OrdenesController extends Controller
         $mensaje = "Orden Iniciada";
 
         if($infoCliente->token_fcm != null) {
-            SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
+
+            $fields['include_player_ids'] = [$infoCliente->token_fcm];
+            OneSignal::sendPush($fields, $mensaje);
         }
 
         return ['success' => 2];
@@ -190,12 +194,13 @@ class OrdenesController extends Controller
         $infoOrden = Ordenes::where('id', $request->id)->first();
         $infoCliente = Clientes::where('id', $infoOrden->clientes_id)->first();
 
-        /*$titulo = "Orden #" . $request->ordenid;
         $mensaje = "Lo sentimos, su orden fue cancelada";
 
         if($infoCliente->token_fcm != null) {
-            SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
-        }*/
+
+            $fields['include_player_ids'] = [$infoCliente->token_fcm];
+            OneSignal::sendPush($fields, $mensaje);
+        }
 
         return ['success' => 1];
 

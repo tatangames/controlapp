@@ -46,6 +46,10 @@
                                             <i class="fas fa-cookie" title="Iniciar"></i>&nbsp; Iniciar
                                         </button>
 
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="informacionCancelar({{ $dato->id }})">
+                                            <i class="fas fa-info" title="Cancelar"></i>&nbsp; Cancelar
+                                        </button>
+
                                     </td>
                                 </tr>
 
