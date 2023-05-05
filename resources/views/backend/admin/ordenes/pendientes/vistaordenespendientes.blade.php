@@ -176,7 +176,7 @@
         }
 
         function countdown() {
-            var seconds = 60;
+            var seconds = 30;
             function tick() {
                 var counter = document.getElementById("contador");
                 seconds--;
