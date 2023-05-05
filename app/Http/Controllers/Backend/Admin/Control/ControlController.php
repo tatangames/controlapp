@@ -19,7 +19,7 @@ class ControlController extends Controller
         // $permiso = $user->getAllPermissions()->pluck('name');
 
         // Rol: Super-Admin
-        if($user->hasPermissionTo('seccion.estadisticas')){
+       /* if($user->hasPermissionTo('seccion.estadisticas')){
             $ruta = 'index.estadisticas';
         }
 
@@ -31,7 +31,9 @@ class ControlController extends Controller
         else{
             // no tiene ningun permiso de vista, redirigir a pantalla sin permisos
             $ruta = 'no.permisos.index';
-        }
+        }*/
+
+        $ruta = 'index.ordenes.pendientes';
 
         return view('backend.index', compact('user', 'ruta'));
     }

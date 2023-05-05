@@ -232,9 +232,9 @@
                         Swal.fire({
                             title: 'ORDEN CANCELADA',
                             text: "El Cliente Cancelo la Orden",
-                            icon: 'danger',
+                            icon: 'error',
                             showCancelButton: false,
-                            confirmButtonColor: '#28a745',
+                            confirmButtonColor: '#ff0000',
                             cancelButtonColor: '#d33',
                             cancelButtonText: 'Cancelar',
                             confirmButtonText: 'Recargar'
