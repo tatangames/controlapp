@@ -152,7 +152,7 @@ class OrdenesController extends Controller
         }
 
         Ordenes::where('id', $request->id)->update([
-            //'estado_iniciada' => 1,
+            'estado_iniciada' => 1,
             'fecha_iniciada' => $fecha,
         ]);
 
