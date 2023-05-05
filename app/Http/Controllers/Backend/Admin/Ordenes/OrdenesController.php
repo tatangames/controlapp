@@ -24,8 +24,7 @@ class OrdenesController extends Controller
     // no canceladas
     public function tablaOrdenesTodas(){
 
-        $ordenes = Ordenes::where('estado_iniciada', 1)
-            ->where('estado_cancelada', 0)
+        $ordenes = Ordenes::where('estado_cancelada', 0)
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -52,8 +51,7 @@ class OrdenesController extends Controller
 
 
     public function tablaOrdenesTodasCanceladas(){
-        $ordenes = Ordenes::where('estado_iniciada', 1)
-            ->where('estado_cancelada', 1)
+        $ordenes = Ordenes::where('estado_cancelada', 1)
             ->orderBy('id', 'DESC')
             ->get();
 
