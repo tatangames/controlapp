@@ -144,12 +144,18 @@ class OrdenesController extends Controller
 
         $fecha = Carbon::now('America/El_Salvador');
 
+
+        $infoOrdenes = Ordenes::where('id', $request->id)->first();
+
+        if($infoOrdenes->estado_cancelada == 1){
+            return ['success' => 1];
+        }
+
         Ordenes::where('id', $request->id)->update([
             'estado_iniciada' => 1,
             'fecha_iniciada' => $fecha,
         ]);
 
-        $infoOrdenes = Ordenes::where('id', $request->id)->first();
         $infoCliente = Clientes::where('id', $infoOrdenes->clientes_id)->first();
 
         /*$titulo = "Orden #" . $request->ordenid;
@@ -159,7 +165,7 @@ class OrdenesController extends Controller
             SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
         }*/
 
-        return ['success' => 1];
+        return ['success' => 2];
     }
 
 

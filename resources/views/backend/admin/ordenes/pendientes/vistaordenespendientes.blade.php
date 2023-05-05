@@ -126,6 +126,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+
             var ruta = "{{ URL::to('/admin/ordenes-pendientes/tabla/lista') }}";
             $('#tablaDatatable').load(ruta);
 
@@ -155,9 +156,6 @@
             }
             tick();
         }
-
-
-
 
 
         function informacion(id){
@@ -229,6 +227,28 @@
 
                         recargar();
 
+                        // si el cliente cancelo la orden
+
+                        Swal.fire({
+                            title: 'ORDEN CANCELADA',
+                            text: "El Cliente Cancelo la Orden",
+                            icon: 'danger',
+                            showCancelButton: false,
+                            confirmButtonColor: '#28a745',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: 'Cancelar',
+                            confirmButtonText: 'Recargar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+
+                            }
+                        })
+
+                    }
+                    else  if(response.data.success === 2){
+
+                        recargar();
+
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -237,7 +257,8 @@
                             timer: 1200
                         })
 
-                    }else{
+                    }
+                    else{
                         toastr.error('Reintentar de nuevo');
                     }
                 })
