@@ -23,12 +23,15 @@
     <div class="container-fluid">
         <div class="row">
             <h1>Productos Orden #: {{ $id }}</h1>
-        </div>
 
-            <div class="col-md-8" style="margin-top: 8px;">
+            <div class="col-md-8" style="margin-left: 15px">
                 <a class="btn btn-info mt-3 float-left" href= "javascript:history.back()" target="frameprincipal">
                     <i title="Atrás"></i> Atrás </a>
             </div>
+
+        </div>
+
+
 
 
     </div>
