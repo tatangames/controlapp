@@ -25,6 +25,17 @@
             <h1>Ordenes Pendientes</h1>
         </div>
 
+        <button type="button" onclick="recargar()" class="btn btn-success btn-sm">
+            <i class="fas fa-pencil-alt"></i>
+            Recargar
+        </button>
+
+        <div class="form-group" style="width: 25%">
+            <label>Cronometro</label>
+            <label id="contador"></label>
+        </div>
+
+
     </div>
 </section>
 
@@ -117,6 +128,8 @@
         $(document).ready(function(){
             var ruta = "{{ URL::to('/admin/ordenes-pendientes/tabla/lista') }}";
             $('#tablaDatatable').load(ruta);
+
+            countdown();
         });
     </script>
 
@@ -126,6 +139,26 @@
             var ruta = "{{ url('/admin/ordenes-pendientes/tabla/lista') }}";
             $('#tablaDatatable').load(ruta);
         }
+
+        function countdown() {
+            var seconds = 60;
+            function tick() {
+                var counter = document.getElementById("contador");
+                seconds--;
+                counter.innerHTML = "0:" + (seconds < 10 ? "0" : "") + String(seconds);
+                if( seconds > 0 ) {
+                    setTimeout(tick, 1000);
+                } else {
+                    recargar();
+                    countdown();
+                }
+            }
+            tick();
+        }
+
+
+
+
 
         function informacion(id){
             openLoading();
