@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Backend\Admin\Ordenes;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendNotiClienteJobs;
 use App\Models\Clientes;
-use App\Models\MotoristasExperiencia;
 use App\Models\Ordenes;
 use App\Models\OrdenesDescripcion;
 use App\Models\OrdenesDirecciones;
 use App\Models\Producto;
-use App\Models\Zonas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -158,12 +156,12 @@ class OrdenesController extends Controller
 
         $infoCliente = Clientes::where('id', $infoOrdenes->clientes_id)->first();
 
-        /*$titulo = "Orden #" . $request->ordenid;
+        $titulo = "Orden #" . $request->ordenid;
         $mensaje = "Orden Iniciada";
 
         if($infoCliente->token_fcm != null) {
             SendNotiClienteJobs::dispatch($titulo, $mensaje, $infoCliente->token_fcm);
-        }*/
+        }
 
         return ['success' => 2];
     }
