@@ -11,6 +11,7 @@
                                 <th># Orden</th>
                                 <th>Fecha</th>
                                 <th>Venta</th>
+                                <th>Nota Cliente</th>
                                 <th>Cliente</th>
                                 <th>Dirección</th>
                                 <th>Referencia</th>
@@ -26,7 +27,7 @@
                                     <td>{{ $dato->id }}</td>
                                     <td>{{ $dato->fecha_orden }}</td>
                                     <td>{{ $dato->precio_consumido }}</td>
-
+                                    <td>{{ $dato->nota }}</td>
                                     <td>{{ $dato->cliente }}</td>
                                     <td>{{ $dato->direccion }}</td>
                                     <td>{{ $dato->referencia }}</td>
