@@ -308,7 +308,8 @@
         }
 
         function imprimirTicket(id){
-            window.location.href="{{ url('/admin/ordenes/ticket') }}/"+id;
+            //window.location.href="{{ url('/admin/ordenes/ticket') }}/"+id;
+            window.open("{{ URL::to('admin/ordenes/ticket') }}/" + id);
 
         }
 
