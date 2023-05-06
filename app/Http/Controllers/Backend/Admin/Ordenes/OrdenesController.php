@@ -133,9 +133,15 @@ class OrdenesController extends Controller
     public function imprimirTicket($id){
 
 
-        $mpdf = new \Mpdf\Mpdf();
+        //$mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->WriteHTML('<h1>Hello world!</h1>');
         $mpdf->Output();
+
+        //$mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+       // $mpdf->SetTitle('Catálogo de Materiales');
+       // $stylesheet = file_get_contents('css/csspresupuesto.css');
 
     }
 
