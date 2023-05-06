@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Ladumor\OneSignal\OneSignal;
-
+use Mpdf\Mpdf;
 class OrdenesController extends Controller
 {
     public function index(){
@@ -130,6 +130,17 @@ class OrdenesController extends Controller
     }
 
 
+    public function imprimirTicket($id){
+
+
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML('<h1>Hello world!</h1>');
+        $mpdf->Output();
+
+    }
+
+
+
     public function iniciarOrden(Request $request){
 
         $rules = array(
@@ -156,7 +167,7 @@ class OrdenesController extends Controller
 
         $infoCliente = Clientes::where('id', $infoOrdenes->clientes_id)->first();
 
-        $titulo = "Orden #" . $request->ordenid;
+        //$titulo = "Orden #" . $request->ordenid;
         $mensaje = "Orden Iniciada";
 
         if($infoCliente->token_fcm != null) {

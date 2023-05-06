@@ -307,7 +307,10 @@
             window.location.href="{{ url('/admin/ordenes/mapa/cliente') }}/"+id;
         }
 
+        function imprimirTicket(id){
+            window.location.href="{{ url('/admin/ordenes/ticket') }}/"+id;
 
+        }
 
         function informacionCancelar(id){
 
