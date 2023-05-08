@@ -9,7 +9,9 @@ use App\Models\Ordenes;
 use App\Models\OrdenesDescripcion;
 use App\Models\OrdenesDirecciones;
 use App\Models\Producto;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -132,17 +134,34 @@ class OrdenesController extends Controller
 
     public function imprimirTicket($id){
 
+        $infoOrden = Ordenes::where('id', $id)->first();
+        $infoDireccion = OrdenesDirecciones::where('id', $id)->first();
 
-        //$mpdf = new \Mpdf\Mpdf();
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-        $mpdf->WriteHTML('<h1>Hello world!</h1>');
-        $mpdf->Output();
+        $fecha = date("d-m-Y h:i A", strtotime($infoOrden->fecha_orden));
 
-        //$mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
-        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-       // $mpdf->SetTitle('Catálogo de Materiales');
-       // $stylesheet = file_get_contents('css/csspresupuesto.css');
 
+        $lista = OrdenesDescripcion::where('ordenes_id', $id)->get();
+
+        $suma = 0;
+
+        foreach ($lista as $ll){
+
+            $info = Producto::where('id', $ll->producto_id)->first();
+            $ll->nomproducto = $info->nombre . " (" . $ll->nota . ")";
+
+            $multiplicado = $ll->cantidad * $ll->precio;
+            $suma = $suma + $multiplicado;
+
+            $ll->multiplicado = number_format((float)$multiplicado, 2, '.', ',');
+            $ll->precio = number_format((float)$ll->precio, 2, '.', ',');
+        }
+
+        $suma = number_format((float)$suma, 2, '.', ',');
+
+        $pdf = PDF::loadView('backend.admin.ticket.vistaticket', compact('infoOrden', 'lista', 'fecha', 'suma', 'infoDireccion'));
+        //$pdf->setPaper('b7', 'portrait')->setWarnings(false);
+
+        return $pdf->stream('ticket.pdf');
     }
 
 
