@@ -199,7 +199,11 @@
             window.location.href="{{ url('/admin/ordenes/mapa/cliente') }}/"+id;
         }
 
+        function imprimirTicket(id){
 
+            window.open("{{ URL::to('admin/ordenes/ticket') }}/" + id);
+
+        }
 
     </script>
 
