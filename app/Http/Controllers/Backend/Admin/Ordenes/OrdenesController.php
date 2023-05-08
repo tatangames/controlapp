@@ -147,7 +147,13 @@ class OrdenesController extends Controller
         foreach ($lista as $ll){
 
             $info = Producto::where('id', $ll->producto_id)->first();
-            $ll->nomproducto = $info->nombre . " (" . $ll->nota . ")";
+
+            if($ll->nota != null){
+                $ll->nomproducto = $info->nombre . " (" . $ll->nota . ")";
+            }
+            else{
+                $ll->nomproducto = $info->nombre;
+            }
 
             $multiplicado = $ll->cantidad * $ll->precio;
             $suma = $suma + $multiplicado;
