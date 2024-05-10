@@ -21,7 +21,9 @@ class CategoriasController extends Controller
 
     // tabla
     public function tablaBloque(){
-        $bloques = BloqueServicios::orderBy('posicion')->get();
+        $bloques = BloqueServicios::orderBy('posicion')
+            ->whereNotIn('id', [1])
+            ->get();
 
         return view('backend.admin.bloques.tablabloques', compact('bloques'));
     }
