@@ -16,7 +16,14 @@ use App\Http\Controllers\Backend\Api\Afiliados\ApiCategoriaAfiliadoController;
 
 // --- CLIENTES ---
 Route::post('cliente/registro', [ApiRegistroController::class, 'registroCliente']);
+Route::post('cliente/registro/v2', [ApiRegistroController::class, 'registroClienteV2']);
+
+
+
 Route::post('cliente/login', [ApiClienteController::class, 'loginCliente']);
+Route::post('cliente/login/v2', [ApiClienteController::class, 'loginClienteV2']);
+
+
 Route::post('cliente/enviar/codigo-correo', [ApiClienteController::class, 'enviarCodigoCorreo']);
 Route::post('cliente/verificar/codigo-correo-password', [ApiClienteController::class, 'verificarCodigoCorreoPassword']);
 Route::post('cliente/actualizar/password', [ApiClienteController::class, 'actualizarPasswordCliente']);
@@ -33,6 +40,9 @@ Route::post('cliente/perfil/cambiar-password', [ApiPerfilController::class, 'cam
 
 // --- BLOQUE DE SERVICIOS ---
 Route::post('cliente/lista/servicios-bloque', [ApiZonasServiciosController::class, 'listadoBloque']);
+Route::post('cliente/lista/servicios-bloque/v2', [ApiZonasServiciosController::class, 'listadoBloqueV2']);
+
+
 
 Route::post('cliente/servicios/listado/menu', [ApiServiciosController::class, 'listadoMenuVertical']);
 Route::post('cliente/informacion/producto', [ApiProductosController::class, 'infoProductoIndividual']);

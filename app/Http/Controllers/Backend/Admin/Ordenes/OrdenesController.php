@@ -215,7 +215,7 @@ class OrdenesController extends Controller
 
         $rules = array(
             'id' => 'required', // id de la orden
-            'nombre' => 'required'
+
         );
 
         $validator = Validator::make($request->all(), $rules);

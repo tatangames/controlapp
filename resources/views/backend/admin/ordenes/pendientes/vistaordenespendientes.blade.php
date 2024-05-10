@@ -326,10 +326,6 @@
             var nombre = document.getElementById('nombre-cancelar').value;
             var id = document.getElementById('id-cancelar').value;
 
-            if(nombre === '') {
-                toastr.error('Nota es requerido');
-                return;
-            }
 
             if(nombre.length > 600){
                 toastr.error('Nota máximo 600 caracteres');

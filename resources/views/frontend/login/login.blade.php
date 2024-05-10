@@ -86,7 +86,7 @@
         <div class="row" style="margin-top: 60px">
             <div class="col-lg-6 col-12 mx-auto">
                 <div class="text-center image-size-small position-relative">
-                    <img src="{{ asset('images/logo.png') }}" class="rounded-circle p-2 bg-white">
+                    <img src="{{ asset('images/logov2.jpg') }}" class="rounded-circle p-2 bg-white">
                 </div>
                 <div class="p-5 bg-white rounded shadow-lg">
                     <h3 class="mb-2 text-center pt-5">PANEL DE CONTROL EL TUNCAZO</h3>

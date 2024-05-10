@@ -54,4 +54,41 @@ class ApiRegistroController extends Controller
             return ['success' => 4];
         }
     }
+
+
+    public function registroClienteV2(Request $request){
+
+        $rules = array(
+            'usuario' => 'required',
+            'password' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()){return ['success' => 0]; }
+
+        // verificar si existe el usuario
+        if(Clientes::where('usuario', $request->usuario)->first()){
+            return ['success' => 1];
+        }
+
+        $fecha = Carbon::now('America/El_Salvador');
+
+        $usuario = new Clientes();
+        $usuario->usuario = $request->usuario;
+        $usuario->correo = null;
+        $usuario->codigo_correo = null;
+        $usuario->password = Hash::make($request->password);
+        $usuario->fecha = $fecha;
+        $usuario->activo = 1;
+        $usuario->token_fcm = null;
+        $usuario->borrar_carrito = 0;
+
+        if($usuario->save()){
+            return ['success'=> 2, 'id'=> strval($usuario->id)];
+
+        }else{
+            return ['success' => 4];
+        }
+    }
 }

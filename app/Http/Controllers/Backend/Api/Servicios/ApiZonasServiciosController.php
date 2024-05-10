@@ -69,4 +69,50 @@ class ApiZonasServiciosController extends Controller
         ];
     }
 
+
+    public function listadoBloqueV2(Request $request){
+
+        $rules = array(
+            'id' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){return ['success' => 0]; }
+
+        // retornar bloques de servicios
+        $servicios = BloqueServicios::where('activo', 1)
+            ->orderBy('posicion', 'ASC')
+            ->get();
+
+        $slider = BloqueSlider::orderBy('posicion')->get();
+        $lleva = false;
+
+        foreach ($slider as $ss){
+            $lleva = true;
+
+            if($ss->redireccionamiento == 0){
+                $ss->id_producto = 0;
+            }
+
+            if($ss->id_producto == null){
+                $ss->id_producto = 0;
+            }
+        }
+
+        $infogeneral = InformacionAdmin::where('id', 1)->first();
+        $visibleSlider = $infogeneral->activo_slider;
+
+        if(!$lleva){
+            $visibleSlider = 0;
+        }
+
+        return [
+            'success' => 1,
+            'servicios' => $servicios,
+            'slider' => $slider,
+            'activo_slider' => $visibleSlider
+        ];
+    }
+
 }
