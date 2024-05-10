@@ -171,6 +171,41 @@ class OrdenesController extends Controller
     }
 
 
+    public function imprimirTicketV2($id){
+
+        $infoOrden = Ordenes::where('id', $id)->first();
+        $infoDireccion = OrdenesDirecciones::where('id', $id)->first();
+
+        $fecha = date("d-m-Y h:i A", strtotime($infoOrden->fecha_orden));
+
+
+        $lista = OrdenesDescripcion::where('ordenes_id', $id)->get();
+
+        $suma = 0;
+
+        foreach ($lista as $ll){
+
+            $info = Producto::where('id', $ll->producto_id)->first();
+
+            $ll->nomproducto = $info->nombre;
+
+            $multiplicado = $ll->cantidad * $ll->precio;
+            $suma = $suma + $multiplicado;
+
+            $ll->multiplicado = number_format((float)$multiplicado, 2, '.', ',');
+            $ll->precio = number_format((float)$ll->precio, 2, '.', ',');
+        }
+
+        $suma = number_format((float)$suma, 2, '.', ',');
+
+        $pdf = PDF::loadView('backend.admin.ticket.vistaticketv2', compact('infoOrden', 'lista', 'fecha', 'suma', 'infoDireccion'));
+        //$pdf->setPaper('b7', 'portrait')->setWarnings(false);
+
+        return $pdf->stream('ticket.pdf');
+    }
+
+
+
 
     public function iniciarOrden(Request $request){
 

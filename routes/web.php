@@ -87,7 +87,7 @@ Route::get('/admin/productos/ordenes/tabla/{id}', [OrdenesController::class,'tab
 Route::get('/admin/ordenes-pendientes/lista', [OrdenesController::class,'indexOrdenesPendientes'])->name('index.ordenes.pendientes');
 Route::get('/admin/ordenes-pendientes/tabla/lista', [OrdenesController::class,'tablaOrdenesPendientes']);
 
-Route::get('/admin/ordenes/ticket/{id}', [OrdenesController::class,'imprimirTicket']);
+Route::get('/admin/ordenes/ticket/{id}', [OrdenesController::class,'imprimirTicketV2']);
 
 
 // iniciar la orden y se envia notificacion al cliente
