@@ -74,10 +74,11 @@ class ApiCarritoController extends Controller
 
                     return [
                         'success' => 1,
+                        'domicilio' => $infoSistema->domicilio,
                         'subtotal' => number_format((float)$subTotal, 2, '.', ','), // subtotal
                         'estadoProductoGlobal' => $estadoProductoGlobal, // saver si producto esta activo
                         'producto' => $producto, //todos los productos
-                        'domicilio' => $infoSistema->domicilio
+
                     ];
 
                 }else{

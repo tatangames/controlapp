@@ -60,7 +60,14 @@ class ApiOrdenesController extends Controller
                 $o->estado = $estado;
             }
 
-            return ['success' => 1, 'ordenes' => $orden];
+
+            if ($orden->isEmpty()) {
+                $vacio = 0;
+            }else{
+                $vacio = 1;
+            }
+
+            return ['success' => 1, 'ordenes' => $orden, 'vacio' => $vacio];
         }else{
             return ['success' => 2];
         }

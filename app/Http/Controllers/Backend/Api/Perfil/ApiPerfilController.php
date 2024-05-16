@@ -74,7 +74,13 @@ class ApiPerfilController extends Controller
 
             $direccion = DireccionCliente::where('clientes_id', $request->id)->get();
 
-            return ['success' => 1, 'direcciones' => $direccion];
+            if ($direccion->isEmpty()) {
+                $vacio = 0;
+            }else{
+                $vacio = 1;
+            }
+
+            return ['success' => 1,  'estado' => $vacio, 'direcciones' => $direccion];
         }else{
             return ['succcess'=> 2];
         }
@@ -106,10 +112,13 @@ class ApiPerfilController extends Controller
                     // setear a 1 el id de la direccion que envia el usuario
                     DireccionCliente::where('id', $request->dirid)->update(['seleccionado' => 1]);
 
-                    if($tabla1 = CarritoTemporal::where('clientes_id', $request->id)->first()){
+
+                    // NO BORRAR CARRITO 16/05/2024
+
+                   /* if($tabla1 = CarritoTemporal::where('clientes_id', $request->id)->first()){
                         CarritoExtra::where('carrito_temporal_id', $tabla1->id)->delete();
                         CarritoTemporal::where('clientes_id', $request->id)->delete();
-                    }
+                    }*/
 
                     DB::commit();
 
