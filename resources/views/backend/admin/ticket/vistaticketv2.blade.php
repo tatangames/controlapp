@@ -1,11 +1,10 @@
 <style>
 
+
     * {
         font-family: 'Times New Roman';
-
-
-        margin-left: 5px !important;
-        margin-top: 3px !important;
+        margin-left: 75px !important;
+        margin-top: 0px !important;
         margin-right: 0px !important;
     }
 
@@ -13,8 +12,10 @@
     th,
     tr,
     table {
+        margin-left: 20px !important;
         border-top: 1px solid black;
         border-collapse: collapse;
+        width: 90%;
     }
 
     td.description,
@@ -45,7 +46,7 @@
 
     .izquierdazo {
         text-align: left;
-
+        font-weight: bold;
     }
 
     .ticket {
@@ -79,27 +80,24 @@
 <div class="ticket">
 
 
-    <br><br> <br><br> <br>
+    <br><br> <br><br>
 
-    <p class="d" style="margin-top: 0px !important; font-weight: bold; font-size: 16px">
-
-        Fecha: {{ $fecha }}
-        <br>Cliente: {{ $infoDireccion->nombre }}
-        <br>Direccion: {{ $infoDireccion->direccion }}
-    @if($infoDireccion->punto_referencia != null)
-        <br>Referencia: {{ $infoDireccion->punto_referencia }}</p>
-
-    @endif
+    <p class="d" style="margin-top: 8px !important;  line-height: 2;  font-weight: bold; font-size: 16px">
 
 
+        <br> {{ $infoDireccion->nombre }}
+        <br>{{ $fecha }}
+
+</p>
 
 
+<br>
 
-    <table width="90%">
+    <table >
         <thead>
         <tr>
-            <th class="quantity" style="font-size: 16px !important; font-weight: bold">Cant</th>
-            <th class="description" style="font-size: 16px !important; font-weight: bold">Producto</th>
+            <th style="font-size: 16px !important; font-weight: bold">CANTIDAD</th>
+            <th style="font-size: 16px !important; font-weight: bold">PRODUCTO</th>
 
         </tr>
         </thead>
@@ -109,8 +107,8 @@
         @foreach($lista as $dato)
 
             <tr>
-                <td class="quantity" style="font-size: 18px !important; font-weight: bold">{{ $dato->cantidad }}</td>
-                <td class="description" style="font-size: 16px !important; font-weight: bold">{{ $dato->nomproducto }}</td>
+                <td class="quantity" style="font-size: 20px !important; font-weight: bold">{{ $dato->cantidad }}</td>
+                <td class="description" style="font-size: 18px !important; font-weight: bold">{{ $dato->nomproducto }}</td>
             </tr>
 
         @endforeach
@@ -127,6 +125,19 @@
         </tbody>
     </table>
 
+
+    <p class="izquierdazo" style="margin-top: 16px !important; font-size: 17px !important;">
+
+        <br>Direccion: {{ $infoDireccion->direccion }}
+
+         @if($infoDireccion->punto_referencia != null)
+
+            <br>
+            <br>Referencia: {{ $infoDireccion->punto_referencia }}
+
+         @endif
+
+    </p>
 
 
 </div>
