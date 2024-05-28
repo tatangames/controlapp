@@ -82,7 +82,7 @@
 
     <br><br> <br><br>
 
-    <p class="d" style="margin-top: 8px !important;  line-height: 2;  font-weight: bold; font-size: 16px">
+    <p class="d" style="margin-top: 8px !important;  line-height: 2;  font-weight: bold; font-size: 17px">
 
 
         <br> {{ $infoDireccion->nombre }}
@@ -94,21 +94,15 @@
 <br>
 
     <table >
-        <thead>
-        <tr>
-            <th style="font-size: 16px !important; font-weight: bold">CANTIDAD</th>
-            <th style="font-size: 16px !important; font-weight: bold">PRODUCTO</th>
 
-        </tr>
-        </thead>
         <tbody>
 
 
         @foreach($lista as $dato)
 
             <tr>
-                <td class="quantity" style="font-size: 20px !important; font-weight: bold">{{ $dato->cantidad }}</td>
-                <td class="description" style="font-size: 18px !important; font-weight: bold">{{ $dato->nomproducto }}</td>
+                <td class="quantity" style="font-size: 25px !important; font-weight: bold">{{ $dato->cantidad }}</td>
+                <td class="description" style="font-size: 22px !important; font-weight: bold">{{ $dato->nomproducto }}</td>
             </tr>
 
         @endforeach

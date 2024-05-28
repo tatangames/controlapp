@@ -40,14 +40,7 @@
                                         <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion({{ $dato->id }})">
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
                                         </button>
-                                        <br><br>
-                                        <button type="button" class="btn btn-success btn-xs" onclick="vistaPoligonos({{ $dato->id }})">
-                                            <i class="fa fa-location-arrow" title="Agregar Poligonos"></i>&nbsp; Poligonos
-                                        </button>
-                                        <br><br>
-                                        <button type="button" class="btn btn-warning btn-xs" onclick="verMapa({{ $dato->id }})">
-                                            <i class="fa fa-location-arrow" title="Mapa"></i>&nbsp; Mapa
-                                        </button>
+
                                     </td>
                                 </tr>
                             @endforeach

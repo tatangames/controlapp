@@ -43,10 +43,7 @@
                                     </td>
 
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="verMapa({{ $dato->id }})">
-                                            <i class="fas fa-eye" title="Mapa"></i>&nbsp; Mapa
-                                        </button>
-                                        <br> <br>
+
                                         <button type="button" class="btn btn-success btn-xs" onclick="informacionProducto({{ $dato->id }})">
                                             <i class="fas fa-shopping-cart" title="Productos"></i>&nbsp; Productos
                                         </button>

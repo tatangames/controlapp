@@ -24,10 +24,6 @@
         <div class="row">
             <h1>Zonas de Entrega</h1>
 
-            <button type="button" onclick="abrirModalAgregar()" style="margin-left: 50px" class="btn btn-info btn-sm">
-                <i class="fas fa-pencil-alt"></i>
-                Nueva Zona
-            </button>
         </div>
 
     </div>
@@ -159,16 +155,6 @@
 
                                 <br>
 
-                                <div class="form-group" style="margin-left:0px">
-                                    <label>Disponibilidad Zona (Mostrar/Ocultar en App)</label><br>
-                                    <label class="switch" style="margin-top:10px">
-                                        <input type="checkbox" id="toggle-activo">
-                                        <div class="slider round">
-                                            <span class="on">Activar</span>
-                                            <span class="off">Desactivar</span>
-                                        </div>
-                                    </label>
-                                </div>
 
                             </div>
                         </div>
@@ -352,11 +338,7 @@
                             $("#toggle-problema").prop("checked", true);
                         }
 
-                        if(response.data.zona.activo === 0){
-                            $("#toggle-activo").prop("checked", false);
-                        }else{
-                            $("#toggle-activo").prop("checked", true);
-                        }
+
 
                     }else{
                         toastr.error('Error al Buscar');
@@ -392,8 +374,6 @@
 
             // toggle problema
             var tp = document.getElementById('toggle-problema').checked;
-            // toggle activo
-            var ta = document.getElementById('toggle-activo').checked;
 
             var latitud = document.getElementById("latitud-editar").value;
             var longitud = document.getElementById("longitud-editar").value;
@@ -402,7 +382,7 @@
             var precio = document.getElementById("precio-editar").value;
 
             var toggleProblema = tp ? 1 : 0;
-            var toggleActivo = ta ? 1 : 0;
+            var toggleActivo = 1;
 
             if(nombre === ''){
                 toastr.error('Nombre de zona es Requerido');

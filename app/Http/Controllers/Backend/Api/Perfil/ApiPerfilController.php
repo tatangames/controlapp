@@ -11,6 +11,7 @@ use App\Models\Horario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -254,7 +255,7 @@ class ApiPerfilController extends Controller
             try {
 
                 $di = new DireccionCliente();
-                $di->zonas_id = $request->zona_id;
+                $di->zonas_id = 1; // ZONA FIJA
                 $di->clientes_id = $request->id;
                 $di->nombre = $request->nombre;
                 $di->direccion = $request->direccion;
