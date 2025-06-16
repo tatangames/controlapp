@@ -28,7 +28,7 @@ class CreateMotoClienteDireccionMultiTable extends Migration
             $table->string('longitud', 100)->nullable();
 
 
-            $table->foreign('id_cliente_direc')->references('id')->on('cliente_direcciones');
+            $table->foreign('id_cliente_direc')->references('id')->on('moto_cliente_direccion');
         });
     }
 
