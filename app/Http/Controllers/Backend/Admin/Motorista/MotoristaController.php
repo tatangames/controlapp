@@ -220,6 +220,17 @@ class MotoristaController extends Controller
     }
 
 
+    public function verMapa($id){
+
+        $googleapi = config('googleapi.Google_API');
+
+        $info = MotoClienteDireccion::where('id', $id)->first();
+        $latitud = $info->latitud;
+        $longitud = $info->longitud;
+
+        return view('backend.admin.motoristas.clientedireccion.mapadireccion', compact('latitud', 'longitud', 'googleapi'));
+    }
+
 
     // *************************  EXTRA DIRECIONES ********************************
 
@@ -340,4 +351,48 @@ class MotoristaController extends Controller
     }
 
 
+    public function verMapaDireccionExtra($id){
+
+        $googleapi = config('googleapi.Google_API');
+
+        $poligono = MotoClienteDireccionMultiple::where('id', $id)->get();
+        return view('backend.admin.motoristas.clientedireccion.extra.mapadireccionextra', compact('poligono', 'googleapi'));
+    }
+
+
+
+
+    //**********
+    public function indexDireccionTodas(){
+        return view('backend.admin.motoristas.clientedireccion.todas.vistatodasdirecciones');
+    }
+
+
+    public function tablaDireccionTodas(){
+
+        $resultsBloque = [];
+
+        $arrayDirecciones = MotoClienteDireccion::orderBy('nombre', 'ASC')->get();
+
+        foreach ($arrayDirecciones as $direccion) {
+
+            $direccion->idcliente = $direccion->id;
+
+            $direccion->bloque = 1; // 👈 bloque 1 para principales
+            $resultsBloque[] = $direccion;
+
+            // Direcciones múltiples relacionadas
+            $arrayMulti = MotoClienteDireccionMultiple::where('id_cliente_direc', $direccion->id)
+                ->orderBy('nombre', 'ASC')
+                ->get();
+
+            foreach ($arrayMulti as $subdireccion) {
+                $subdireccion->bloque = 2; // 👈 bloque 2 para múltiples
+                $resultsBloque[] = $subdireccion;
+                $subdireccion->idcliente = $subdireccion->id;
+            }
+        }
+
+        return view('backend.admin.motoristas.clientedireccion.todas.tablatodasdirecciones', compact('resultsBloque'));
+    }
 }

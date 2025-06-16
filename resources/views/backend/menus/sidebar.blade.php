@@ -61,6 +61,15 @@
 
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="{{ route('index.nuevo.motorista.direccion.todas') }}" target="frameprincipal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Direcciones Todas</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
                             <a href="{{ route('index.nuevo.motorista') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Nuevo Motorista</p>

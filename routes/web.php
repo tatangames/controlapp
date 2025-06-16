@@ -216,6 +216,7 @@ Route::post('/admin/motorista/direccion/nuevo', [MotoristaController::class, 'nu
 Route::post('/admin/motorista/direccion/informacion', [MotoristaController::class, 'infoMotoristaDireccion']);
 Route::post('/admin/motorista/direccion/editar', [MotoristaController::class, 'editarMotoristaDireccion']);
 Route::post('/admin/motorista/direccion/borrar', [MotoristaController::class, 'borrarDireccion']);
+Route::get('/admin/motorista/direccion/mapa/{id}', [MotoristaController::class, 'verMapa']);
 
 
 
@@ -228,9 +229,11 @@ Route::post('/admin/motorista/direccion-extra/borrar', [MotoristaController::cla
 Route::post('/admin/motorista/direccion-extra/nuevo', [MotoristaController::class, 'nuevoMotoristaDireccionExtra']);
 Route::post('/admin/motorista/direccion-extra/informacion', [MotoristaController::class, 'infoMotoristaDireccionExtra']);
 Route::post('/admin/motorista/direccion-extra/editar', [MotoristaController::class, 'editarMotoristaDireccionExtra']);
+Route::get('/admin/motorista/direccion-extra/mapa/{id}', [MotoristaController::class, 'verMapaDireccionExtra']);
 
 
-
+Route::get('/admin/motorista/direccion-todas/index', [MotoristaController::class, 'indexDireccionTodas'])->name('index.nuevo.motorista.direccion.todas');
+Route::get('/admin/motorista/direccion-todas/tabla', [MotoristaController::class, 'tablaDireccionTodas']);
 
 
 

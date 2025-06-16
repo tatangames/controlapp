@@ -360,6 +360,14 @@
         }
 
 
+        function verMapa(id){
+            window.location.href="{{ url('/admin/motorista/direccion/mapa') }}/"+id;
+        }
+
+
+
+
+
     </script>
 
 
