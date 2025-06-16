@@ -355,8 +355,11 @@ class MotoristaController extends Controller
 
         $googleapi = config('googleapi.Google_API');
 
-        $poligono = MotoClienteDireccionMultiple::where('id', $id)->get();
-        return view('backend.admin.motoristas.clientedireccion.extra.mapadireccionextra', compact('poligono', 'googleapi'));
+        $info = MotoClienteDireccionMultiple::where('id', $id)->first();
+        $latitud = $info->latitud;
+        $longitud = $info->longitud;
+
+        return view('backend.admin.motoristas.clientedireccion.extra.mapadireccionextra', compact('latitud', 'longitud', 'googleapi'));
     }
 
 
