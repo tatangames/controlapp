@@ -10,9 +10,10 @@ use App\Http\Controllers\Backend\Api\Perfil\ApiPerfilController;
 use App\Http\Controllers\Backend\Api\Productos\ApiProductosController;
 use App\Http\Controllers\Backend\Api\Carrito\ApiCarritoController;
 use App\Http\Controllers\Backend\Api\Ordenes\ApiOrdenesController;
-use App\Http\Controllers\Backend\Api\Motoristas\ApiMotoristasController;
-use App\Http\Controllers\Backend\Api\Afiliados\ApiAfiliadosController;
-use App\Http\Controllers\Backend\Api\Afiliados\ApiCategoriaAfiliadoController;
+use App\Http\Controllers\Backend\Api\Motorista\ApiMotoristaController;
+
+
+
 
 // --- CLIENTES ---
 Route::post('cliente/registro', [ApiRegistroController::class, 'registroCliente']);
@@ -87,5 +88,16 @@ Route::post('cliente/opcion/carrito/guardar', [ApiPerfilController::class, 'guar
 
 
 
+
+//******* SECCION DE MOTORISTAS ****************************
+
+Route::post('motorista/login', [ApiMotoristaController::class, 'loginMotorista']);
+
+// obtener listado de direcciones para actualizar
+Route::post('motorista/direcciones', [ApiMotoristaController::class, 'listadoDireccionesCliente']);
+// verificar si debo actualizar
+Route::post('motorista/verificar/deboactualizar', [ApiMotoristaController::class, 'VerificarDeboActualizar']);
+// motorista puede modificar GPS
+Route::post('motorista/actualizar/gps', [ApiMotoristaController::class, 'modificarGPS']);
 
 

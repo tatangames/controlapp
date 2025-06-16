@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendNotiPropietarioJobs;
 use App\Models\Afiliados;
 use App\Models\Clientes;
-use App\Models\MotoristasExperiencia;
-use App\Models\MotoristasOrdenes;
 use App\Models\Ordenes;
 use App\Models\OrdenesDescripcion;
 use App\Models\OrdenesDirecciones;
