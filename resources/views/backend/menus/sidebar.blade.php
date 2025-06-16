@@ -39,6 +39,41 @@
                 </li>
 
 
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="far fa-edit"></i>
+                        <p>
+                            Motoristas
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('index.nuevo.motorista.direccion') }}" target="frameprincipal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Direcciones Cliente</p>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('index.nuevo.motorista') }}" target="frameprincipal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Nuevo Motorista</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </li>
+
+
+
+
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -122,10 +157,6 @@
                                 </a>
                             </li>
                         </ul>
-
-
-
-
 
                     </li>
 

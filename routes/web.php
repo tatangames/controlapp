@@ -13,6 +13,9 @@ use App\Http\Controllers\Backend\Admin\Clientes\ClientesController;
 use App\Http\Controllers\Backend\Admin\Eventos\EventosController;
 use App\Http\Controllers\Backend\Admin\Horario\HorarioController;
 use App\Http\Controllers\Backend\Admin\Ordenes\OrdenesController;
+use App\Http\Controllers\Backend\Admin\Motorista\MotoristaController;
+
+
 
 // INICIO
 Route::get('/', [LoginController::class,'index'])->name('login');
@@ -194,5 +197,45 @@ Route::get('/admin/tiposervicio/tabla', [HorarioController::class, 'tablaTipoSer
 Route::post('/admin/tiposervicio/nuevo', [HorarioController::class, 'nuevoTipoServicio']);
 Route::post('/admin/tiposervicio/informacion', [HorarioController::class,'informacionTipoServicio']);
 Route::post('/admin/tiposervicio/editar', [HorarioController::class,'editarTipoServicio']);
+
+
+
+
+//***** MOTORISTAS *******
+Route::get('/admin/motorista/index', [MotoristaController::class, 'indexNuevoMotorista'])->name('index.nuevo.motorista');
+Route::get('/admin/motorista/tabla', [MotoristaController::class, 'tablaNuevoMotorista']);
+Route::post('/admin/motorista/nuevo', [MotoristaController::class, 'nuevoMotorista']);
+Route::post('/admin/motorista/informacion', [MotoristaController::class, 'infoMotorista']);
+Route::post('/admin/motorista/editar', [MotoristaController::class, 'editarMotorista']);
+
+// MOTORISTA DIRECCIONES
+
+Route::get('/admin/motorista/direccion/index', [MotoristaController::class, 'indexNuevoMotoristaDireccion'])->name('index.nuevo.motorista.direccion');
+Route::get('/admin/motorista/direccion/tabla', [MotoristaController::class, 'tablaNuevoMotoristaDireccion']);
+Route::post('/admin/motorista/direccion/nuevo', [MotoristaController::class, 'nuevoMotoristaDireccion']);
+Route::post('/admin/motorista/direccion/informacion', [MotoristaController::class, 'infoMotoristaDireccion']);
+Route::post('/admin/motorista/direccion/editar', [MotoristaController::class, 'editarMotoristaDireccion']);
+Route::post('/admin/motorista/direccion/borrar', [MotoristaController::class, 'borrarDireccion']);
+
+
+
+
+// EXTRA DIRECCIONES
+
+Route::get('/admin/motorista/direccion-extra/{id}', [MotoristaController::class, 'indexNuevoMotoristaDireccionExtra']);
+Route::get('/admin/motorista/direccion-extra/tabla/{id}', [MotoristaController::class, 'tablaNuevoMotoristaDireccionExtra']);
+Route::post('/admin/motorista/direccion-extra/borrar', [MotoristaController::class, 'borrarDireccionExtra']);
+Route::post('/admin/motorista/direccion-extra/nuevo', [MotoristaController::class, 'nuevoMotoristaDireccionExtra']);
+Route::post('/admin/motorista/direccion-extra/informacion', [MotoristaController::class, 'infoMotoristaDireccionExtra']);
+Route::post('/admin/motorista/direccion-extra/editar', [MotoristaController::class, 'editarMotoristaDireccionExtra']);
+
+
+
+
+
+
+
+
+
 
 
