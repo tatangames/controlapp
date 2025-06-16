@@ -30,7 +30,7 @@
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
                                         </button>
 
-                                        <button type="button" style="padding: 5px" class="btn btn-danger btn-xs" onclick="infoBorrar({{ $dato->id }})">
+                                        <button type="button" style="margin: 5px" class="btn btn-danger btn-xs" onclick="infoBorrar({{ $dato->id }})">
                                             <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                         </button>
 

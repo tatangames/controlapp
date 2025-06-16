@@ -30,19 +30,19 @@
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
                                         </button>
 
-                                        <button type="button" style="padding: 5px" class="btn btn-success btn-xs" onclick="extraDireccion({{ $dato->id }})">
+                                        <button type="button" style="margin: 5px" class="btn btn-success btn-xs" onclick="extraDireccion({{ $dato->id }})">
                                             <i class="fas fa-plus" title="Dirección Extra"></i>&nbsp; Direccion Extra
                                         </button>
 
                                         @if($dato->latitud != null && $dato->longitud != null)
 
-                                            <button type="button" style="padding: 5px" class="btn btn-warning btn-xs" onclick="verMapa({{ $dato->id }})">
+                                            <button type="button" style="margin: 5px" class="btn btn-warning btn-xs" onclick="verMapa({{ $dato->id }})">
                                                 <i class="fas fa-map" title="Mapa"></i>&nbsp; Mapa
                                             </button>
 
                                         @endif
 
-                                        <button type="button" style="padding: 5px" class="btn btn-danger btn-xs" onclick="infoBorrar({{ $dato->id }})">
+                                        <button type="button" style="margin: 5px" class="btn btn-danger btn-xs" onclick="infoBorrar({{ $dato->id }})">
                                             <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                         </button>
 
