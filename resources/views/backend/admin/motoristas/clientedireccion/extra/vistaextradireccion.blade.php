@@ -359,6 +359,13 @@
                 });
         }
 
+
+
+        function verMapa(id){
+            window.location.href="{{ url('/admin/motorista/direccion-extra/mapa') }}/"+id;
+        }
+
+
     </script>
 
 

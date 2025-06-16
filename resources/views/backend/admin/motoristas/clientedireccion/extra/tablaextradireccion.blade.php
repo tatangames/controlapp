@@ -34,7 +34,13 @@
                                             <i class="fas fa-trash" title="Borrar"></i>&nbsp; Borrar
                                         </button>
 
+                                        @if($dato->latitud != null && $dato->longitud != null)
 
+                                            <button type="button" style="margin: 5px" class="btn btn-warning btn-xs" onclick="verMapa({{ $dato->id }})">
+                                                <i class="fas fa-map" title="Mapa"></i>&nbsp; Mapa
+                                            </button>
+
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
