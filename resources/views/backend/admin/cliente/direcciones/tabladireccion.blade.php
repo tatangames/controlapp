@@ -12,6 +12,8 @@
                                 <th>Referencia</th>
                                 <th>Teléfono</th>
                                 <th>Zona</th>
+                                <th>Latitud</th>
+                                <th>Longitud</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -23,6 +25,8 @@
                                     <td>{{ $dato->punto_referencia }}</td>
                                     <td>{{ $dato->telefono }}</td>
                                     <td>{{ $dato->zona }}</td>
+                                    <td>{{ $dato->latitud }}</td>
+                                    <td>{{ $dato->longitud }}</td>
 
                                 </tr>
                             @endforeach
