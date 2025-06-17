@@ -52,7 +52,7 @@
             "info": true,
             "autoWidth": false,
             "pagingType": "full_numbers",
-            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, "Todo"]],
+            "lengthMenu": [[150, -1], [150, "Todo"]],
             "language": {
 
                 "sProcessing": "Procesando...",
