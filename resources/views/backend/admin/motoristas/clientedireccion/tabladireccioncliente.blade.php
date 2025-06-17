@@ -30,10 +30,6 @@
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
                                         </button>
 
-                                        <button type="button" style="margin: 5px" class="btn btn-success btn-xs" onclick="extraDireccion({{ $dato->id }})">
-                                            <i class="fas fa-plus" title="Dirección Extra"></i>&nbsp; Direccion Extra
-                                        </button>
-
                                         @if($dato->latitud != null && $dato->longitud != null)
 
                                             <button type="button" style="margin: 5px" class="btn btn-warning btn-xs" onclick="verMapa({{ $dato->id }})">
