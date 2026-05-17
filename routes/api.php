@@ -30,7 +30,7 @@ Route::post('cliente/servicios/listado/menu', [ApiServiciosController::class, 'l
 Route::post('cliente/informacion/producto', [ApiProductosController::class, 'infoProductoIndividual']);
 Route::post('cliente/carrito/producto/agregar', [ApiProductosController::class, 'agregarProductoCarritoTemporal']);
 
-
+// --- CARRITO DE COMPRAS ---
 Route::post('cliente/carrito/ver/orden', [ApiCarritoController::class, 'verCarritoDeCompras']);
 Route::post('cliente/carrito/borrar/orden', [ApiCarritoController::class, 'borrarCarritoDeCompras']);
 Route::post('cliente/carrito/ver/producto', [ApiCarritoController::class, 'verProductoCarritoEditar']);
@@ -39,52 +39,20 @@ Route::post('cliente/carrito/cambiar/cantidad', [ApiCarritoController::class, 'e
 Route::post('cliente/carrito/ver/proceso-orden', [ApiCarritoController::class, 'verOrdenAProcesarCliente']);
 Route::post('cliente/proceso/orden/estado-1', [ApiCarritoController::class, 'procesarOrdenEstado1']);
 
+// --- ORDENES ENVIADAS ---
 Route::post('cliente/ver/ordenes-activas',  [ApiOrdenesController::class, 'ordenesActivas']);
 Route::post('cliente/ver/estado-orden',  [ApiOrdenesController::class, 'estadoOrdenesActivas']);
 Route::post('cliente/proceso/finalizar/orden',  [ApiOrdenesController::class, 'ocultarOrdenFinal']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// notificacion: cancelar orden
-Route::post('cliente/proceso/orden/cancelar',  [ApiOrdenesController::class, 'cancelarOrdenCliente']);
 Route::post('cliente/listado/productos/ordenes',  [ApiOrdenesController::class, 'listadoProductosOrdenes']);
-Route::post('cliente/listado/productos/ordenes-individual',  [ApiOrdenesController::class, 'listadoProductosOrdenesIndividual']);
+Route::post('cliente/proceso/orden/cancelar',  [ApiOrdenesController::class, 'cancelarOrdenCliente']);
+Route::post('cliente/proceso/completar/orden',  [ApiOrdenesController::class, 'completarOrden']);
 
 
-Route::post('cliente/ver/historial', [ApiOrdenesController::class, 'verHistorial']);
-Route::post('cliente/ver/productos/historial',  [ApiOrdenesController::class, 'verProductosOrdenHistorial']);
-
-// --- EVENTOS ----
-Route::get('cliente/eventos/listado', [ApiServiciosController::class, 'listadoEventos']);
-Route::post('cliente/eventos-imagen/listado', [ApiServiciosController::class, 'listadoEventosImagenes']);
 
 
-// horarios
-Route::get('cliente/horarios', [ApiPerfilController::class, 'listaHorarios']);
 
 
-// ver opcion elegida carrito de compras
-Route::post('cliente/opcion/carrito/compras', [ApiPerfilController::class, 'opcionCarritoCompras']);
-// guardar opcion elegida carrito de compras
-Route::post('cliente/opcion/carrito/guardar', [ApiPerfilController::class, 'guardarOpcionCarritoCompras']);
+
 
 
 

@@ -84,12 +84,12 @@
 
                                 <div class="form-group">
                                     <label>Descripción</label>
-                                    <input type="text" maxlength="2000" class="form-control" id="descripcion-nuevo" placeholder="Descripción">
+                                    <input type="text" maxlength="2000" autocomplete="off" class="form-control" id="descripcion-nuevo" placeholder="Descripción">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Precio</label>
-                                    <input type="number" class="form-control" id="precio-nuevo" placeholder="Precio">
+                                    <input type="text" autocomplete="off" class="form-control" id="precio-nuevo" placeholder="Precio">
                                 </div>
 
                                 <div class="form-group" style="margin-left:0px">
@@ -116,7 +116,7 @@
 
                                 <div class="form-group">
                                     <label>Nota</label>
-                                    <input type="text" maxlength="500" class="form-control" id="nota-nuevo" placeholder="Nota">
+                                    <input type="text" autocomplete="off" maxlength="500" class="form-control" id="nota-nuevo" placeholder="Nota">
                                 </div>
 
                             </div>
@@ -168,12 +168,12 @@
 
                             <div class="form-group">
                                 <label>Descripción</label>
-                                <input type="text" maxlength="2000" class="form-control" id="descripcion-editar" placeholder="Descripción">
+                                <input type="text" maxlength="2000" autocomplete="off" class="form-control" id="descripcion-editar" placeholder="Descripción">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio</label>
-                                <input type="number" class="form-control" id="precio-editar" placeholder="Precio">
+                                <input type="text" autocomplete="off" class="form-control" id="precio-editar" placeholder="Precio">
                             </div>
 
                             <div class="form-group" style="margin-left:0px">
@@ -212,7 +212,7 @@
 
                             <div class="form-group">
                                 <label>Nota</label>
-                                <input type="text" maxlength="500" class="form-control" id="nota-editar" placeholder="Nota">
+                                <input type="text" autocomplete="off" maxlength="500" class="form-control" id="nota-editar" placeholder="Nota">
                             </div>
 
                         </div>
@@ -265,7 +265,7 @@
 
             var nombre = document.getElementById('nombre-nuevo').value;
             var descripcion = document.getElementById('descripcion-nuevo').value;
-            var precio = document.getElementById('precio-nuevo').value;
+            var precio = parseFloat(document.getElementById('precio-nuevo').value).toFixed(2);
             var imagen = document.getElementById('imagen-nuevo');
             var cbimagen = document.getElementById('toggle-imagen').checked;
             var cbnota = document.getElementById('toggle-nota').checked;
@@ -306,7 +306,7 @@
                 return;
             }
 
-            if(precio < 0){
+            if(precio <= 0){
                 toastr.error('Precio no debe ser negativo');
                 return;
             }
@@ -420,7 +420,7 @@
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
             var descripcion = document.getElementById('descripcion-editar').value;
-            var precio = document.getElementById('precio-editar').value;
+            var precio = parseFloat(document.getElementById('precio-editar').value).toFixed(2);
             var imagen = document.getElementById('imagen-editar');
             var cbimagen = document.getElementById('toggle-imagen-editar').checked;
             var cbnota = document.getElementById('toggle-nota-editar').checked;

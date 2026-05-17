@@ -18,8 +18,6 @@ class Ordenes extends Model
         'fecha_orden',
         'estado_iniciada',
         'fecha_iniciada',
-        'estado_finalizada',
-        'fecha_finalizada',
         'estado_cancelada',
         'fecha_cancelada',
         'mensaje_cancelada',

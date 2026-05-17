@@ -12,6 +12,7 @@ use App\Models\OrdenesDirecciones;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApiOrdenesController extends Controller
@@ -115,13 +116,13 @@ class ApiOrdenesController extends Controller
 
         if($orden = Ordenes::where('id', $request->ordenid)->first()){
 
+            if($orden->estado_iniciada == 1){
+                return ['success' => 1, 'titulo' => 'Nota', 'mensaje' => 'No se puede cancelar la orden, ya fue iniciada'];
+            }
+
             if($orden->estado_cancelada == 0){
 
-                // seguro para evitar cancelar cuando servicio inicia a preparar orden
-                if($orden->estado_iniciada == 1){
-                    return ['success' => 1];
-                }
-
+                // CANCELAR LA ORDEN POR EL CLIENTE
                 DB::beginTransaction();
 
                 try {
@@ -129,23 +130,21 @@ class ApiOrdenesController extends Controller
                     $fecha = Carbon::now('America/El_Salvador');
 
                     Ordenes::where('id', $request->ordenid)->update(['estado_cancelada' => 1,
-                        'cancelada_por' => 1,
+                        'cancelada_por' => 1, // CANCELADA POR CLIENTE
                         'visible' => 0,
                         'fecha_cancelada' => $fecha]);
 
                     DB::commit();
-                    return ['success' => 2];
 
                 } catch(\Throwable $e){
                     DB::rollback();
                     return ['success' => 99];
                 }
 
-            }else{
-                return ['success' => 2]; // ya cancelada
             }
+            return ['success' => 2]; // ORDEN CANCELADA
         }else{
-            return ['success' => 99]; // no encontrada
+            return ['success' => 99]; // ERROR
         }
     }
 
@@ -161,9 +160,10 @@ class ApiOrdenesController extends Controller
 
         if(Ordenes::where('id', $request->ordenid)->first()){
             $producto = DB::table('ordenes AS o')
-                ->join('ordenes_descripcion AS od', 'od.ordenes_id', '=', 'o.id')
-                ->join('producto AS p', 'p.id', '=', 'od.producto_id')
-                ->select('od.id AS productoID', 'p.nombre', 'p.utiliza_imagen', 'p.imagen', 'od.precio', 'od.cantidad')
+                ->join('ordenes_descripcion AS od', 'od.id_ordenes', '=', 'o.id')
+                ->join('producto AS p', 'p.id', '=', 'od.id_producto')
+                ->select('od.id AS productoID', 'p.nombre', 'p.utiliza_imagen',
+                    'p.imagen', 'od.precio', 'od.cantidad', 'od.nota')
                 ->where('o.id', $request->ordenid)
                 ->get();
 
@@ -171,38 +171,7 @@ class ApiOrdenesController extends Controller
                 $cantidad = $p->cantidad;
                 $precio = $p->precio;
                 $multi = $cantidad * $precio;
-                $p->multiplicado = number_format((float)$multi, 2, '.', ',');
-            }
-
-            return ['success' => 1, 'productos' => $producto];
-        }else{
-            return ['success' => 2];
-        }
-    }
-
-    public function listadoProductosOrdenesIndividual(Request $request){
-
-        $reglaDatos = array(
-            'productoid' => 'required'
-        );
-
-        $validarDatos = Validator::make($request->all(), $reglaDatos);
-
-        if($validarDatos->fails()){return ['success' => 0]; }
-
-        if(OrdenesDescripcion::where('id', $request->productoid)->first()){
-
-            $producto = DB::table('ordenes_descripcion AS o')
-                ->join('producto AS p', 'p.id', '=', 'o.producto_id')
-                ->select('p.imagen', 'p.nombre', 'p.descripcion', 'p.utiliza_imagen', 'o.precio', 'o.cantidad', 'o.nota')
-                ->where('o.id', $request->productoid)
-                ->get();
-
-            foreach($producto as $p){
-                $cantidad = $p->cantidad;
-                $precio = $p->precio;
-                $multi = $cantidad * $precio;
-                $p->multiplicado = number_format((float)$multi, 2, '.', ',');
+                $p->multiplicado = "$" . number_format((float)$multi, 2, '.', ',');
             }
 
             return ['success' => 1, 'productos' => $producto];
@@ -212,92 +181,11 @@ class ApiOrdenesController extends Controller
     }
 
 
-    public function verHistorial(Request $request){
-        $reglaDatos = array(
-            'id' => 'required',
-            'fecha1' => 'required',
-            'fecha2' => 'required'
-        );
-
-        $validarDatos = Validator::make($request->all(), $reglaDatos );
-
-        if($validarDatos->fails()){return ['success' => 0]; }
-
-        if(Clientes::where('id', $request->id)->first()){
-
-            $start = Carbon::parse($request->fecha1)->startOfDay();
-            $end = Carbon::parse($request->fecha2)->endOfDay();
-
-            $orden = Ordenes::where('clientes_id', $request->id)
-                ->whereBetween('fecha_orden', [$start, $end])
-                ->orderBy('id', 'DESC')
-                ->get();
-
-            foreach($orden as $o){
-
-                $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
-
-                // prioridad
-                if($o->estado_iniciada == 0){
-                    $estado = "Orden Pendiente";
-                }else{
-                    $estado = "Orden Iniciada";
-                }
-
-                if($o->estado_cancelada == 1){
-                    $estado = "Orden Cancelada";
-                }
-
-                $o->estado = $estado;
 
 
 
-                $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
 
 
-                $infoCliente = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
-
-               $o->direccion = $infoCliente->direccion;
-            }
-
-            return ['success' => 1, 'historial' => $orden];
-
-        }else{
-            return ['success' => 2];
-        }
-    }
-
-    public function verProductosOrdenHistorial(Request $request){
-        // validaciones para los datos
-        $reglaDatos = array(
-            'ordenid' => 'required',
-        );
-
-        $validarDatos = Validator::make($request->all(), $reglaDatos );
-
-        if($validarDatos->fails()){return ['success' => 0]; }
-
-        if(Ordenes::where('id', $request->ordenid)->first()){
-
-            $producto = DB::table('ordenes AS o')
-                ->join('ordenes_descripcion AS od', 'od.ordenes_id', '=', 'o.id')
-                ->join('producto AS p', 'p.id', '=', 'od.producto_id')
-                ->select('od.id AS productoID', 'p.nombre', 'od.nota',
-                    'p.imagen', 'p.utiliza_imagen', 'od.precio', 'od.cantidad')
-                ->where('o.id', $request->ordenid)
-                ->get();
-
-            foreach($producto as $p){
-                $cantidad = $p->cantidad;
-                $precio = $p->precio;
-                $multi = $cantidad * $precio;
-                $p->multiplicado = number_format((float)$multi, 2, '.', ',');
-            }
-            return ['success' => 1, 'productos' => $producto];
-        }else{
-            return ['success' => 3];
-        }
-    }
 
     public function ocultarOrdenFinal(Request $request){
 
@@ -318,5 +206,26 @@ class ApiOrdenesController extends Controller
             return ['success' => 2];
         }
     }
+
+
+
+    public function completarOrden(Request $request){
+
+        $reglaDatos = array(
+            'ordenid' => 'required'
+        );
+
+        $validarDatos = Validator::make($request->all(), $reglaDatos);
+
+        if($validarDatos->fails()){return ['success' => 0]; }
+
+        Ordenes::where('id', $request->ordenid)->update([
+            'visible' => 0
+        ]);
+
+        return ['success' => 1];
+    }
+
+
 
 }

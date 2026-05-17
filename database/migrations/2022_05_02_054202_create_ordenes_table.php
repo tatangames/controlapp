@@ -25,10 +25,6 @@ class CreateOrdenesTable extends Migration
             $table->boolean('estado_iniciada');
             $table->dateTime('fecha_iniciada')->nullable();
 
-            // el cliente es el que finaliza la orden
-            $table->boolean('estado_finalizada');
-            $table->dateTime('fecha_finalizada')->nullable();
-
             $table->boolean('estado_cancelada');
             $table->dateTime('fecha_cancelada')->nullable();
 

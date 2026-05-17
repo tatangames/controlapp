@@ -9,8 +9,7 @@
                             <tr>
                                 <th>Fecha de Registro</th>
                                 <th>Usuario</th>
-                                <th>Activo</th>
-                                <th>Opciones</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -19,24 +18,6 @@
                                 <tr>
                                     <td>{{ $dato->fecha }}</td>
                                     <td>{{ $dato->usuario }}</td>
-                                    <td>
-                                        @if($dato->activo == 0)
-                                            <span class="badge bg-danger">Inactivo</span>
-                                        @else
-                                            <span class="badge bg-success">Activo</span>
-                                        @endif
-                                    </td>
-
-                                    <td>
-                                        <button type="button" class="btn btn-info btn-xs" onclick="informacion({{ $dato->id }})">
-                                            <i class="fas fa-edit" title="Editar"></i> Editar
-                                        </button>
-
-                                        <button type="button" class="btn btn-success btn-xs" onclick="verDirecciones({{ $dato->id }})">
-                                            <i class="fas fa-edit" title="Direcciones"></i> Direcciones
-                                        </button>
-
-                                    </td>
 
                                 </tr>
                             @endforeach

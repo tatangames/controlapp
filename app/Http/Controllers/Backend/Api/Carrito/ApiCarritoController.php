@@ -415,9 +415,6 @@ class ApiCarritoController extends Controller
                         'estado_iniciada' => 0, // el propietario inicia la orden
                         'fecha_iniciada' => null,
 
-                        'estado_finalizada' => 0, // el propietario finaliza la orden
-                        'fecha_finalizada' => null,
-
                         'estado_cancelada' => 0, // el motorista inicia el envio
                         'fecha_cancelada' => null,
                         'mensaje_cancelada' => null,
@@ -437,7 +434,6 @@ class ApiCarritoController extends Controller
                     OrdenesDescripcion::insert($data);
                 }
 
-                $infoCliente = Clientes::where('id', $request->clienteid)->first();
 
                 $nuevaDir = new OrdenesDirecciones();
                 $nuevaDir->id_ordenes = $idOrden;

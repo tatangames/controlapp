@@ -66,24 +66,4 @@ class ApiServiciosController extends Controller
 
 
 
-    public function listadoEventos(){
-
-        $eventos = BloquesEventos::where('activo', 1)
-            ->orderBy('posicion')
-            ->get();
-
-        return ['success' => 1, 'eventos' => $eventos];
-    }
-
-    public function listadoEventosImagenes(Request $request){
-
-        $eventos = EventoImagenes::where('evento_id', $request->id)
-            ->orderBy('posicion')
-            ->get();
-
-        $conteo = EventoImagenes::where('evento_id', $request->id)->count();
-
-        return ['success' => 1, 'eventos' => $eventos, 'conteo' => $conteo];
-    }
-
 }

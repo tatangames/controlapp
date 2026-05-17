@@ -81,11 +81,11 @@ class OrdenesController extends Controller
 
     public function tablaOrdenesProducto($id){
 
-        $lista = OrdenesDescripcion::where('ordenes_id', $id)->get();
+        $lista = OrdenesDescripcion::where('id_ordenes', $id)->get();
 
         foreach ($lista as $ll){
 
-            $info = Producto::where('id', $ll->producto_id)->first();
+            $info = Producto::where('id', $ll->id_producto)->first();
             $ll->nombre = $info->nombre;
 
             $total = $ll->cantidad * $ll->precio;
@@ -94,7 +94,6 @@ class OrdenesController extends Controller
         }
 
         return view('backend.admin.ordenes.productos.tablaproductoorden', compact('lista'));
-
     }
 
 
@@ -179,13 +178,13 @@ class OrdenesController extends Controller
         $fecha = date("d-m-Y h:i A", strtotime($infoOrden->fecha_orden));
 
 
-        $lista = OrdenesDescripcion::where('ordenes_id', $id)->get();
+        $lista = OrdenesDescripcion::where('id_ordenes', $id)->get();
 
         $suma = 0;
 
         foreach ($lista as $ll){
 
-            $info = Producto::where('id', $ll->producto_id)->first();
+            $info = Producto::where('id', $ll->id_producto)->first();
 
             $ll->nomproducto = $info->nombre;
 
@@ -231,17 +230,6 @@ class OrdenesController extends Controller
             'fecha_iniciada' => $fecha,
         ]);
 
-        $infoCliente = Clientes::where('id', $infoOrdenes->clientes_id)->first();
-
-        //$titulo = "Orden #" . $request->ordenid;
-        $mensaje = "Orden Iniciada";
-
-        if($infoCliente->token_fcm != null) {
-
-            $fields['include_player_ids'] = [$infoCliente->token_fcm];
-            OneSignal::sendPush($fields, $mensaje);
-        }
-
         return ['success' => 2];
     }
 
@@ -266,19 +254,7 @@ class OrdenesController extends Controller
             'cancelada_por' => 2 // por propietario
         ]);
 
-        $infoOrden = Ordenes::where('id', $request->id)->first();
-        $infoCliente = Clientes::where('id', $infoOrden->clientes_id)->first();
-
-        $mensaje = "Lo sentimos, su orden fue cancelada";
-
-        if($infoCliente->token_fcm != null) {
-
-            $fields['include_player_ids'] = [$infoCliente->token_fcm];
-            OneSignal::sendPush($fields, $mensaje);
-        }
-
         return ['success' => 1];
-
     }
 
 
