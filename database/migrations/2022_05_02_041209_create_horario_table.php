@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateHorarioTable extends Migration
 {
     /**
-     * Run the migrations.
+     * HORARIO DEL LOCAL
      *
      * @return void
      */
@@ -17,9 +17,9 @@ class CreateHorarioTable extends Migration
             $table->id();
             $table->time('hora1');
             $table->time('hora2');
-            $table->integer('dia');
-            $table->boolean('cerrado');
-            $table->string('nombre', 25);
+            $table->integer('dia'); // Numero de Dia
+            $table->boolean('cerrado'); // Que dia esta Cerrado
+            $table->string('nombre', 25); // Nombre del Dia
         });
     }
 

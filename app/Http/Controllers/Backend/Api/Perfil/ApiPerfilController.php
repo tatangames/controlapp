@@ -18,49 +18,8 @@ use Illuminate\Support\Str;
 
 class ApiPerfilController extends Controller
 {
-    public function informacionPerfil(Request $request){
 
-        $rules = array(
-            'id' => 'required'
-        );
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if ( $validator->fails()){return ['success' => 0]; }
-
-        if($info = Clientes::where('id', $request->id)->first()){
-
-            return ['success' => 1, 'correo' => $info->correo,
-                'imagen' => $info->imagen,
-                'usuario' => $info->usuario];
-        }else{
-            return ['success' => 2];
-        }
-    }
-
-    public function editarPerfil(Request $request){
-        $reglaDatos = array(
-            'id' => 'required',
-            'correo' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $reglaDatos);
-
-        if ( $validator->fails()){return ['success' => 0]; }
-
-        if(Clientes::where('correo', $request->correo)
-            ->where('id', '!=', $request->id)
-            ->first()){
-
-            // correo ya esta registrado
-            return ['success' => 1];
-        }
-
-        Clientes::where('id', $request->id)->update([
-            'correo' => $request->correo]);
-
-        return ['success' => 2];
-    }
 
     public function listadoDeDirecciones(Request $request){
         $rules = array(
@@ -73,7 +32,7 @@ class ApiPerfilController extends Controller
 
         if(Clientes::where('id', $request->id)->first()){
 
-            $direccion = DireccionCliente::where('clientes_id', $request->id)->get();
+            $direccion = DireccionCliente::where('id_cliente', $request->id)->get();
 
             if ($direccion->isEmpty()) {
                 $vacio = 0;
@@ -100,7 +59,7 @@ class ApiPerfilController extends Controller
 
         if(Clientes::where('id', $request->id)->first()){
 
-            if(DireccionCliente::where('clientes_id', $request->id)
+            if(DireccionCliente::where('id_cliente', $request->id)
                 ->where('id', $request->dirid)->first()){
 
                 DB::beginTransaction();
@@ -108,18 +67,10 @@ class ApiPerfilController extends Controller
                 try {
 
                     // setear a 0
-                    DireccionCliente::where('clientes_id', $request->id)->update(['seleccionado' => 0]);
+                    DireccionCliente::where('id_cliente', $request->id)->update(['seleccionado' => 0]);
 
                     // setear a 1 el id de la direccion que envia el usuario
                     DireccionCliente::where('id', $request->dirid)->update(['seleccionado' => 1]);
-
-
-                    // NO BORRAR CARRITO 16/05/2024
-
-                   /* if($tabla1 = CarritoTemporal::where('clientes_id', $request->id)->first()){
-                        CarritoExtra::where('carrito_temporal_id', $tabla1->id)->delete();
-                        CarritoTemporal::where('clientes_id', $request->id)->delete();
-                    }*/
 
                     DB::commit();
 
@@ -131,7 +82,6 @@ class ApiPerfilController extends Controller
                     // error
                     return ['success' => 0];
                 }
-
             }else{
                 // cliente no encontrado
                 return ['success' => 2];
@@ -153,13 +103,13 @@ class ApiPerfilController extends Controller
         if ( $validarDatos->fails()){return ['success' => 0]; }
 
         if($infoDire = DireccionCliente::where('id', $request->dirid)
-            ->where('clientes_id', $request->id)->first()){
+            ->where('id_cliente', $request->id)->first()){
 
             DB::beginTransaction();
 
             try {
 
-                $total = DireccionCliente::where('clientes_id', $request->id)->count();
+                $total = DireccionCliente::where('id_cliente', $request->id)->count();
 
                 if($total > 1){
 
@@ -173,7 +123,7 @@ class ApiPerfilController extends Controller
                     if($info->seleccionado == 1){
 
                         // volver a buscar la primera linea y poner seleccionado
-                        $datos = DireccionCliente::where('clientes_id', $request->id)->first();
+                        $datos = DireccionCliente::where('id_cliente', $request->id)->first();
                         DireccionCliente::where('id', $datos->id)->update(['seleccionado' => 1]);
                     }
 
@@ -193,54 +143,11 @@ class ApiPerfilController extends Controller
         }
     }
 
-
-    public function puntosZonaPoligonos(){
-
-        $rr = DB::table('zonas AS z')
-            ->join('zona_poligono AS p', 'p.zonas_id', '=', 'z.id')
-            ->select('z.id')
-            ->where('z.activo', 1)
-            ->groupBy('id')
-            ->get();
-
-        // meter zonas que si tienen poligonos
-        $pila = array();
-        foreach($rr as $p){
-            array_push($pila, $p->id);
-        }
-
-        $tablas = DB::table('zonas')
-            ->select('id AS idZona', 'nombre AS nombreZona')
-            ->whereIn('id', $pila)
-            ->get();
-
-        $resultsBloque = array();
-        $index = 0;
-
-        foreach($tablas  as $secciones){
-            array_push($resultsBloque,$secciones);
-
-            $subSecciones = DB::table('zona_poligono AS pol')
-                ->select('pol.latitud AS latitudPoligono', 'pol.longitud AS longitudPoligono')
-                ->where('pol.zonas_id', $secciones->idZona)
-                ->get();
-
-            $resultsBloque[$index]->poligonos = $subSecciones;
-            $index++;
-        }
-
-        return [
-            'success' => 1,
-            'poligono' => $tablas
-        ];
-    }
-
     public function nuevaDireccionCliente(Request $request){
         $reglaDatos = array(
             'id' => 'required',
             'nombre' => 'required',
             'direccion' => 'required',
-            'zona_id' => 'required',
             'telefono' => 'required'
         );
 
@@ -255,22 +162,17 @@ class ApiPerfilController extends Controller
             try {
 
                 $di = new DireccionCliente();
-                $di->zonas_id = 1; // ZONA FIJA
-                $di->clientes_id = $request->id;
+                $di->id_cliente = $request->id;
                 $di->nombre = $request->nombre;
                 $di->direccion = $request->direccion;
                 $di->punto_referencia = $request->punto_referencia;
                 $di->seleccionado = 1;
-                $di->latitud = $request->latitud;
-                $di->longitud = $request->longitud;
-                $di->latitudreal = $request->latitudreal;
-                $di->longitudreal = $request->longitudreal;
                 $di->telefono = $request->telefono;
 
                 if($di->save()){
 
                     try {
-                        DireccionCliente::where('clientes_id', $request->id)
+                        DireccionCliente::where('id_cliente', $request->id)
                             ->where('id', '!=', $di->id)
                             ->update(['seleccionado' => 0]);
 

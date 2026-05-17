@@ -26,7 +26,6 @@ class ApiCarritoController extends Controller
             'clienteid' => 'required',
         );
 
-
         $validarDatos = Validator::make($request->all(), $reglaDatos);
 
         if($validarDatos->fails()){return ['success' => 0]; }
@@ -35,16 +34,22 @@ class ApiCarritoController extends Controller
 
             try {
 
+                $hayDireccionRegistrada = 1;
+                if(!DireccionCliente::where('id_cliente', $request->clienteid)->first()){
+                    $hayDireccionRegistrada = 0;
+                }
+
+
                 $estadoProductoGlobal = 0; // saver si producto esta activo
 
                 // preguntar si usuario ya tiene un carrito de compras
-                if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+                if($cart = CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
                     $producto = DB::table('producto AS p')
-                        ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
+                        ->join('carrito_extra AS c', 'c.id_producto', '=', 'p.id')
                         ->select('p.id AS productoID', 'p.nombre', 'c.cantidad',
                             'p.imagen', 'p.precio', 'p.activo',
                             'c.id AS carritoid', 'p.utiliza_imagen')
-                        ->where('c.carrito_temporal_id', $cart->id)
+                        ->where('c.id_carrito_temporal', $cart->id)
                         ->get();
 
                     // verificar cada producto
@@ -69,18 +74,13 @@ class ApiCarritoController extends Controller
                     // sub total de la orden
                     $subTotal = collect($producto)->sum('precio'); // sumar todos el precio
 
-                    // informacion sistema
-                    $infoSistema = InformacionAdmin::where('id', 1)->first();
-
                     return [
                         'success' => 1,
-                        'domicilio' => $infoSistema->domicilio,
                         'subtotal' => number_format((float)$subTotal, 2, '.', ','), // subtotal
                         'estadoProductoGlobal' => $estadoProductoGlobal, // saver si producto esta activo
                         'producto' => $producto, //todos los productos
-
+                        'hayDireccionRegistrada' => $hayDireccionRegistrada
                     ];
-
                 }else{
                     return [
                         'success' => 2  // no tiene carrito de compras
@@ -107,9 +107,9 @@ class ApiCarritoController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-        if($carrito = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
-            CarritoExtra::where('carrito_temporal_id', $carrito->id)->delete();
-            CarritoTemporal::where('clientes_id', $request->clienteid)->delete();
+        if($carrito = CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
+            CarritoExtra::where('id_carrito_temporal', $carrito->id)->delete();
+            CarritoTemporal::where('id_clientes', $request->clienteid)->delete();
 
             return ['success' => 1];
         }else{
@@ -129,14 +129,14 @@ class ApiCarritoController extends Controller
         if($validarDatos->fails()){return ['success' => 0]; }
 
         // verificar si tenemos carrito
-        if($ctm = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+        if($ctm = CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
 
             // encontrar el producto a borrar
             if(CarritoExtra::where('id', $request->carritoid)->first()){
                 CarritoExtra::where('id', $request->carritoid)->delete();
 
                 // saver si tenemos mas productos aun
-                $dato = CarritoExtra::where('carrito_temporal_id', $ctm->id)->get();
+                $dato = CarritoExtra::where('id_carrito_temporal', $ctm->id)->get();
 
                 if(count($dato) == 0){
                     CarritoTemporal::where('id', $ctm->id)->delete();
@@ -169,7 +169,7 @@ class ApiCarritoController extends Controller
 
         // buscar carrito de compras a quien pertenece el producto
         // verificar si existe el carrito
-        if(CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+        if(CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
             // verificar si existe el carrito extra id que manda el usuario
             if(CarritoExtra::where('id', $request->carritoid)->first()){
 
@@ -200,13 +200,13 @@ class ApiCarritoController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-        if(CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+        if(CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
 
             if(CarritoExtra::where('id', $request->carritoid)->first()){
 
                 // informacion del producto + cantidad elegida
                 $producto = DB::table('producto AS p')
-                    ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
+                    ->join('carrito_extra AS c', 'c.id_producto', '=', 'p.id')
                     ->select('p.id AS productoID', 'p.nombre', 'p.descripcion', 'c.cantidad', 'c.nota_producto',
                         'p.imagen', 'p.precio', 'p.utiliza_nota', 'p.nota', 'p.utiliza_imagen')
                     ->where('c.id', $request->carritoid)
@@ -239,24 +239,24 @@ class ApiCarritoController extends Controller
         if($validarDatos->fails()){return ['success' => 0]; }
 
         // verificar que cliente tenga direccion
-        if(!DireccionCliente::where('clientes_id', $request->clienteid)->first()){
+        if(!DireccionCliente::where('id_cliente', $request->clienteid)->first()){
             // sin direccion
             return ['success' => 1];
         }
 
         try {
             // preguntar si usuario ya tiene un carrito de compras
-            if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+            if($cart = CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
 
-                $infoDireccion = DireccionCliente::where('clientes_id', $request->clienteid)
+                $infoDireccion = DireccionCliente::where('id_cliente', $request->clienteid)
                     ->where('seleccionado', 1)
                     ->first();
 
                 // listado de productos del carrito
                 $producto = DB::table('producto AS p')
-                    ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
+                    ->join('carrito_extra AS c', 'c.id_producto', '=', 'p.id')
                     ->select('p.precio', 'c.cantidad')
-                    ->where('c.carrito_temporal_id', $cart->id)
+                    ->where('c.id_carrito_temporal', $cart->id)
                     ->get();
 
                 $subtotal = 0;
@@ -269,23 +269,22 @@ class ApiCarritoController extends Controller
                     $subtotal = $subtotal + $multi;
                 }
 
-                // precio minimo para envio de zona
-                $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
+                $minimoConsumo = 6; // $6.00 DOLARES ES EL MINIMO DE CONSUMO
                 $minimo = 0; // aqui no puede ordenar
 
-                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
+                $msjMinimoConsumo = "El mínimo de consumo es: $".number_format((float)$minimoConsumo, 2, '.', ',');;
 
-
-                if($subtotal >= $infoZona->minimo_consumo){
+                if($subtotal >= $minimoConsumo){
                     // si puede ordenar
                     $minimo = 1;
                 }
 
-                $total = number_format((float)$subtotal, 2, '.', '');
+                $total = "$" . number_format((float)$subtotal, 2, '.', '');
 
                 return [
                     'success' => 2,
                     'total' => $total,
+                    'cliente' => $infoDireccion->nombre,
                     'direccion' => $infoDireccion->direccion,
                     'minimo' => $minimo,
                     'mensaje' => $msjMinimoConsumo
@@ -306,31 +305,24 @@ class ApiCarritoController extends Controller
         // validaciones para los datos
         $reglaDatos = array(
             'clienteid' => 'required',
-            'version' => 'required'
         );
 
         $validarDatos = Validator::make($request->all(), $reglaDatos);
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-        // verificar que cliente tenga direccion
-        if(!DireccionCliente::where('clientes_id', $request->clienteid)->first()){
-            // sin direccion
-            return ['success' => 1];
-        }
 
         DB::beginTransaction();
 
         try {
 
-            // informacion de la direccion del cliente
-            $infoDireccion = DireccionCliente::where('clientes_id', $request->clienteid)
+            // DIRECCION DEL CLIENTE
+            $infoDireccion = DireccionCliente::where('id_cliente', $request->clienteid)
                 ->where('seleccionado', 1)
                 ->first();
 
             //**** VALIDACIONES
 
-            // validacion de horarios para este servicio
             $numSemana = [
                 0 => 1, // domingo
                 1 => 2, // lunes
@@ -355,47 +347,39 @@ class ApiCarritoController extends Controller
                 ->where('hora2', '>=', $hora)
                 ->get();
 
-            // Mensaje cerrado por horario
 
+            // CERRADO POR HORARIO
             if(count($horario) >= 1){
                 // abierto
             }else{
                 // cerrado horario normal del servicio (2 horarios)
-                return ['success' => 2, 'msj1' => $infoGeneral->cerrado_horario];
+                return ['success' => 1, 'titulo' => 'Nota', 'mensaje' => 'Cerrado'];
             }
 
-            // preguntar si este dia esta cerrado
+
+
+            // ESTE DIA ESTA CERRADO?
             $cerradoHoy = Horario::where('dia', $diaSemana)->first();
 
             if($cerradoHoy->cerrado == 1){
                 // cerrado este dia el negocio
-                return ['success' => 3, 'msj1' => $infoGeneral->cerrado_estedia];
+                return ['success' => 1, 'titulo' => 'Nota', 'mensaje' => 'Cerrado'];
             }
 
-            // CERRADO POR BLOQUEO DE ZONA
-
-            $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
-
-            if($infoZona->saturacion == 1){
-                // zona bloqueada por algun problema
-                return ['success' => 4, 'msj1' => $infoZona->mensaje_bloqueo];
-            }
-
-            // cerrado general de la aplicacion
+            // CERRADO DESDE PANEL DE CONTROL
             $infoApp = InformacionAdmin::where('id', 1)->first();
             if($infoApp->cerrado == 1){
-                return ['success' => 4, 'msj1' => $infoApp->mensaje_cerrado];
+                return ['success' => 2, 'mensaje' => $infoApp->mensaje_cerrado];
             }
 
-
-            // preguntar si usuario ya tiene un carrito de compras
-            if($cart = CarritoTemporal::where('clientes_id', $request->clienteid)->first()){
+            // VERIFICAR SI TENGO CARRITO DE COMPRAS
+            if($cart = CarritoTemporal::where('id_clientes', $request->clienteid)->first()){
 
                 // listado de productos del carrito
                 $producto = DB::table('producto AS p')
-                    ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
+                    ->join('carrito_extra AS c', 'c.id_producto', '=', 'p.id')
                     ->select('p.precio', 'c.cantidad', 'p.id', 'c.nota_producto')
-                    ->where('c.carrito_temporal_id', $cart->id)
+                    ->where('c.id_carrito_temporal', $cart->id)
                     ->get();
 
                 $total = 0;
@@ -409,20 +393,20 @@ class ApiCarritoController extends Controller
                     $total = $total + $multi;
                 }
 
-                // precio de la zona servicio
-                $infoZona = Zonas::where('id', $infoDireccion->zonas_id)->first();
-                $msjMinimoConsumo = "El mínimo de consumo es: $".$infoZona->minimo_consumo;
+                $minimoConsumo = 6; // $6.00 DOLARES ES EL MINIMO DE CONSUMO
+                $minimo = 0; // aqui no puede ordenar
 
+                $msjMinimoConsumo = "El mínimo de consumo es: $".number_format((float)$minimoConsumo, 2, '.', ',');;
 
-                if ($total < $infoZona->minimo_consumo) {
+                if ($total < $minimoConsumo) {
                     // no puede ordenar
-                    return ['success' => 5, 'msj1' => $msjMinimoConsumo];
+                    return ['success' => 3, 'mensaje' => $msjMinimoConsumo];
                 }
 
                 $fechahoy = Carbon::now('America/El_Salvador');
 
                 $idOrden = DB::table('ordenes')->insertGetId(
-                    [ 'clientes_id' => $request->clienteid,
+                    [ 'id_clientes' => $request->clienteid,
                         'nota' => $request->nota,
 
                         'precio_consumido' => $total,
@@ -436,23 +420,17 @@ class ApiCarritoController extends Controller
 
                         'estado_cancelada' => 0, // el motorista inicia el envio
                         'fecha_cancelada' => null,
-
                         'mensaje_cancelada' => null,
-
                         'cancelada_por' => 0,
-
                         'visible' => 1,
-
-                        'estrellas' => 0,
-                        'mensaje_estrellas' => null
                     ]
                 );
 
                 // guadar todos los productos de esa orden
                 foreach($producto as $p){
 
-                    $data = array('ordenes_id' => $idOrden,
-                        'producto_id' => $p->id,
+                    $data = array('id_ordenes' => $idOrden,
+                        'id_producto' => $p->id,
                         'cantidad' => $p->cantidad,
                         'precio' => $p->precio,
                         'nota' => $p->nota_producto);
@@ -462,31 +440,23 @@ class ApiCarritoController extends Controller
                 $infoCliente = Clientes::where('id', $request->clienteid)->first();
 
                 $nuevaDir = new OrdenesDirecciones();
-                $nuevaDir->clientes_id = $request->clienteid;
-                $nuevaDir->ordenes_id = $idOrden;
-                $nuevaDir->zonas_id = $infoZona->id;
+                $nuevaDir->id_ordenes = $idOrden;
                 $nuevaDir->nombre = $infoDireccion->nombre;
                 $nuevaDir->telefono = $infoDireccion->telefono;
                 $nuevaDir->direccion = $infoDireccion->direccion;
                 $nuevaDir->punto_referencia = $infoDireccion->punto_referencia;
-                $nuevaDir->latitud = $infoDireccion->latitud;
-                $nuevaDir->longitud = $infoDireccion->longitud;
-                $nuevaDir->latitudreal = $infoDireccion->latitudreal;
-                $nuevaDir->longitudreal = $infoDireccion->longitudreal;
                 $nuevaDir->version = $request->version;
                 $nuevaDir->save();
 
                 // BORRAR CARRITO TEMPORAL DEL USUARIO
-                if($infoCliente->borrar_carrito == 1){
-                    CarritoExtra::where('carrito_temporal_id', $cart->id)->delete();
-                    CarritoTemporal::where('clientes_id', $request->clienteid)->delete();
-                }
+                CarritoExtra::where('id_carrito_temporal', $cart->id)->delete();
+                CarritoTemporal::where('id_clientes', $request->clienteid)->delete();
 
                 DB::commit();
-                return ['success' => 6];
+                return ['success' => 5];
             }else{
                 // no tiene carrito de compras
-                return ['success' => 7];
+                return ['success' => 4, 'mensaje' => 'No hay productos'];
             }
 
         } catch(\Throwable $e){
@@ -494,6 +464,7 @@ class ApiCarritoController extends Controller
             DB::rollback();
             return [
                 'success' => 101,
+                'error' => $e->getMessage()
             ];
         }
     }

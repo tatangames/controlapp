@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateOrdenesDescripcionTable extends Migration
 {
     /**
-     * Run the migrations.
+     * LISTADO DE PRODUCTO DE LA ORDEN
      *
      * @return void
      */
@@ -15,14 +15,14 @@ class CreateOrdenesDescripcionTable extends Migration
     {
         Schema::create('ordenes_descripcion', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ordenes_id')->unsigned();
-            $table->bigInteger('producto_id')->unsigned();
+            $table->bigInteger('id_ordenes')->unsigned();
+            $table->bigInteger('id_producto')->unsigned();
             $table->integer('cantidad');
             $table->string('nota', 400)->nullable();
             $table->decimal('precio', 10,2);
 
-            $table->foreign('ordenes_id')->references('id')->on('ordenes');
-            $table->foreign('producto_id')->references('id')->on('producto');
+            $table->foreign('id_ordenes')->references('id')->on('ordenes');
+            $table->foreign('id_producto')->references('id')->on('producto');
         });
     }
 

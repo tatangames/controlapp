@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class CategoriasController extends Controller
 {
@@ -21,56 +22,41 @@ class CategoriasController extends Controller
 
     // tabla
     public function tablaBloque(){
-        $bloques = BloqueServicios::orderBy('posicion')
-            ->whereNotIn('id', [1])
-            ->get();
+        $bloques = BloqueServicios::orderBy('posicion')->get();
 
         return view('backend.admin.bloques.tablabloques', compact('bloques'));
     }
 
-    public function nuevoBloque(Request $request){
+    public function nuevoBloque(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'imagen' => 'required',
+        ]);
 
-        $regla = array(
-            'nombre' => 'required'
-        );
+        // Nombre único para la imagen
+        $nombreFoto = Str::random(15) . '_' . microtime(true) . '.' .
+            strtolower($request->imagen->getClientOriginalExtension());
 
-        $validar = Validator::make($request->all(), $regla);
+        // Subir imagen
+        $subido = Storage::disk('imagenes')->put($nombreFoto, File::get($request->imagen));
 
-        if ($validar->fails()){return ['success' => 0]; }
-
-        $cadena = Str::random(15);
-        $tiempo = microtime();
-        $union = $cadena.$tiempo;
-        $nombre = str_replace(' ', '_', $union);
-
-        $extension = '.'.$request->imagen->getClientOriginalExtension();
-        $nombreFoto = $nombre.strtolower($extension);
-        $avatar = $request->file('imagen');
-        $upload = Storage::disk('imagenes')->put($nombreFoto, \File::get($avatar));
-
-        if($upload){
-
-            if($info = BloqueServicios::orderBy('posicion', 'DESC')->first()){
-                $suma = $info->posicion + 1;
-            }else{
-                $suma = 1;
-            }
-
-            $ca = new BloqueServicios();
-            $ca->nombre = $request->nombre;
-            $ca->imagen = $nombreFoto;
-            $ca->activo = 1;
-            $ca->tiposervicio_id = 2;
-            $ca->posicion = $suma;
-
-            if($ca->save()){
-                return ['success' => 1];
-            }else{
-                return ['success' => 2];
-            }
-        }else{
+        if (!$subido) {
             return ['success' => 2];
         }
+
+        // Siguiente posición
+        $posicion = (BloqueServicios::max('posicion') ?? 0) + 1;
+
+        // Crear registro
+        BloqueServicios::create([
+            'nombre'   => $request->nombre,
+            'imagen'   => $nombreFoto,
+            'activo'   => 1,
+            'posicion' => $posicion,
+        ]);
+
+        return ['success' => 1];
     }
 
     public function informacionBloque(Request $request){
@@ -91,63 +77,42 @@ class CategoriasController extends Controller
         }
     }
 
-    public function editarBloque(Request $request){
+    public function editarBloque(Request $request)
+    {
+        $request->validate([
+            'id'     => 'required',
+            'nombre' => 'required',
+            'imagen' => 'nullable',
+        ]);
 
-        $rules = array(
-            'id' => 'required',
-            'nombre' => 'required'
-        );
+        $bloque = BloqueServicios::findOrFail($request->id);
 
-        $validator = Validator::make($request->all(), $rules);
+        $datos = [
+            'nombre' => $request->nombre,
+            'activo' => $request->cbactivo,
+        ];
 
-        if ($validator->fails()){return ['success' => 0]; }
+        if ($request->hasFile('imagen')) {
+            $nombreFoto = Str::random(15) . '_' . microtime(true) . '.' .
+                strtolower($request->imagen->getClientOriginalExtension());
 
-        if($info = BloqueServicios::where('id', $request->id)->first()){
+            $subido = Storage::disk('imagenes')->put($nombreFoto, file_get_contents($request->imagen));
 
-            if($request->hasFile('imagen')){
-
-                $cadena = Str::random(15);
-                $tiempo = microtime();
-                $union = $cadena.$tiempo;
-                $nombre = str_replace(' ', '_', $union);
-
-                $extension = '.'.$request->imagen->getClientOriginalExtension();
-                $nombreFoto = $nombre.strtolower($extension);
-                $avatar = $request->file('imagen');
-                $upload = Storage::disk('imagenes')->put($nombreFoto, \File::get($avatar));
-
-                if($upload){
-                    $imagenOld = $info->imagen;
-
-                    BloqueServicios::where('id', $request->id)->update([
-                        'nombre' => $request->nombre,
-                        'imagen' => $nombreFoto,
-                        'activo' => $request->cbactivo
-                    ]);
-
-                    if(Storage::disk('imagenes')->exists($imagenOld)){
-                        Storage::disk('imagenes')->delete($imagenOld);
-                    }
-
-                    return ['success' => 1];
-
-                }else{
-                    return ['success' => 2];
-                }
-            }else{
-                // solo guardar datos
-
-                BloqueServicios::where('id', $request->id)->update([
-                    'nombre' => $request->nombre,
-                    'activo' => $request->cbactivo
-                ]);
-
-                return ['success' => 1];
+            if (!$subido) {
+                return ['success' => 2];
             }
 
-        }else{
-            return ['success' => 2];
+            // Eliminar imagen anterior
+            if (Storage::disk('imagenes')->exists($bloque->imagen)) {
+                Storage::disk('imagenes')->delete($bloque->imagen);
+            }
+
+            $datos['imagen'] = $nombreFoto;
         }
+
+        $bloque->update($datos);
+
+        return ['success' => 1];
     }
 
     public function ordenarBloque(Request $request){
@@ -174,39 +139,28 @@ class CategoriasController extends Controller
 
     // tabla
     public function tablaCategorias($id){
-        $categorias = Categorias::where('bloque_servicios_id', $id)->orderBy('posicion')->get();
+        $categorias = Categorias::where('id_bloque_servicios', $id)->orderBy('posicion')->get();
 
         return view('backend.admin.categorias.tablacategorias', compact('categorias'));
     }
 
-    public function nuevaCategorias(Request $request){
+    public function nuevaCategorias(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'id'     => 'required',
+        ]);
 
-        $regla = array(
-            'nombre' => 'required'
-        );
+        $posicion = (Categorias::max('posicion') ?? 0) + 1;
 
-        $validar = Validator::make($request->all(), $regla);
+        Categorias::create([
+            'id_bloque_servicios' => $request->id,
+            'nombre'              => $request->nombre,
+            'activo'              => 1,
+            'posicion'            => $posicion,
+        ]);
 
-        if ($validar->fails()){return ['success' => 0]; }
-
-        if($info = Categorias::orderBy('posicion', 'DESC')->first()){
-            $suma = $info->posicion + 1;
-        }else{
-            $suma = 1;
-        }
-
-        $ca = new Categorias();
-        $ca->bloque_servicios_id = $request->id;
-        $ca->nombre = $request->nombre;
-        $ca->activo = 1;
-        $ca->posicion = $suma;
-
-        if($ca->save()){
-            return ['success' => 1];
-        }else{
-            return ['success' => 2];
-        }
-
+        return ['success' => 1];
     }
 
     public function informacionCategorias(Request $request){
@@ -233,6 +187,8 @@ class CategoriasController extends Controller
             'id' => 'required',
             'nombre' => 'required'
         );
+
+        // cbactivo
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -280,7 +236,7 @@ class CategoriasController extends Controller
     // tabla
     public function tablaProductos($id){
 
-        $productos = Producto::where('categorias_id', $id)->orderBy('posicion')->get();
+        $productos = Producto::where('id_categorias', $id)->orderBy('posicion')->get();
 
         foreach ($productos as $pp){
             $pp->precio = number_format((float)$pp->precio, 2, '.', ',');
@@ -289,86 +245,45 @@ class CategoriasController extends Controller
         return view('backend.admin.productos.tablaproductos', compact('productos'));
     }
 
+    public function nuevoProducto(Request $request)
+    {
+        $request->validate([
+            'nombre'      => 'required',
+            'idcategoria' => 'required',
+        ]);
 
-    public function nuevoProducto(Request $request){
+        // imagen, precio
 
-        $regla = array(
-            'nombre' => 'required',
-        );
+        $nombreFoto = null;
 
-        $validar = Validator::make($request->all(), $regla);
+        if ($request->hasFile('imagen')) {
+            $nombreFoto = Str::random(15) . '_' . microtime(true) . '.' .
+                strtolower($request->imagen->getClientOriginalExtension());
 
-        if ($validar->fails()){return ['success' => 0]; }
+            $subido = Storage::disk('imagenes')->put($nombreFoto, file_get_contents($request->imagen));
 
-        if($request->file('imagen')){
-
-            $cadena = Str::random(15);
-            $tiempo = microtime();
-            $union = $cadena.$tiempo;
-            $nombre = str_replace(' ', '_', $union);
-
-            $extension = '.'.$request->imagen->getClientOriginalExtension();
-            $nombreFoto = $nombre.strtolower($extension);
-            $avatar = $request->file('imagen');
-            $upload = Storage::disk('imagenes')->put($nombreFoto, \File::get($avatar));
-
-            if($upload){
-
-                if($info = Producto::orderBy('posicion', 'DESC')->first()){
-                    $suma = $info->posicion + 1;
-                }else{
-                    $suma = 1;
-                }
-
-                $ca = new Producto();
-                $ca->categorias_id  = $request->idcategoria;
-                $ca->nombre = $request->nombre;
-                $ca->imagen = $nombreFoto;
-                $ca->descripcion = $request->descripcion;
-                $ca->precio = $request->precio;
-                $ca->activo = 1;
-                $ca->posicion = $suma;
-                $ca->utiliza_nota = $request->cbnota;
-                $ca->nota = $request->nota;
-                $ca->utiliza_imagen = $request->cbimagen;
-
-                if($ca->save()){
-                    return ['success' => 1];
-                }else{
-                    return ['success' => 2];
-                }
-            }else{
-                return ['success' => 2];
-            }
-
-        }else {
-
-            $suma = Producto::sum('posicion');
-            if($suma == null){
-                $suma = 1;
-            }else{
-                $suma = $suma + 1;
-            }
-
-            $ca = new Producto();
-            $ca->categorias_id  = $request->idcategoria;
-            $ca->nombre = $request->nombre;
-            $ca->descripcion = $request->descripcion;
-            $ca->precio = $request->precio;
-            $ca->activo = 1;
-            $ca->posicion = $suma;
-            $ca->utiliza_nota = $request->cbnota;
-            $ca->nota = $request->nota;
-            $ca->utiliza_imagen = 0;
-
-            if($ca->save()){
-                return ['success' => 1];
-            }else{
+            if (!$subido) {
                 return ['success' => 2];
             }
         }
-    }
 
+        $posicion = (Producto::where('id_categorias', $request->idcategoria)->max('posicion') ?? 0) + 1;
+
+        Producto::create([
+            'id_categorias'  => $request->idcategoria,
+            'nombre'         => $request->nombre,
+            'imagen'         => $nombreFoto,
+            'descripcion'    => $request->descripcion,
+            'precio'         => $request->precio,
+            'activo'         => 1,
+            'posicion'       => $posicion,
+            'utiliza_nota'   => $request->cbnota,
+            'nota'           => $request->nota,
+            'utiliza_imagen' => $nombreFoto ? $request->cbimagen : 0,
+        ]);
+
+        return ['success' => 1];
+    }
 
     public function informacionProductos(Request $request){
 
@@ -390,81 +305,58 @@ class CategoriasController extends Controller
         }
     }
 
-    public function editarProductos(Request $request){
 
-        $rules = array(
-            'id' => 'required',
-            'nombre' => 'required'
-        );
 
-        $validator = Validator::make($request->all(), $rules);
+    public function editarProductos(Request $request)
+    {
+        $request->validate([
+            'id'     => 'required',
+            'nombre' => 'required',
+        ]);
 
-        if ($validator->fails()){return ['success' => 0]; }
+        // imagen, precio
 
-        if($info = Producto::where('id', $request->id)->first()){
+        $producto = Producto::findOrFail($request->id);
 
-            if($request->hasFile('imagen')){
+        // Validar: quiere usar imagen pero no tiene ninguna
+        if (!$request->hasFile('imagen') && $producto->imagen === null && $request->cbimagen == 1) {
+            return ['success' => 3];
+        }
 
-                $cadena = Str::random(15);
-                $tiempo = microtime();
-                $union = $cadena.$tiempo;
-                $nombre = str_replace(' ', '_', $union);
+        $nombreFoto = null;
 
-                $extension = '.'.$request->imagen->getClientOriginalExtension();
-                $nombreFoto = $nombre.strtolower($extension);
-                $avatar = $request->file('imagen');
-                $upload = Storage::disk('imagenes')->put($nombreFoto, \File::get($avatar));
+        if ($request->hasFile('imagen')) {
+            $nombreFoto = Str::random(15) . '_' . microtime(true) . '.' .
+                strtolower($request->imagen->getClientOriginalExtension());
 
-                if($upload){
-                    $imagenOld = $info->imagen;
+            $subido = Storage::disk('imagenes')->put($nombreFoto, file_get_contents($request->imagen));
 
-                    Producto::where('id', $request->id)->update([
-                        'nombre' => $request->nombre,
-                        'descripcion' => $request->descripcion,
-                        'precio' => $request->precio,
-                        'activo' => $request->cbactivo,
-                        'utiliza_nota' => $request->cbnota,
-                        'nota' => $request->nota,
-                        'utiliza_imagen' => $request->cbimagen,
-                        'imagen' => $nombreFoto,
-                    ]);
-
-                    if(Storage::disk('imagenes')->exists($imagenOld)){
-                        Storage::disk('imagenes')->delete($imagenOld);
-                    }
-
-                    return ['success' => 1];
-
-                }else{
-                    return ['success' => 2];
-                }
-            }else{
-                // solo guardar datos
-
-                if($info->imagen == null){
-                    if($request->cbimagen == 1){
-                        // quiere utilizar imagen pero no hay
-                        return ['success' => 3];
-                    }
-                }
-
-                Producto::where('id', $request->id)->update([
-                    'nombre' => $request->nombre,
-                    'descripcion' => $request->descripcion,
-                    'precio' => $request->precio,
-                    'activo' => $request->cbactivo,
-                    'utiliza_nota' => $request->cbnota,
-                    'nota' => $request->nota,
-                    'utiliza_imagen' => $request->cbimagen,
-                ]);
-
-                return ['success' => 1];
+            if (!$subido) {
+                return ['success' => 2];
             }
 
-        }else{
-            return ['success' => 2];
+            // Eliminar imagen anterior
+            if ($producto->imagen && Storage::disk('imagenes')->exists($producto->imagen)) {
+                Storage::disk('imagenes')->delete($producto->imagen);
+            }
         }
+
+        $producto->update([
+            'nombre'         => $request->nombre,
+            'descripcion'    => $request->descripcion,
+            'precio'         => $request->precio,
+            'activo'         => $request->cbactivo,
+            'utiliza_nota'   => $request->cbnota,
+            'nota'           => $request->nota,
+            'utiliza_imagen' => $nombreFoto ? $request->cbimagen : ($producto->imagen ? $request->cbimagen : 0),
+            'imagen'         => $nombreFoto ?? $producto->imagen,
+        ]);
+
+        return ['success' => 1];
     }
+
+
+
 
     public function ordenarProductos(Request $request){
 

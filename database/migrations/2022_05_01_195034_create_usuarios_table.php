@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateUsuariosTable extends Migration
 {
     /**
-     * usuarios de panel de control
+     * USUARIO PANEL DE CONTROL
      *
      * @return void
      */

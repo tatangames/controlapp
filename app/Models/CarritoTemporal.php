@@ -10,4 +10,8 @@ class CarritoTemporal extends Model
     use HasFactory;
     protected $table = 'carrito_temporal';
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_clientes',
+    ];
 }

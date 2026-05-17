@@ -30,7 +30,7 @@ class ApiOrdenesController extends Controller
         if(Clientes::where('id', $request->clienteid)->first()){
 
             // solo ordenes no canceladas, ni completadas
-            $orden = Ordenes::where('clientes_id', $request->clienteid)
+            $orden = Ordenes::where('id_clientes', $request->clienteid)
                 ->where('visible', 1) // la orden finalizada por cliente
                 ->orderBy('id', 'DESC')
                 ->get();
@@ -38,11 +38,11 @@ class ApiOrdenesController extends Controller
             foreach($orden as $o){
                 $o->fecha_orden = date("h:i A d-m-Y", strtotime($o->fecha_orden));
 
-                $infoDireccion = OrdenesDirecciones::where('ordenes_id', $o->id)->first();
+                $infoDireccion = OrdenesDirecciones::where('id_ordenes', $o->id)->first();
 
                 $o->direccion = $infoDireccion->direccion;
 
-                $o->total = number_format((float)$o->precio_consumido, 2, '.', ',');
+                $o->total = "$" . number_format((float)$o->precio_consumido, 2, '.', ',');
 
                 // prioridad
                 if($o->estado_iniciada == 0){
@@ -57,7 +57,6 @@ class ApiOrdenesController extends Controller
 
                 $o->estado = $estado;
             }
-
 
             if ($orden->isEmpty()) {
                 $vacio = 0;
@@ -87,11 +86,11 @@ class ApiOrdenesController extends Controller
 
             foreach($orden as $o){
 
-                if($o->estado_iniciada == 1){ // propietario inicia la orden
+                if($o->estado_iniciada == 1){
                    $o->fecha_iniciada = date("h:i A d-m-Y", strtotime($o->fecha_iniciada));
                 }
 
-                if($o->estado_cancelada == 1){ // motorista inicia la entrega
+                if($o->estado_cancelada == 1){
                     $o->fecha_cancelada = date("h:i A d-m-Y", strtotime($o->fecha_cancelada));
                 }
 
@@ -300,11 +299,10 @@ class ApiOrdenesController extends Controller
         }
     }
 
-    public function calificarEntrega(Request $request){
+    public function ocultarOrdenFinal(Request $request){
 
         $reglaDatos = array(
             'ordenid' => 'required',
-            'valor' => 'required'
         );
 
         $validarDatos = Validator::make($request->all(), $reglaDatos);
@@ -313,10 +311,7 @@ class ApiOrdenesController extends Controller
 
         if($or = Ordenes::where('id', $request->ordenid)->first()){
 
-            Ordenes::where('id', $or->id)
-                ->update(['estrellas' => $request->valor,
-                    'mensaje_estrellas' => $request->mensaje,
-                    'visible' => 0]);
+            Ordenes::where('id', $or->id)->update(['visible' => 0]);
 
             return ['success' => 1];
         }else{

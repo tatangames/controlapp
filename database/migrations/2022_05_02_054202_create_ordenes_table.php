@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateOrdenesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * ORDENES DEL CLIENTE
      *
      * @return void
      */
@@ -15,7 +15,7 @@ class CreateOrdenesTable extends Migration
     {
         Schema::create('ordenes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('clientes_id')->unsigned();
+            $table->bigInteger('id_clientes')->unsigned();
 
             $table->string('nota', 600)->nullable();
             $table->decimal('precio_consumido', 10,2); // total de la orden
@@ -42,14 +42,9 @@ class CreateOrdenesTable extends Migration
             $table->integer('cancelada_por');
 
 
-            $table->boolean('visible');
+            $table->boolean('visible'); // ocultar al cliente
 
-
-            $table->integer('estrellas');
-            $table->string('mensaje_estrellas', 600)->nullable();
-
-
-            $table->foreign('clientes_id')->references('id')->on('clientes');
+            $table->foreign('id_clientes')->references('id')->on('clientes');
         });
     }
 

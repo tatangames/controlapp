@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateCarritoTemporalTable extends Migration
 {
     /**
-     * Run the migrations.
+     * CARRITO DE COMPRAS
      *
      * @return void
      */
@@ -15,9 +15,9 @@ class CreateCarritoTemporalTable extends Migration
     {
         Schema::create('carrito_temporal', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('clientes_id')->unsigned();
+            $table->bigInteger('id_clientes')->unsigned();
 
-            $table->foreign('clientes_id')->references('id')->on('clientes');
+            $table->foreign('id_clientes')->references('id')->on('clientes');
         });
     }
 

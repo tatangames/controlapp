@@ -12,6 +12,9 @@ class BloqueServicios extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'nombre',
+        'imagen',
         'posicion',
+        'activo',
     ];
 }

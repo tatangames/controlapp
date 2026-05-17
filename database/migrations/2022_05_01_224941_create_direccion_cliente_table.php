@@ -15,23 +15,16 @@ class CreateDireccionClienteTable extends Migration
     {
         Schema::create('direccion_cliente', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('zonas_id')->unsigned();
-            $table->bigInteger('clientes_id')->unsigned();
+            $table->bigInteger('id_cliente')->unsigned();
 
             $table->string('nombre', 100);
             $table->string('direccion', 400);
             $table->string('punto_referencia', 400)->nullable();
             $table->boolean('seleccionado');
-            $table->string('latitud', 50);
-            $table->string('longitud', 50);
             $table->string('telefono', 10);
 
-            // puntos donde se registro la direccion
-            $table->string('latitudreal', 50)->nullable();
-            $table->string('longitudreal', 50)->nullable();
 
-            $table->foreign('zonas_id')->references('id')->on('zonas');
-            $table->foreign('clientes_id')->references('id')->on('clientes');
+            $table->foreign('id_cliente')->references('id')->on('clientes');
         });
     }
 

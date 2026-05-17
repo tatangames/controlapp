@@ -10,57 +10,58 @@ use App\Http\Controllers\Backend\Api\Perfil\ApiPerfilController;
 use App\Http\Controllers\Backend\Api\Productos\ApiProductosController;
 use App\Http\Controllers\Backend\Api\Carrito\ApiCarritoController;
 use App\Http\Controllers\Backend\Api\Ordenes\ApiOrdenesController;
-use App\Http\Controllers\Backend\Api\Motorista\ApiMotoristaController;
-
-
 
 
 // --- CLIENTES ---
-Route::post('cliente/registro', [ApiRegistroController::class, 'registroCliente']);
-Route::post('cliente/registro/v2', [ApiRegistroController::class, 'registroClienteV2']);
-
-
-
 Route::post('cliente/login', [ApiClienteController::class, 'loginCliente']);
-Route::post('cliente/login/v2', [ApiClienteController::class, 'loginClienteV2']);
-
-
-Route::post('cliente/enviar/codigo-correo', [ApiClienteController::class, 'enviarCodigoCorreo']);
-Route::post('cliente/verificar/codigo-correo-password', [ApiClienteController::class, 'verificarCodigoCorreoPassword']);
-Route::post('cliente/actualizar/password', [ApiClienteController::class, 'actualizarPasswordCliente']);
+Route::post('cliente/registro', [ApiRegistroController::class, 'registroCliente']);
 
 // --- PERFIL ---
-Route::post('cliente/informacion', [ApiPerfilController::class, 'informacionPerfil']);
-Route::post('cliente/editar-perfil', [ApiPerfilController::class, 'editarPerfil']);
+Route::post('cliente/actualizar/password', [ApiClienteController::class, 'actualizarPasswordCliente']);
 Route::post('cliente/listado/direcciones', [ApiPerfilController::class, 'listadoDeDirecciones']);
 Route::post('cliente/seleccionar/direccion', [ApiPerfilController::class, 'seleccionarDireccion']);
 Route::post('cliente/eliminar/direccion',  [ApiPerfilController::class, 'eliminarDireccion']);
-Route::get('listado/zonas/poligonos', [ApiPerfilController::class, 'puntosZonaPoligonos']);
 Route::post('cliente/nueva/direccion', [ApiPerfilController::class, 'nuevaDireccionCliente']);
 Route::post('cliente/perfil/cambiar-password', [ApiPerfilController::class, 'cambiarPasswordPerfil']);
 
 // --- BLOQUE DE SERVICIOS ---
 Route::post('cliente/lista/servicios-bloque', [ApiZonasServiciosController::class, 'listadoBloque']);
-Route::post('cliente/lista/servicios-bloque/v2', [ApiZonasServiciosController::class, 'listadoBloqueV2']);
-
-
-
 Route::post('cliente/servicios/listado/menu', [ApiServiciosController::class, 'listadoMenuVertical']);
 Route::post('cliente/informacion/producto', [ApiProductosController::class, 'infoProductoIndividual']);
 Route::post('cliente/carrito/producto/agregar', [ApiProductosController::class, 'agregarProductoCarritoTemporal']);
 
-Route::post('cliente/carrito/ver/producto', [ApiCarritoController::class, 'verProductoCarritoEditar']);
+
 Route::post('cliente/carrito/ver/orden', [ApiCarritoController::class, 'verCarritoDeCompras']);
 Route::post('cliente/carrito/borrar/orden', [ApiCarritoController::class, 'borrarCarritoDeCompras']);
+Route::post('cliente/carrito/ver/producto', [ApiCarritoController::class, 'verProductoCarritoEditar']);
 Route::post('cliente/carrito/eliminar/producto', [ApiCarritoController::class, 'borrarProductoDelCarrito']);
 Route::post('cliente/carrito/cambiar/cantidad', [ApiCarritoController::class, 'editarCantidadProducto']);
 Route::post('cliente/carrito/ver/proceso-orden', [ApiCarritoController::class, 'verOrdenAProcesarCliente']);
-
-// notificacion: enviar orden
 Route::post('cliente/proceso/orden/estado-1', [ApiCarritoController::class, 'procesarOrdenEstado1']);
 
 Route::post('cliente/ver/ordenes-activas',  [ApiOrdenesController::class, 'ordenesActivas']);
 Route::post('cliente/ver/estado-orden',  [ApiOrdenesController::class, 'estadoOrdenesActivas']);
+Route::post('cliente/proceso/finalizar/orden',  [ApiOrdenesController::class, 'ocultarOrdenFinal']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // notificacion: cancelar orden
 Route::post('cliente/proceso/orden/cancelar',  [ApiOrdenesController::class, 'cancelarOrdenCliente']);
@@ -75,7 +76,6 @@ Route::post('cliente/ver/productos/historial',  [ApiOrdenesController::class, 'v
 Route::get('cliente/eventos/listado', [ApiServiciosController::class, 'listadoEventos']);
 Route::post('cliente/eventos-imagen/listado', [ApiServiciosController::class, 'listadoEventosImagenes']);
 
-Route::post('cliente/proceso/calificar/entrega',  [ApiOrdenesController::class, 'calificarEntrega']);
 
 // horarios
 Route::get('cliente/horarios', [ApiPerfilController::class, 'listaHorarios']);
@@ -86,18 +86,5 @@ Route::post('cliente/opcion/carrito/compras', [ApiPerfilController::class, 'opci
 // guardar opcion elegida carrito de compras
 Route::post('cliente/opcion/carrito/guardar', [ApiPerfilController::class, 'guardarOpcionCarritoCompras']);
 
-
-
-
-//******* SECCION DE MOTORISTAS ****************************
-
-Route::post('motorista/login', [ApiMotoristaController::class, 'loginMotorista']);
-
-// obtener listado de direcciones para actualizar
-Route::post('motorista/direcciones', [ApiMotoristaController::class, 'listadoDireccionesCliente']);
-// verificar si debo actualizar
-Route::post('motorista/verificar/deboactualizar', [ApiMotoristaController::class, 'VerificarDeboActualizar']);
-// motorista puede modificar GPS
-Route::post('motorista/actualizar/gps', [ApiMotoristaController::class, 'modificarGPS']);
 
 

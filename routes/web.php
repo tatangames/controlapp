@@ -6,8 +6,6 @@ use App\Http\Controllers\Backend\Admin\Control\ControlController;
 use App\Http\Controllers\Backend\Admin\Control\RolesController;
 use App\Http\Controllers\Backend\Admin\Control\PermisosController;
 use App\Http\Controllers\Backend\Admin\Perfil\PerfilController;
-use App\Http\Controllers\Backend\Admin\Control\EstadisticasController;
-use App\Http\Controllers\Backend\Admin\Mapa\ZonaController;
 use App\Http\Controllers\Backend\Admin\Servicios\CategoriasController;
 use App\Http\Controllers\Backend\Admin\Clientes\ClientesController;
 use App\Http\Controllers\Backend\Admin\Eventos\EventosController;
@@ -21,7 +19,6 @@ use App\Http\Controllers\Backend\Admin\Motorista\MotoristaController;
 Route::get('/', [LoginController::class,'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
-
 
 // --- CONTROL WEB ---
 Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name('admin.panel');
@@ -50,22 +47,45 @@ Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarP
 Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
 Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
-// --- ESTADISTICAS ---
-Route::get('/admin/estadisticas/index', [EstadisticasController::class,'index'])->name('index.estadisticas');
+// --- BLOQUE DE SERVICIOS ---
+Route::get('/admin/bloques', [CategoriasController::class,'indexBloque'])->name('index.bloques');
+Route::get('/admin/bloques/tablas/', [CategoriasController::class,'tablaBloque']);
+Route::post('/admin/bloques/nuevo', [CategoriasController::class,'nuevoBloque']);
+Route::post('/admin/bloques/informacion', [CategoriasController::class,'informacionBloque']);
+Route::post('/admin/bloques/editar', [CategoriasController::class,'editarBloque']);
+Route::post('/admin/bloques/ordenar', [CategoriasController::class,'ordenarBloque']);
 
-// --- ZONAS ---
-Route::get('/admin/zona/mapa/zona', [ZonaController::class,'index'])->name('index.zonas');
-Route::get('/admin/zona/tablas/zona', [ZonaController::class,'tablaZonas']);
-Route::post('/zona/nueva-zona', [ZonaController::class,'nuevaZona']);
-Route::post('/zona/informacion-zona', [ZonaController::class,'informacionZona']);
-Route::post('/zona/editar-zona', [ZonaController::class,'editarZona']);
-Route::get('admin/zona/ver-mapa/{id}', [ZonaController::class,'verMapa']);
+// --- CATEGORIAS ---
+Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
+Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);
+Route::post('/admin/categorias/nuevo', [CategoriasController::class,'nuevaCategorias']);
+Route::post('/admin/categorias/informacion', [CategoriasController::class,'informacionCategorias']);
+Route::post('/admin/categorias/editar', [CategoriasController::class,'editarCategorias']);
+Route::post('/admin/categorias/ordenar', [CategoriasController::class,'ordenarCategorias']);
+
+// --- PRODUCTOS ---
+Route::get('/admin/productos/{id}', [CategoriasController::class,'indexProductos']);
+Route::get('/admin/productos/tablas/{id}', [CategoriasController::class,'tablaProductos']);
+Route::post('/admin/productos/nuevo', [CategoriasController::class,'nuevoProducto']);
+Route::post('/admin/productos/informacion', [CategoriasController::class,'informacionProductos']);
+Route::post('/admin/productos/editar', [CategoriasController::class,'editarProductos']);
+Route::post('/admin/productos/ordenar', [CategoriasController::class,'ordenarProductos']);
 
 
-// --- POLIGONO ---
-Route::get('/admin/zona/poligono/{id}', [ZonaController::class,'indexPoligono']);
-Route::post('/zona/poligono/listado-nuevo', [ZonaController::class,'nuevoPoligono']);
-Route::post('/zona/poligono/borrar', [ZonaController::class,'borrarPoligonos']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // --- ORDENES TODAS---
@@ -110,13 +130,6 @@ Route::get('/admin/ordenes-hoy/tabla/lista', [OrdenesController::class,'tablaOrd
 
 
 
-// --- BLOQUES ---
-Route::get('/admin/bloques', [CategoriasController::class,'indexBloque'])->name('index.bloques');
-Route::get('/admin/bloques/tablas/', [CategoriasController::class,'tablaBloque']);
-Route::post('/admin/bloques/nuevo', [CategoriasController::class,'nuevoBloque']);
-Route::post('/admin/bloques/informacion', [CategoriasController::class,'informacionBloque']);
-Route::post('/admin/bloques/editar', [CategoriasController::class,'editarBloque']);
-Route::post('/admin/bloques/ordenar', [CategoriasController::class,'ordenarBloque']);
 
 // --- SLIDERS ---
 Route::get('/admin/sliders', [CategoriasController::class,'indexSliders'])->name('index.sliders');
@@ -127,23 +140,9 @@ Route::post('/admin/sliders/borrar', [CategoriasController::class,'borrarSliders
 Route::post('/admin/sliders/informacion', [CategoriasController::class,'informacionSlider']);
 Route::post('/admin/sliders/editar', [CategoriasController::class,'editarSlider']);
 
-// --- PRODUCTOS ---
-Route::get('/admin/productos/{id}', [CategoriasController::class,'indexProductos']);
-Route::get('/admin/productos/tablas/{id}', [CategoriasController::class,'tablaProductos']);
-Route::post('/admin/productos/nuevo', [CategoriasController::class,'nuevoProducto']);
-Route::post('/admin/productos/informacion', [CategoriasController::class,'informacionProductos']);
-Route::post('/admin/productos/editar', [CategoriasController::class,'editarProductos']);
-Route::post('/admin/productos/ordenar', [CategoriasController::class,'ordenarProductos']);
 
 
 
-// --- CATEGORIAS ---
-Route::get('/admin/categorias/{id}', [CategoriasController::class,'indexCategorias']);
-Route::get('/admin/categorias/tablas/{id}', [CategoriasController::class,'tablaCategorias']);
-Route::post('/admin/categorias/nuevo', [CategoriasController::class,'nuevaCategorias']);
-Route::post('/admin/categorias/informacion', [CategoriasController::class,'informacionCategorias']);
-Route::post('/admin/categorias/editar', [CategoriasController::class,'editarCategorias']);
-Route::post('/admin/categorias/ordenar', [CategoriasController::class,'ordenarCategorias']);
 
 // --- EVENTOS ---
 Route::get('/admin/eventos', [EventosController::class,'indexEventos']);

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateProductoTable extends Migration
 {
     /**
-     * Run the migrations.
+     * LISTA DE PRODUCTOS
      *
      * @return void
      */
@@ -15,7 +15,7 @@ class CreateProductoTable extends Migration
     {
         Schema::create('producto', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('categorias_id')->unsigned();
+            $table->bigInteger('id_categorias')->unsigned();
 
             $table->string('nombre', 150);
             $table->string('imagen', 100)->nullable();
@@ -23,11 +23,11 @@ class CreateProductoTable extends Migration
             $table->decimal('precio', 10,2);
             $table->boolean('activo');
             $table->integer('posicion');
-            $table->boolean('utiliza_nota');
+            $table->boolean('utiliza_nota')->default(false);
             $table->string('nota', 500)->nullable();
             $table->boolean('utiliza_imagen');
 
-            $table->foreign('categorias_id')->references('id')->on('categorias');
+            $table->foreign('id_categorias')->references('id')->on('categorias');
         });
     }
 

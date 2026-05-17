@@ -10,4 +10,13 @@ class DireccionCliente extends Model
     use HasFactory;
     protected $table = 'direccion_cliente';
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_cliente',
+        'nombre',
+        'direccion',
+        'punto_referencia',
+        'seleccionado',
+        'telefono'
+    ];
 }

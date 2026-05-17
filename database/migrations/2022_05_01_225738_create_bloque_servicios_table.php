@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateBloqueServiciosTable extends Migration
 {
     /**
-     * Mostrara bloque de servicios horizontales tales como
-     * neveria
-     * pupuseria
-     * cafeteria
-     * etc
+     * BLOQUE DE SERVICIOS (PUPUSAS, HELADOS, BEBIDAS)
      *
      * @return void
      */
@@ -19,13 +15,10 @@ class CreateBloqueServiciosTable extends Migration
     {
         Schema::create('bloque_servicios', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tiposervicio_id')->unsigned();
+            $table->string('nombre', 100)->nullable();
             $table->string('imagen', 100);
             $table->integer('posicion');
-            $table->boolean('activo');
-            $table->string('nombre', 100)->nullable();
-
-            $table->foreign('tiposervicio_id')->references('id')->on('tipo_servicio');
+            $table->boolean('activo')->default(true);
         });
     }
 

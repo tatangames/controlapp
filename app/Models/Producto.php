@@ -12,7 +12,16 @@ class Producto extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id_categorias',
+        'nombre',
+        'imagen',
+        'descripcion',
+        'precio',
+        'activo',
         'posicion',
+        'utiliza_nota',
+        'nota',
+        'utiliza_imagen'
     ];
 
 

@@ -7,10 +7,12 @@ use App\Models\Clientes;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApiRegistroController extends Controller
 {
+
     public function registroCliente(Request $request){
 
         $rules = array(
@@ -18,50 +20,7 @@ class ApiRegistroController extends Controller
             'password' => 'required',
         );
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()){return ['success' => 0]; }
-
-        // verificar si existe el usuario
-        if(Clientes::where('usuario', $request->usuario)->first()){
-            return ['success' => 1];
-        }
-
-        if($request->correo != null) {
-            // verificar si existe el correo
-            if (Clientes::where('correo', $request->correo)->first()) {
-                return ['success' => 2];
-            }
-        }
-
-        $fecha = Carbon::now('America/El_Salvador');
-
-        $usuario = new Clientes();
-        $usuario->usuario = $request->usuario;
-        $usuario->correo = $request->correo;
-        $usuario->codigo_correo = null;
-        $usuario->password = Hash::make($request->password);
-        $usuario->fecha = $fecha;
-        $usuario->activo = 1;
-        $usuario->token_fcm = $request->token_fcm;
-        $usuario->borrar_carrito = 0;
-
-        if($usuario->save()){
-
-            return ['success'=> 3, 'id'=> strval($usuario->id)];
-
-        }else{
-            return ['success' => 4];
-        }
-    }
-
-
-    public function registroClienteV2(Request $request){
-
-        $rules = array(
-            'usuario' => 'required',
-            'password' => 'required',
-        );
+        // version
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -69,26 +28,20 @@ class ApiRegistroController extends Controller
 
         // verificar si existe el usuario
         if(Clientes::where('usuario', $request->usuario)->first()){
-            return ['success' => 1];
+            return ['success' => 1, 'titulo' => 'Nota', 'mensaje' => 'Este usuario ya existe'];
         }
 
         $fecha = Carbon::now('America/El_Salvador');
 
         $usuario = new Clientes();
         $usuario->usuario = $request->usuario;
-        $usuario->correo = null;
-        $usuario->codigo_correo = null;
         $usuario->password = Hash::make($request->password);
         $usuario->fecha = $fecha;
-        $usuario->activo = 1;
-        $usuario->token_fcm = null;
-        $usuario->borrar_carrito = 0;
 
         if($usuario->save()){
-            return ['success'=> 2, 'id'=> strval($usuario->id)];
-
+            return ['success'=> 2, 'id'=> strval($usuario->id), 'titulo' => 'Nota', 'mensaje' => 'Registro exitoso'];
         }else{
-            return ['success' => 4];
+            return ['success' => 4,  'titulo' => 'Nota', 'mensaje' => 'Error'];
         }
     }
 }

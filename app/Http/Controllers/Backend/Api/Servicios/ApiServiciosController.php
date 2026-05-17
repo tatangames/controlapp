@@ -25,13 +25,13 @@ class ApiServiciosController extends Controller
 
         if($validarDatos->fails()){return ['success' => 0]; }
 
-
-        // retornar listado de productos por su bloque id
-
         if(BloqueServicios::where('id', $request->categoria)->first()){
 
-            $productos = Categorias::where('bloque_servicios_id', $request->categoria)
+            $productos = Categorias::where('id_bloque_servicios', $request->categoria)
                 ->where('activo', 1)
+                ->whereHas('productos', function($q){
+                    $q->where('activo', 1);
+                })
                 ->orderBy('posicion', 'ASC')
                 ->get();
 
@@ -39,14 +39,14 @@ class ApiServiciosController extends Controller
             $index = 0;
 
             foreach($productos as $secciones){
-                array_push($resultsBloque,$secciones);
+                array_push($resultsBloque, $secciones);
 
-                $subSecciones = Producto::where('categorias_id', $secciones->id)
-                    ->where('activo', 1) // para inactivarlo solo para administrador
+                $subSecciones = Producto::where('id_categorias', $secciones->id)
+                    ->where('activo', 1)
                     ->orderBy('posicion', 'ASC')
                     ->get();
 
-                $resultsBloque[$index]->productos = $subSecciones; //agregar los productos en la sub seccion
+                $resultsBloque[$index]->productos = $subSecciones;
                 $index++;
             }
 
@@ -59,6 +59,12 @@ class ApiServiciosController extends Controller
             return ['success' => 2];
         }
     }
+
+
+
+
+
+
 
     public function listadoEventos(){
 

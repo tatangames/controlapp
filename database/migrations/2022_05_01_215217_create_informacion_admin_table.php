@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateInformacionAdminTable extends Migration
 {
     /**
-     * Run the migrations.
+     * SOLO 1 FILA, PARA INFORMACION DEL SISTEMA
      *
      * @return void
      */
@@ -16,21 +16,8 @@ class CreateInformacionAdminTable extends Migration
         Schema::create('informacion_admin', function (Blueprint $table) {
             $table->id();
 
-            // cerrar aplicacion y establecer mensaje
-            $table->boolean('cerrado');
-            $table->string('mensaje_cerrado', 300);
-
-            // mensaje de cerrado por horario normal de cierre
-            $table->string('cerrado_horario', 300);
-
-            // mensaje de cerrado este dia
-            $table->string('cerrado_estedia', 300);
-
-
-            // ocultar slider
-            $table->boolean('activo_slider');
-
-
+            $table->boolean('cerrado'); // Cerrado manual
+            $table->string('mensaje_cerrado', 300); // mensaje porque esta cerrado
         });
     }
 

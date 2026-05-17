@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateCarritoExtraTable extends Migration
 {
     /**
-     * Run the migrations.
+     * PRODUCTOS DENTRO DEL CARRITO
      *
      * @return void
      */
@@ -15,14 +15,14 @@ class CreateCarritoExtraTable extends Migration
     {
         Schema::create('carrito_extra', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('carrito_temporal_id')->unsigned();
-            $table->bigInteger('producto_id')->unsigned();
+            $table->bigInteger('id_carrito_temporal')->unsigned();
+            $table->bigInteger('id_producto')->unsigned();
 
             $table->string('nota_producto', 400)->nullable();
             $table->integer('cantidad');
 
-            $table->foreign('carrito_temporal_id')->references('id')->on('carrito_temporal');
-            $table->foreign('producto_id')->references('id')->on('producto');
+            $table->foreign('id_carrito_temporal')->references('id')->on('carrito_temporal');
+            $table->foreign('id_producto')->references('id')->on('producto');
         });
     }
 

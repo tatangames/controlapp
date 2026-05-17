@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateCategoriasTable extends Migration
 {
     /**
-     * Run the migrations.
+     * CATEGORIAS DEL SERVICIO
      *
      * @return void
      */
@@ -15,14 +15,13 @@ class CreateCategoriasTable extends Migration
     {
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
-
-            $table->bigInteger('bloque_servicios_id')->unsigned();
+            $table->bigInteger('id_bloque_servicios')->unsigned();
 
             $table->string('nombre', 200);
             $table->integer('posicion');
             $table->boolean('activo');
 
-            $table->foreign('bloque_servicios_id')->references('id')->on('bloque_servicios');
+            $table->foreign('id_bloque_servicios')->references('id')->on('bloque_servicios');
         });
     }
 
