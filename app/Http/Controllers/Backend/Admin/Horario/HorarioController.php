@@ -176,8 +176,6 @@ class HorarioController extends Controller
     }
 
     public function informacionTipoServicio(Request $request){
-
-
         $regla = array(
             'id' => 'required',
         );
@@ -216,6 +214,65 @@ class HorarioController extends Controller
             return ['success' => 2];
         }
     }
+
+
+
+
+    public function indexCerradoApp()
+    {
+        return view('backend.cerradoapp.vistacerrado');
+    }
+
+    public function tablaCerradoApp()
+    {
+        $arrayInfo = InformacionAdmin::all();
+        return view('backend.cerradoapp.tablacerrado', compact('arrayInfo'));
+    }
+
+    public function infoCerradoApp(Request $request)
+    {
+        $regla = array(
+            'id' => 'required',
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){return ['success' => 0]; }
+
+        if($info = InformacionAdmin::where('id', $request->id)->first()){
+
+            return ['success' => 1, 'info' => $info];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+    public function actualizarCerradoApp(Request $request)
+    {
+        $rules = array(
+            'id' => 'required',
+            'estado' => 'required',
+            'nombre' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()){return ['success' => 0]; }
+
+        if(InformacionAdmin::where('id', $request->id)->first()){
+
+            InformacionAdmin::where('id', $request->id)->update([
+                'cerrado' => $request->estado,
+                'mensaje_cerrado' => $request->nombre,
+            ]);
+            return ['success' => 1];
+        }else{
+            return ['success' => 2];
+        }
+    }
+
+
+
 
 
 

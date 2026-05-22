@@ -98,8 +98,6 @@ Route::post('/admin/ordenes/cancelar', [OrdenesController::class,'cancelarOrden'
 
 
 
-
-
 // ORDENES PENDIENTES
 
 Route::get('/admin/ordenes-pendientes/lista', [OrdenesController::class,'indexOrdenesPendientes'])->name('index.ordenes.pendientes');
@@ -198,7 +196,12 @@ Route::get('/admin/motorista/direccion-todas/tabla', [MotoristaController::class
 
 
 
+// CERRAR APP
+Route::get('/admin/cerrado/app/index', [HorarioController::class, 'indexCerradoApp'])->name('index.cerrar.app');
+Route::get('/admin/cerrado/app/tabla', [HorarioController::class, 'tablaCerradoApp']);
+Route::post('/admin/cerrado/app/informacion', [HorarioController::class, 'infoCerradoApp']);
 
+Route::post('/admin/cerrado/app/actualizar', [HorarioController::class, 'actualizarCerradoApp']);
 
 
 
