@@ -187,25 +187,7 @@ class ApiOrdenesController extends Controller
 
 
 
-    public function ocultarOrdenFinal(Request $request){
 
-        $reglaDatos = array(
-            'ordenid' => 'required',
-        );
-
-        $validarDatos = Validator::make($request->all(), $reglaDatos);
-
-        if($validarDatos->fails()){return ['success' => 0]; }
-
-        if($or = Ordenes::where('id', $request->ordenid)->first()){
-
-            Ordenes::where('id', $or->id)->update(['visible' => 0]);
-
-            return ['success' => 1];
-        }else{
-            return ['success' => 2];
-        }
-    }
 
 
 

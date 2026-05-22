@@ -51,37 +51,6 @@ class ApiClienteController extends Controller
 
 
 
-    public function loginClienteV2(Request $request){
-
-        $rules = array(
-            'usuario' => 'required',
-            'password' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules );
-
-        if ($validator->fails()){
-            return ['success' => 0];
-        }
-
-        if($info = Clientes::where('usuario', $request->usuario)->first()){
-
-            if (Hash::check($request->password, $info->password)) {
-
-                // inicio sesion
-                return ['success' => 1, 'id' => strval($info->id)];
-
-            }else{
-                // contraseña incorrecta (datos incorrectos)
-                return ['success' => 2];
-            }
-
-        } else {
-            // usuario no encontrado (datos incorrectos)
-            return ['success' => 2];
-        }
-    }
-
 
 
 

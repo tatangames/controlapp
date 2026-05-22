@@ -42,7 +42,6 @@ Route::post('cliente/proceso/orden/estado-1', [ApiCarritoController::class, 'pro
 // --- ORDENES ENVIADAS ---
 Route::post('cliente/ver/ordenes-activas',  [ApiOrdenesController::class, 'ordenesActivas']);
 Route::post('cliente/ver/estado-orden',  [ApiOrdenesController::class, 'estadoOrdenesActivas']);
-Route::post('cliente/proceso/finalizar/orden',  [ApiOrdenesController::class, 'ocultarOrdenFinal']);
 Route::post('cliente/listado/productos/ordenes',  [ApiOrdenesController::class, 'listadoProductosOrdenes']);
 Route::post('cliente/proceso/orden/cancelar',  [ApiOrdenesController::class, 'cancelarOrdenCliente']);
 Route::post('cliente/proceso/completar/orden',  [ApiOrdenesController::class, 'completarOrden']);
